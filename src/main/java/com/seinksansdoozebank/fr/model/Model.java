@@ -1,4 +1,4 @@
-package java.com.seinksansdoozebank.fr.model;
+package com.seinksansdoozebank.fr.model;
 
 public class Model {
 }

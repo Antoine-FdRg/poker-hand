@@ -1,4 +1,4 @@
-package java.com.seinksansdoozebank.fr;
+package com.seinksansdoozebank.fr;
 
 public class Launcher {
     public static void main(String[] args) {

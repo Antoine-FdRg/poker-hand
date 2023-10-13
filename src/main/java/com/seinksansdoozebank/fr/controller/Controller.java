@@ -1,4 +1,4 @@
-package java.com.seinksansdoozebank.fr.controller;
+package com.seinksansdoozebank.fr.controller;
 
 public class Controller {
 }

@@ -1,4 +1,4 @@
-package java.com.seinksansdoozebank.fr.view;
+package com.seinksansdoozebank.fr.view;
 
 public class Cli {
 }
