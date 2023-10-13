@@ -1,4 +1,4 @@
-package com.seinksansdoozebank.fr.controller;
+package com.seinksansdoozebank.fr.model;
 
 public class Card {
     private Rank value;

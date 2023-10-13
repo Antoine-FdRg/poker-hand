@@ -1,4 +1,4 @@
-package com.seinksansdoozebank.fr.controller;
+package com.seinksansdoozebank.fr.model;
 
 public enum Rank {
     AS("A", 14),
@@ -22,6 +22,10 @@ public enum Rank {
         this.value=value;
     }
 
+    public static Rank getRank(Integer card) {
+        //FIXME because its not that cool
+        return Rank.values()[card-1];
+    }
 
 
     public String getSymbol() {

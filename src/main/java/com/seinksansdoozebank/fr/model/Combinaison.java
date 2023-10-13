@@ -1,4 +1,4 @@
-package com.seinksansdoozebank.fr.controller;
+package com.seinksansdoozebank.fr.model;
 
 public enum Combinaison {
     HIGH_CARD("carte la plus élevée");

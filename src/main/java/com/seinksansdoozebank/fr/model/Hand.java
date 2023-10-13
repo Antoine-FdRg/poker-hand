@@ -1,4 +1,4 @@
-package com.seinksansdoozebank.fr.controller;
+package com.seinksansdoozebank.fr.model;
 
 import java.util.ArrayList;
 import java.util.List;

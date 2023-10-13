@@ -1,14 +1,14 @@
 package com.seinksansdoozebank.fr.view;
 
-import com.seinksansdoozebank.fr.controller.Card;
-import com.seinksansdoozebank.fr.controller.Combinaison;
+import com.seinksansdoozebank.fr.model.Card;
+import com.seinksansdoozebank.fr.model.Combinaison;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Cli {
 
-    public ArrayList<Integer> intializeHand(int numHand) {
+    public ArrayList<Integer> initializeHand(int numHand) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Main "+ numHand +": ");
         String[] cards = scanner.nextLine().split(" ");

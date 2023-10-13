@@ -1,12 +1,12 @@
-package com.seinksansdoozebank.fr.view;
+package java.com.seinksansdoozebank.fr.view;
 
-import com.seinksansdoozebank.fr.controller.Card;
-import com.seinksansdoozebank.fr.controller.Combinaison;
+import com.seinksansdoozebank.fr.model.Card;
+import com.seinksansdoozebank.fr.model.Combinaison;
+import com.seinksansdoozebank.fr.model.Rank;
 import com.seinksansdoozebank.fr.view.Cli;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -32,7 +32,7 @@ class CliTest {
     @Test
     void testDisplayWinner() {
         int handNumber = 1;
-        Card highestCard = new Card(1);
+        Card highestCard = new Card(Rank.AS);
 
         cli.displayWinner(handNumber, Combinaison.HIGH_CARD, highestCard);
 
