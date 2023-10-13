@@ -1,4 +1,4 @@
 package com.seinksansdoozebank.fr.model;
 
-public class Model {
+public class Game {
 }
