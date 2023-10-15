@@ -1,9 +1,10 @@
 package com.seinksansdoozebank.fr.model;
 
 public enum Combinaison {
-    HIGH_CARD("carte la plus élevée");
+    HIGHEST_CARD("carte la plus élevée");
 
     private final String name;
+
 
     Combinaison(String name) {
         this.name = name;
@@ -20,5 +21,12 @@ public enum Combinaison {
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "Combinaison{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }

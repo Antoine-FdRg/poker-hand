@@ -1,26 +1,28 @@
 package com.seinksansdoozebank.fr.view;
 
-import com.seinksansdoozebank.fr.model.Card;
-import com.seinksansdoozebank.fr.model.Combinaison;
+import com.seinksansdoozebank.fr.model.Victory;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Cli {
 
-    public ArrayList<Integer> initializeHand(int numHand) {
+    public List<String> initializeHand(int numHand) {
+        //TODO check number of cards
+        //TODO make working only the symbol of the card
         Scanner scanner = new Scanner(System.in);
         System.out.println("Main "+ numHand +": ");
         String[] cards = scanner.nextLine().split(" ");
-        ArrayList<Integer> hand = new ArrayList<>();
+        ArrayList<String> hand = new ArrayList<>();
         for (String card : cards) {
-            hand.add(Integer.parseInt(card));
+            hand.add(card);
         }
         return hand;
     }
 
-    public void displayWinner(int handNumber, Combinaison combinaison, Card highestCard) {
-        System.out.println("La main " + handNumber + " gagne avec " + combinaison.getName() + " : " + highestCard.getValue());
+    public void displayWinner(Victory winner) {
+        System.out.println("La main " + winner.getHand().getID() + " gagne avec " + winner.getCombinaisonValue());
     }
 
     public void displayDraw() {
