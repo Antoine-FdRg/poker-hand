@@ -22,9 +22,6 @@ public class CombinaisonValue {
 
     @Override
     public String toString() {
-        return "CombinaisonValue{" +
-                "combinaison=" + combinaison +
-                ", cards=" + cards +
-                '}';
+        return combinaison + " : " + cards;
     }
 }

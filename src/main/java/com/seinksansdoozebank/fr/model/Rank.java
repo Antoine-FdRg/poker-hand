@@ -1,26 +1,28 @@
 package com.seinksansdoozebank.fr.model;
 
 public enum Rank implements Comparable<Rank> {
-    TWO("2", 2),
-    THREE("3", 3),
-    FOUR("4", 4),
-    FIVE("5", 5),
-    SIX("6", 6),
-    SEVEN("7", 7),
-    EIGHT("8", 8),
-    NINE("9", 9),
-    TEN("10", 10),
-    VALET("V", 11),
-    QUEEN("D", 12),
-    KING("R", 13),
-    AS("A", 14);
+    TWO("2", 2,"2"),
+    THREE("3", 3,"3"),
+    FOUR("4", 4,"4"),
+    FIVE("5", 5,"5"),
+    SIX("6", 6,"6"),
+    SEVEN("7", 7,"7"),
+    EIGHT("8", 8,"8"),
+    NINE("9", 9,"9"),
+    TEN("10", 10,"10"),
+    VALET("V", 11,"Valet"),
+    QUEEN("D", 12,"Dame"),
+    KING("R", 13,"Roi"),
+    AS("A", 14,"As");
 
     private final String symbol;
     private final int value;
+    private final String fullName;
 
-    Rank(String symbol, int value) {
+    Rank(String symbol, int value, String fullName) {
         this.symbol = symbol;
         this.value = value;
+        this.fullName = fullName;
     }
 
     public static Rank getRankBySymbol(String card) {
@@ -57,13 +59,8 @@ public enum Rank implements Comparable<Rank> {
 
     }
 
-
-    public String getSymbol() {
-        return symbol;
+    @Override
+    public String toString() {
+        return fullName;
     }
-
-    public int getValue() {
-        return value;
-    }
-
 }

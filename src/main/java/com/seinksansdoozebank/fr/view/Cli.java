@@ -3,6 +3,7 @@ package com.seinksansdoozebank.fr.view;
 import com.seinksansdoozebank.fr.model.Victory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -14,11 +15,7 @@ public class Cli {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Main "+ numHand +": ");
         String[] cards = scanner.nextLine().split(" ");
-        ArrayList<String> hand = new ArrayList<>();
-        for (String card : cards) {
-            hand.add(card);
-        }
-        return hand;
+        return new ArrayList<>(Arrays.asList(cards));
     }
 
     public void displayWinner(Victory winner) {
