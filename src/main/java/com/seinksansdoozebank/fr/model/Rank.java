@@ -1,7 +1,6 @@
 package com.seinksansdoozebank.fr.model;
 
-public enum Rank {
-    AS("A", 14),
+public enum Rank implements Comparable<Rank> {
     TWO("2", 2),
     THREE("3", 3),
     FOUR("4", 4),
@@ -12,19 +11,50 @@ public enum Rank {
     NINE("9", 9),
     TEN("10", 10),
     VALET("V", 11),
-    QUEEN ("D",12),
-    KING("R",13);
+    QUEEN("D", 12),
+    KING("R", 13),
+    AS("A", 14);
 
-    private String symbol;
-    private int value;
+    private final String symbol;
+    private final int value;
+
     Rank(String symbol, int value) {
-        this.symbol=symbol;
-        this.value=value;
+        this.symbol = symbol;
+        this.value = value;
     }
 
-    public static Rank getRank(Integer card) {
-        //FIXME because its not that cool
-        return Rank.values()[card-1];
+    public static Rank getRankBySymbol(String card) {
+        switch (card) {
+            case "2":
+                return TWO;
+            case "3":
+                return THREE;
+            case "4":
+                return FOUR;
+            case "5":
+                return FIVE;
+            case "6":
+                return SIX;
+            case "7":
+                return SEVEN;
+            case "8":
+                return EIGHT;
+            case "9":
+                return NINE;
+            case "10":
+                return TEN;
+            case "V":
+                return VALET;
+            case "D":
+                return QUEEN;
+            case "R":
+                return KING;
+            case "A":
+                return AS;
+            default:
+                return null;
+        }
+
     }
 
 
@@ -35,4 +65,5 @@ public enum Rank {
     public int getValue() {
         return value;
     }
+
 }
