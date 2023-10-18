@@ -10,9 +10,9 @@ import java.util.List;
 
 public class Game {
     private static final List<String> VALID_CARDS_SYMBOLS = List.of("2", "3", "4", "5", "6", "7", "8", "9", "10", "V", "D", "R", "A");
-    private List<Hand> hands = new ArrayList<>();
-    private Cli view = new Cli();
-    private Referee referee = new Referee();
+    private final List<Hand> hands = new ArrayList<>();
+    private final Cli view = new Cli();
+    private final Referee referee = new Referee();
     private int numberOfCards;
 
     /**
@@ -54,7 +54,7 @@ public class Game {
             return false;
         }
         for (String card : cards) {
-            if (!VALID_CARDS_SYMBOLS.contains(card)) {
+            if (!card.matches("^10|[2-9]|[VDRA]$")) {
                 System.out.println("Veuillez entrer des cartes valides");
                 return false;
             }

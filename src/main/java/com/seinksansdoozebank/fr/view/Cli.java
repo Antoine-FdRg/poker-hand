@@ -1,7 +1,6 @@
 package com.seinksansdoozebank.fr.view;
 
 import com.seinksansdoozebank.fr.model.Card;
-import com.seinksansdoozebank.fr.model.Combinaison;
 import com.seinksansdoozebank.fr.model.Victory;
 
 import java.util.ArrayList;
@@ -12,12 +11,13 @@ public class Cli {
 
     /**
      * Initialize the hand with the cards given by the user
+     *
      * @param numHand the number of the hand
      * @return the list of the cards
      */
     public List<String> initializeHand(int numHand) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Main " + numHand + ": ");
+        System.out.print("Main " + numHand + ": ");
         String[] cards = scanner.nextLine().split(" ");
         return new ArrayList<>(List.of(cards));
     }
@@ -32,22 +32,11 @@ public class Cli {
 
     /**
      * Display the winner of the game
-     * @param handNumber the number of the hand
-     * @param combinaison the combinaison of the hand
-     * @param highestCard the highest card of the hand
-     */
-    public void displayWinner(int handNumber, Combinaison combinaison, Card highestCard) {
-        System.out.println("La main " + handNumber + " gagne avec " + combinaison.getName() + " : " + highestCard.getRank().getSymbol());
-    }
-
-    /**
-     * Display the winner of the game
+     *
      * @param winner the winner of the game
      */
     public void displayWinner(Victory winner) {
-        System.out.println("La main " + winner.getHand().getID() + " gagne avec " +
-                winner.getCombinaisonValue().getCombinaison().getName() + " : " +
-                winner.getCombinaisonValue().getCards().getRank().getName());
+        System.out.println("La main " + winner.getHand().getID() + " gagne avec " + winner.getCombinaisonValue().getCombinaison().getName() + " : " + winner.getCombinaisonValue().getCards().getRank().getName());
     }
 
     /**
