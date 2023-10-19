@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    private static final List<String> VALID_CARDS_SYMBOLS = List.of("2", "3", "4", "5", "6", "7", "8", "9", "10", "V", "D", "R", "A");
     private final List<Hand> hands = new ArrayList<>();
     private final Cli view = new Cli();
     private final Referee referee = new Referee();
@@ -50,12 +49,12 @@ public class Game {
     private boolean checkInput(List<String> cards) {
         // check if the input is valid
         if (cards.size() != this.numberOfCards) {
-            System.out.println("Veuillez entrer " + this.numberOfCards + " cartes");
+            view.displayAlertSize(this.numberOfCards);
             return false;
         }
         for (String card : cards) {
             if (!card.matches("^10|[2-9]|[VDRA]$")) {
-                System.out.println("Veuillez entrer des cartes valides");
+                view.displayAlertInvalidCard();
                 return false;
             }
         }

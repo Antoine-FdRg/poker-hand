@@ -22,6 +22,11 @@ public class Cli {
         return new ArrayList<>(List.of(cards));
     }
 
+    /**
+     * Display the hand
+     * @param numHand the hand id
+     * @param cards the cards of the hand
+     */
     public void displayHand(int numHand, List<Card> cards) {
         System.out.print("Main " + numHand + ": ");
         for (Card card : cards) {
@@ -31,12 +36,27 @@ public class Cli {
     }
 
     /**
+     * Display the alert for the size of the hand
+     * @param numberOfCards the number of cards
+     */
+    public void displayAlertSize(int numberOfCards) {
+        System.out.println("Veuillez entrer " + numberOfCards + " cartes");
+    }
+
+    /**
+     * Display the alert for the invalid card
+     */
+    public void displayAlertInvalidCard() {
+        System.out.println("Veuillez entrer des cartes valides");
+    }
+
+    /**
      * Display the winner of the game
      *
      * @param winner the winner of the game
      */
     public void displayWinner(Victory winner) {
-        System.out.println("La main " + winner.getHand().getID() + " gagne avec " + winner.getCombinaisonValue().getCombinaison().getName() + " : " + winner.getCombinaisonValue().getCards().getRank().getName());
+        System.out.println("La main " + winner.getHand().getID() + " gagne avec " + winner.getCombinaisonValue().getVictoryCondition());
     }
 
     /**
