@@ -26,7 +26,7 @@ public class CombinaisonValue {
     }
 
     /**
-     * Create the corresponding string for printing the victory condition :
+     * Merci d'ajouter les conditions de victoire suivantes au fur et à mesure de leur implémentation :
      * "La main 1 gagne avec carte la plus élevée : As"
      * "La main 2 gagne avec paire de 5"
      * "La main 1 gagne avec double paire : As et 5"
@@ -34,9 +34,11 @@ public class CombinaisonValue {
      * "La main 1 gagne avec suite"
      * "La main 2 gagne avec couleur"
      * "La main 1 gagne avec full : As par les 5"
-     * @return the victory condition
+     * "La main 2 gagne avec carré de 5"
+     * "La main 1 gagne avec quinte flush"
+     * @return the victory condition string that must be printed
      */
-    public String getVictoryCondition() {
+    public String toString() {
         String victoryCondition = "";
         switch (this.combinaison) {
             case HIGHEST_CARD:
@@ -55,13 +57,5 @@ public class CombinaisonValue {
 
     public Card getCards() {
         return cards;
-    }
-
-    @Override
-    public String toString() {
-        return "CombinaisonValue{" +
-                "combinaison=" + combinaison +
-                ", cards=" + cards +
-                '}';
     }
 }

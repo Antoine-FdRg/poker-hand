@@ -56,7 +56,7 @@ public class Cli {
      * @param winner the winner of the game
      */
     public void displayWinner(Victory winner) {
-        System.out.println("La main " + winner.getHand().getID() + " gagne avec " + winner.getCombinaisonValue().getVictoryCondition());
+        System.out.println("La main " + winner.getHand().getID() + " gagne avec " + winner.getCombinaisonValue());
     }
 
     /**
