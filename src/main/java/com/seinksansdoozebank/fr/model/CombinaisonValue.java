@@ -38,6 +38,7 @@ public class CombinaisonValue {
      * "La main 1 gagne avec quinte flush"
      * @return the victory condition string that must be printed
      */
+    @Override
     public String toString() {
         String victoryCondition = "";
         switch (this.combinaison) {

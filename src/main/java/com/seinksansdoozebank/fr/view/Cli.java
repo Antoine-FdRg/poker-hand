@@ -23,19 +23,6 @@ public class Cli {
     }
 
     /**
-     * Display the hand
-     * @param numHand the hand id
-     * @param cards the cards of the hand
-     */
-    public void displayHand(int numHand, List<Card> cards) {
-        System.out.print("Main " + numHand + ": ");
-        for (Card card : cards) {
-            System.out.print(card.getRank().getSymbol() + " ");
-        }
-        System.out.println();
-    }
-
-    /**
      * Display the alert for the size of the hand
      * @param numberOfCards the number of cards
      */

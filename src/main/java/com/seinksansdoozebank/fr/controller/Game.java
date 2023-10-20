@@ -32,9 +32,6 @@ public class Game {
             Hand hand = new Hand(cardsHand);
             hands.add(hand);
         }
-        for (Hand hand : hands) {
-            view.displayHand(hand.getID(), hand.getCards());
-        }
         Victory winner = referee.compareHands(hands.get(0), hands.get(1));
         if (winner == null) {
             view.displayDraw();
