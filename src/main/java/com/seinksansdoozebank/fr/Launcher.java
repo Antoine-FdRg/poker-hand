@@ -4,7 +4,9 @@ import com.seinksansdoozebank.fr.controller.Game;
 
 public class Launcher {
     public static void main(String[] args) {
-        Game game = new Game();
+        int nbrOfHands = 2;
+        int nbrOfCards = 1;
+        Game game = new Game(nbrOfHands, nbrOfCards);
         game.run();
     }
 }
