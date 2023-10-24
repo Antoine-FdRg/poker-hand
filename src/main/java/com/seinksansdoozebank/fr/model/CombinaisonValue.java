@@ -15,7 +15,6 @@ public class CombinaisonValue {
      * @return 1 if the combinaison value is greater, -1 if the combinaison value is lower, 0 if they are equals
      */
     public int compareTo(CombinaisonValue combinaison2) {
-        //TODO test this
         int result = this.combinaison.compareTo(combinaison2.combinaison);
         if (result > 0) {
             return 1;
@@ -42,7 +41,6 @@ public class CombinaisonValue {
     @Override
     public String toString() {
         String victoryCondition = "";
-        //TODO test this
         switch (this.combinaison) {
             case HIGHEST_CARD:
                 victoryCondition += "carte la plus élevée : " + this.cards.getRank().getName();
@@ -52,10 +50,6 @@ public class CombinaisonValue {
                 break;
         }
         return victoryCondition;
-    }
-
-    public Combinaison getCombinaison() {
-        return combinaison;
     }
 
     public Card getCards() {
