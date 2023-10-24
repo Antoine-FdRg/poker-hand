@@ -17,6 +17,7 @@ public class Hand {
             this.cards.add(new Card(Rank.getRankFromSymbol(card)));
         }
         //sorting cards
+        //TODO test this
         this.cards.sort(Comparator.comparing(Card::getRank));
     }
 
@@ -29,6 +30,7 @@ public class Hand {
     }
 
     public Card getBestCard() {
+        //TODO test this
         return cards.get(cards.size() - 1);
     }
 

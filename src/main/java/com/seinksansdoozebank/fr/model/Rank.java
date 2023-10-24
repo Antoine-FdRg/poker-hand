@@ -32,6 +32,7 @@ public enum Rank implements Comparable<Rank> {
      * @return the rank
      */
     public static Rank getRankFromValue(int value) {
+        //TODO test this
         for (Rank rank : Rank.values()) {
             if (rank.getValue() == value) {
                 return rank;
@@ -47,6 +48,7 @@ public enum Rank implements Comparable<Rank> {
      * @return the rank
      */
     public static Rank getRankFromSymbol(String symbol) {
+        //TODO test this
         for (Rank rank : Rank.values()) {
             if (rank.getSymbol().equals(symbol)) {
                 return rank;

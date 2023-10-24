@@ -21,6 +21,7 @@ public class Referee {
     }
 
     private CombinaisonValue getBestCombinaison(Hand hand) {
+        //TODO test this
         return new CombinaisonValue(Combinaison.HIGHEST_CARD, hand.getBestCard());
     }
 }

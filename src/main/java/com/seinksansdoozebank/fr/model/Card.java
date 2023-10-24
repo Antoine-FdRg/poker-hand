@@ -11,6 +11,7 @@ public class Card implements Comparable<Card> {
     }
     @Override
     public int compareTo(Card o) {
+        //TODO test this
         return this.rank.compareTo(o.rank);
     }
 

@@ -20,6 +20,7 @@ public enum Combinaison {
      * @return the combinaison
      */
     public static Combinaison getCombinaison(String name) {
+        //TODO test this
         for (Combinaison combinaison : Combinaison.values()) {
             if (combinaison.getName().equals(name)) {
                 return combinaison;

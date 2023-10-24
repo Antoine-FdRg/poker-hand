@@ -47,7 +47,7 @@ public class Game {
      * @return true if the input is valid, false otherwise
      */
     private boolean checkInput(List<String> cards) {
-        // check if the input is valid
+        //TODO test this
         if (cards.size() != this.nbrOfCards) {
             view.displayAlertSize(this.nbrOfCards);
             return false;
