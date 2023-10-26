@@ -20,7 +20,7 @@ public class Referee {
 
     }
 
-    private CombinaisonValue getBestCombinaison(Hand hand) {
+    protected CombinaisonValue getBestCombinaison(Hand hand) {
         return new CombinaisonValue(Combinaison.HIGHEST_CARD, hand.getBestCard());
     }
 }
