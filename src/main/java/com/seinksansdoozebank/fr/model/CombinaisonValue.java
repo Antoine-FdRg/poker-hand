@@ -52,10 +52,6 @@ public class CombinaisonValue {
         return victoryCondition;
     }
 
-    public Combinaison getCombinaison() {
-        return combinaison;
-    }
-
     public Card getCards() {
         return cards;
     }
