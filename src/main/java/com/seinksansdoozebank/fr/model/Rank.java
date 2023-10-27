@@ -31,7 +31,7 @@ public enum Rank implements Comparable<Rank> {
      */
     public static Rank getRankFromSymbol(String symbol) {
         for (Rank rank : Rank.values()) {
-            if (rank.getSymbol().equals(symbol)) {
+            if (symbol.contains(rank.getSymbol())) {
                 return rank;
             }
         }

@@ -17,14 +17,14 @@ class CardTest {
 
     @BeforeEach
     void setUp() {
-        this.cardEight = new Card(Rank.EIGHT);
-        this.cardThree = new Card(Rank.THREE);
-        this.cardThreeBis = new Card(Rank.THREE);
-        this.cardKing = new Card(Rank.KING);
-        this.cardQueen = new Card(Rank.QUEEN);
-        this.cardJack = new Card(Rank.JACK);
-        this.cardAce = new Card(Rank.ACE);
-        this.cardAceBis = new Card(Rank.ACE);
+        this.cardEight = new Card(Rank.EIGHT, Suit.CLUB);
+        this.cardThree = new Card(Rank.THREE, Suit.CLUB);
+        this.cardThreeBis = new Card(Rank.THREE, Suit.CLUB);
+        this.cardKing = new Card(Rank.KING, Suit.CLUB);
+        this.cardQueen = new Card(Rank.QUEEN, Suit.CLUB);
+        this.cardJack = new Card(Rank.JACK, Suit.CLUB);
+        this.cardAce = new Card(Rank.ACE, Suit.CLUB);
+        this.cardAceBis = new Card(Rank.ACE, Suit.CLUB);
     }
 
     @Test

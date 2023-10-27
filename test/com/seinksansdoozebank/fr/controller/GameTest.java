@@ -28,6 +28,14 @@ class GameTest {
         assertFalse(game.checkInput(cards));
         cards.remove(2);
         cards.add("V");
+        assertFalse(game.checkInput(cards));
+        cards = new ArrayList<>();
+        cards.add("VPi");
+        cards.add("2Co");
+        cards.add("3Ci");
+        assertFalse(game.checkInput(cards));
+        cards.remove(2);
+        cards.add("2Ca");
         assertTrue(game.checkInput(cards));
     }
 }
