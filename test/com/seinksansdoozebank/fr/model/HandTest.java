@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,8 +20,11 @@ class HandTest {
 
     @Test
     void cardsAreSortded() {
-        for (int i = 0; i < hand.getCards().size()-1; i++) {
-            assertTrue(hand.getCards().get(i).getRank().compareTo(hand.getCards().get(i+1).getRank()) <= 0);
+        assertFalse(hand.getCards().get(0).compareTo(hand.getCards().get(1)) < 0);
+
+        List<Card> sortedCards = hand.getSortedCards();
+        for (int i = 0; i < sortedCards.size() - 1; i++) {
+            assertTrue(sortedCards.get(i).compareTo(sortedCards.get(i + 1)) < 0);
         }
     }
 
