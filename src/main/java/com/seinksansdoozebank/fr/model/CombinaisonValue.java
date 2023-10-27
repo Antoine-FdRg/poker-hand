@@ -59,8 +59,14 @@ public class CombinaisonValue {
         return victoryCondition;
     }
 
+    /**
+     * Get the string representation of the straight
+     * The straight is represented by the cards symbols separated by a space
+     *
+     * @return the string representation of the straight
+     */
     private String toStringStraight() {
-        List<Card> cards = this.hand.getSortedCards();
+        List<Card> cards = this.hand.getCards();
         StringBuilder stringBuilder = new StringBuilder();
         if (cards.contains(new Card(Rank.ACE))) {
             stringBuilder.append("A ");
@@ -84,6 +90,10 @@ public class CombinaisonValue {
         // if the combinaison is a straight so the best card is the last card of the hand.
         // And if there is an ACE in the hand, the ACE is NOT the best card.
         if (this.combinaison.equals(Combinaison.STRAIGHT)) {
+            List<Card> cards = this.hand.getCards();
+            if (cards.contains(new Card(Rank.ACE))) {
+                return cards.get(cards.size() - 2);
+            }
             return this.hand.getCards().get(this.hand.getCards().size() - 1);
         }
         return this.hand.getBestCard();

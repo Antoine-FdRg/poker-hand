@@ -17,7 +17,7 @@ public class Hand {
             this.cards.add(new Card(Rank.getRankFromSymbol(card)));
         }
         //sorting cards
-        // this.cards.sort(Comparator.comparing(Card::getRank));
+        this.cards.sort(Comparator.comparing(Card::getRank));
     }
 
     public List<Card> getCards() {
@@ -29,14 +29,13 @@ public class Hand {
     }
 
     public Card getBestCard() {
-        // return cards.get(cards.size() - 1);
-        return this.getSortedCards().get(cards.size() - 1);
-    }
-
-    public List<Card> getSortedCards() {
-        List<Card> sortedCards = new ArrayList<>(cards);
-        sortedCards.sort(Comparator.comparing(Card::getRank));
-        return sortedCards;
+        Card bestCard = cards.get(0);
+        for (Card card : cards) {
+            if (card.compareTo(bestCard) > 0) {
+                bestCard = card;
+            }
+        }
+        return bestCard;
     }
 
     public static void resetIdCounter(){
