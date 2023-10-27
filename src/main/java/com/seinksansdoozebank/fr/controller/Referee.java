@@ -46,7 +46,7 @@ public class Referee {
      * @param hand the hand
      * @return true if the hand is a straight, false otherwise
      */
-    private boolean isStraight(Hand hand) {
+    boolean isStraight(Hand hand) {
         List<Card> cards = hand.getCards();
         // if the last card is an ACE put it at first
         if (cards.get(cards.size() - 1).getRank().equals(Rank.ACE)) {

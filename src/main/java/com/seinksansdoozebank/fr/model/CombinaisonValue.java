@@ -65,10 +65,11 @@ public class CombinaisonValue {
      *
      * @return the string representation of the straight
      */
-    private String toStringStraight() {
+    String toStringStraight() {
         List<Card> cards = this.hand.getCards();
         StringBuilder stringBuilder = new StringBuilder();
-        if (cards.contains(new Card(Rank.ACE))) {
+        if (cards.contains(new Card(Rank.ACE, Suit.CLUB)) || cards.contains(new Card(Rank.ACE, Suit.DIAMOND)) || cards.contains(new Card(Rank.ACE, Suit.HEART)) || cards.contains(new Card(Rank.ACE, Suit.SPADE)))
+        {
             stringBuilder.append("A ");
         }
         // if there is a ACE in the hand, the ACE is set to the first card
@@ -91,12 +92,12 @@ public class CombinaisonValue {
         // And if there is an ACE in the hand, the ACE is NOT the best card.
         if (this.combinaison.equals(Combinaison.STRAIGHT)) {
             List<Card> cards = this.hand.getCards();
-            if (cards.contains(new Card(Rank.ACE))) {
+            if (cards.contains(new Card(Rank.ACE, Suit.CLUB)) || cards.contains(new Card(Rank.ACE, Suit.DIAMOND)) || cards.contains(new Card(Rank.ACE, Suit.HEART)) || cards.contains(new Card(Rank.ACE, Suit.SPADE)))
+            {
                 return cards.get(cards.size() - 2);
             }
             return this.hand.getCards().get(this.hand.getCards().size() - 1);
-        }
-        return this.hand.getBestCard();
+        } return this.hand.getBestCard();
     }
 
     /**
