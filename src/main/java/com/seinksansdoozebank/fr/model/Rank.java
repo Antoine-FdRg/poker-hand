@@ -45,5 +45,4 @@ public enum Rank implements Comparable<Rank> {
     public String getName() {
         return name;
     }
-
 }

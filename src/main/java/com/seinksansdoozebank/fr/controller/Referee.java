@@ -2,7 +2,11 @@ package com.seinksansdoozebank.fr.controller;
 
 import com.seinksansdoozebank.fr.model.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Referee {
 
@@ -36,8 +40,25 @@ public class Referee {
     protected CombinaisonValue getBestCombinaison(Hand hand) {
         if (hand.getCards().size() != 1 && this.isStraight(hand)) {
             return new CombinaisonValue(Combinaison.STRAIGHT, hand);
+        }else if(this.searchTwoPair(hand)) {
+            return new CombinaisonValue(Combinaison.TWO_PAIR, hand);
+        }else{
+            return new CombinaisonValue(Combinaison.HIGHEST_CARD, hand);
         }
-        return new CombinaisonValue(Combinaison.HIGHEST_CARD, hand);
+    }
+
+    protected boolean searchTwoPair(Hand hand) {
+        Map<Card, Integer> map = hand.getCards().stream()
+                .distinct()
+                .collect(Collectors.toMap(
+                        Function.identity(),
+                        v -> Collections.frequency(hand.getCards(), v))
+                );
+        List<Card> cards = map.entrySet().stream()
+                .filter(entry -> entry.getValue() == 2)
+                .map(Map.Entry::getKey)
+                .toList();
+        return cards.size() == 2;
     }
 
     /**
