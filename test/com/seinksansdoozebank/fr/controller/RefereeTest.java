@@ -108,4 +108,14 @@ class RefereeTest {
         assertEquals(cv.toString(),referee.getBestCombinaison(hand1).toString());
     }
 
+    @Test
+    void threeOfAKindCombinaisonTest(){
+
+        /* we check if the method searchThreeOfAKind works */
+       Hand  hand1= new Hand(new ArrayList<>(List.of("2","2","3","4","2")));
+       Hand hand2= new Hand(new ArrayList<>(List.of("2","A","3","4","2")));
+       assertEquals(Combinaison.THREE_OF_A_KIND, referee.getBestCombinaison(hand1).getCombinaison());
+       assertNotEquals(Combinaison.THREE_OF_A_KIND, referee.getBestCombinaison(hand2).getCombinaison());
+    }
+
 }

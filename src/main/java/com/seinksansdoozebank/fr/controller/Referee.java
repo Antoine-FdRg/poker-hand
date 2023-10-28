@@ -34,9 +34,13 @@ public class Referee {
      * @return the best combinaison
      */
     protected CombinaisonValue getBestCombinaison(Hand hand) {
+        if(this.searchThreeOfAKind(hand)){
+            return new CombinaisonValue(Combinaison.THREE_OF_A_KIND,hand);
+        }
         if (hand.getCards().size() != 1 && this.isStraight(hand)) {
             return new CombinaisonValue(Combinaison.STRAIGHT, hand);
         }
+
         return new CombinaisonValue(Combinaison.HIGHEST_CARD, hand);
     }
 
@@ -64,5 +68,17 @@ public class Referee {
         }
         // if the index is equal to the cards size so the hand is a straight
         return index == cardsSize;
+    }
+
+    private boolean searchThreeOfAKind(Hand hand){
+        int compteur=0;
+        for ( Card card: hand.getCards()){
+            if( compteur==3 ){ return true ; }
+            else { compteur = 0; }
+            for(Card card1: hand.getCards()){
+                if(card1.getRank().equals(card.getRank())){ compteur+=1;}
+            }
+        }
+        return false;
     }
 }
