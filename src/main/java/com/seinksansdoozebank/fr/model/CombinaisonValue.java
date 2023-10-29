@@ -74,6 +74,10 @@ public class CombinaisonValue {
      * @return the best card of the combinaison
      */
     public Card getBestCard() {
+        // if the combinaison is a straight
+        if (this.combinaison.equals(Combinaison.STRAIGHT) && (this.cards.get(0).getRank().equals(Rank.TWO) && this.cards.get(this.cards.size() - 1).getRank().equals(Rank.ACE))) {
+            return this.cards.get(this.cards.size() - 2);
+        }
         return this.cards.get(this.cards.size() - 1);
     }
 

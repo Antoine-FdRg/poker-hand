@@ -35,7 +35,7 @@ public class Referee {
      * @return the best combinaison
      */
     protected CombinaisonValue getBestCombinaison(Hand hand) {
-        Optional<List<Card>> response = this.isStraight(hand);
+        Optional<List<Card>> response = this.searchStraight(hand);
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.STRAIGHT, response.get());
         }
@@ -43,12 +43,12 @@ public class Referee {
     }
 
     /**
-     * Check if the hand is a straight
+     * Search if the hand is a straight
      *
      * @param hand the hand
-     * @return true if the hand is a straight, false otherwise
+     * @return the list of cards if the hand is a straight, empty optional otherwise
      */
-    private Optional<List<Card>> isStraight(Hand hand) {
+    public Optional<List<Card>> searchStraight(Hand hand) {
         // Sorted list of cards
         List<Card> cards = hand.getCards();
         // if the first Card is a TWO and the last one is an ACE put the ACE at the beginning of the list

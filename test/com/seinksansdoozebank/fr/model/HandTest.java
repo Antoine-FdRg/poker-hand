@@ -30,7 +30,7 @@ class HandTest {
 
     @Test
     void getBestCard() {
-        assertEquals(hand.getBestCard().getRank(), new Card(Rank.ACE).getRank());
-        assertNotEquals(hand2.getBestCard().getRank(), new Card(Rank.KING).getRank());
+        assertEquals(Rank.ACE, hand.getBestCard().getRank());
+        assertNotEquals(Rank.KING, hand2.getBestCard().getRank());
     }
 }
