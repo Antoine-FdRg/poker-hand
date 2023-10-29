@@ -5,30 +5,31 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CombinaisonValueTest {
     private CombinaisonValue testBestCardJack;
-    private CombinaisonValue testBestCardFive;
+    private CombinaisonValue testBestCardSix;
 
     @BeforeEach
     void setUp() {
-        Hand hand1 = new Hand(List.of("V"));
-        Hand hand2 = new Hand(List.of("5"));
-        testBestCardJack = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand1);
-        testBestCardFive = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand2);
+        Hand hand1 = new Hand(List.of("V", "2", "3", "4", "5"));
+        Hand hand2 = new Hand(List.of("5", "2", "3", "4", "6"));
+        testBestCardJack = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand1.getBestCard()));
+        testBestCardSix = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand2.getBestCard()));
     }
 
     @Test
     void compareTo() {
-        assertTrue(testBestCardJack.compareTo(testBestCardFive) > 0);
-        assertTrue(testBestCardFive.compareTo(testBestCardJack) < 0);
+        assertTrue(testBestCardJack.compareTo(testBestCardSix) > 0);
+        assertTrue(testBestCardSix.compareTo(testBestCardJack) < 0);
         assertEquals(0, testBestCardJack.compareTo(testBestCardJack));
     }
 
     @Test
     void testToString() {
-        assertEquals("carte la plus élevée : "+ testBestCardJack.getBestCard().getRank().getName(), testBestCardJack.toString());
-        assertEquals("carte la plus élevée : "+ testBestCardFive.getBestCard().getRank().getName(), testBestCardFive.toString());
+        assertEquals("carte la plus élevée : " + testBestCardJack.getBestCard().getRank().getName(), testBestCardJack.toString());
+        assertEquals("carte la plus élevée : " + testBestCardSix.getBestCard().getRank().getName(), testBestCardSix.toString());
     }
 }

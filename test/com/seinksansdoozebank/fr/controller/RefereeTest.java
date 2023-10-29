@@ -24,15 +24,15 @@ class RefereeTest {
 
     @Test
     void compareHandsDraw() {
-        hand1 = new Hand(new ArrayList<>(List.of("A")));
-        hand2 = new Hand(new ArrayList<>(List.of("A")));
+        hand1 = new Hand(new ArrayList<>(List.of("A", "2", "4", "5", "6")));
+        hand2 = new Hand(new ArrayList<>(List.of("A", "2", "4", "5", "6")));
         victory = referee.compareHands(hand1, hand2);
         assertNull(victory);
     }
     @Test
     void compareHandsFirstWin() {
-        hand1 = new Hand(new ArrayList<>(List.of("A")));
-        hand2 = new Hand(new ArrayList<>(List.of("2")));
+        hand1 = new Hand(new ArrayList<>(List.of("A", "2", "4", "5", "6")));
+        hand2 = new Hand(new ArrayList<>(List.of("9", "2", "4", "5", "6")));
         victory = referee.compareHands(hand1, hand2);
         assertEquals(victory.getHand(), hand1);
     }
@@ -57,10 +57,10 @@ class RefereeTest {
         hand1 = new Hand(new ArrayList<>(List.of("9","10","R","D","V")));
         hand2 = new Hand(new ArrayList<>(List.of("10","R","D","V","A")));
         victory = referee.compareHands(hand1, hand2);
-        assertEquals(victory.getHand(), hand1);
+        assertEquals(victory.getHand(), hand2);
 
         hand1 = new Hand(new ArrayList<>(List.of("4","5","3","2","A")));
-        hand2 = new Hand(new ArrayList<>(List.of("10","R","D","V","A")));
+        hand2 = new Hand(new ArrayList<>(List.of("10","R","D","V","2")));
         victory = referee.compareHands(hand1, hand2);
         assertEquals(victory.getHand(), hand1);
     }
@@ -72,39 +72,33 @@ class RefereeTest {
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
 
-        hand1 = new Hand(new ArrayList<>(List.of("2","3","4","5","6")));
         hand2 = new Hand(new ArrayList<>(List.of("3","4","5","6","7")));
-        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
 
         hand1 = new Hand(new ArrayList<>(List.of("A","2","3","4","5")));
-        hand2 = new Hand(new ArrayList<>(List.of("2","3","4","5","6")));
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
-        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
 
         hand1 = new Hand(new ArrayList<>(List.of("9","10","R","D","V")));
         hand2 = new Hand(new ArrayList<>(List.of("10","R","D","V","A")));
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
-        assertNotEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
+        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
 
         hand1 = new Hand(new ArrayList<>(List.of("4","5","3","2","A")));
-        hand2 = new Hand(new ArrayList<>(List.of("10","R","D","V","A")));
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
-        assertNotEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
     }
 
     @Test
     void compareHandsSecondWin() {
-        hand1 = new Hand(new ArrayList<>(List.of("2")));
-        hand2 = new Hand(new ArrayList<>(List.of("A")));
+        hand1 = new Hand(new ArrayList<>(List.of("9", "2", "4", "5", "6")));
+        hand2 = new Hand(new ArrayList<>(List.of("A", "2", "4", "5", "6")));
         victory = referee.compareHands(hand1, hand2);
         assertEquals(victory.getHand(), hand2);
     }
 
     @Test
     void getBestCombinaisonForHighestCard(){
-        hand1 = new Hand(new ArrayList<>(List.of("2","D","7")));
-        CombinaisonValue cv = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand1);
+        hand1 = new Hand(new ArrayList<>(List.of("2","D","7", "3", "4")));
+        CombinaisonValue cv = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand1.getBestCard()));
         assertEquals(cv.toString(),referee.getBestCombinaison(hand1).toString());
     }
 

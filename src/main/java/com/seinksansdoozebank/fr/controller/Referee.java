@@ -3,6 +3,7 @@ package com.seinksansdoozebank.fr.controller;
 import com.seinksansdoozebank.fr.model.*;
 
 import java.util.List;
+import java.util.Optional;
 
 public class Referee {
 
@@ -34,10 +35,11 @@ public class Referee {
      * @return the best combinaison
      */
     protected CombinaisonValue getBestCombinaison(Hand hand) {
-        if (hand.getCards().size() != 1 && this.isStraight(hand)) {
-            return new CombinaisonValue(Combinaison.STRAIGHT, hand);
+        Optional<List<Card>> response = this.isStraight(hand);
+        if (response.isPresent()) {
+            return new CombinaisonValue(Combinaison.STRAIGHT, response.get());
         }
-        return new CombinaisonValue(Combinaison.HIGHEST_CARD, hand);
+        return new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand.getBestCard()));
     }
 
     /**
@@ -46,23 +48,28 @@ public class Referee {
      * @param hand the hand
      * @return true if the hand is a straight, false otherwise
      */
-    private boolean isStraight(Hand hand) {
+    private Optional<List<Card>> isStraight(Hand hand) {
+        // Sorted list of cards
         List<Card> cards = hand.getCards();
-        // if the last card is an ACE put it at first
-        if (cards.get(cards.size() - 1).getRank().equals(Rank.ACE)) {
+        // if the first Card is a TWO and the last one is an ACE put the ACE at the beginning of the list
+        if (cards.get(0).getRank().equals(Rank.TWO) && cards.get(cards.size() - 1).getRank().equals(Rank.ACE)) {
             cards.add(0, cards.remove(cards.size() - 1));
         }
         int cardsSize = cards.size();
         Card previousCard = cards.get(0);
         int index = 1;
-        // if the index is less than the size of the list and the previous card is the precedent value of the current card
-        while (index < cardsSize &&
-                (previousCard.compareTo(cards.get(index)) == -1) ||
-                (previousCard.getRank().equals(Rank.ACE) && cards.get(index).getRank().equals(Rank.TWO))) {
+        // while the index is inferior to the cards size and
+        // the previous card is inferior to the current card or
+        // the previous card is an ACE and the current card is a TWO or
+        // the previous card is a KING and the current card is an ACE
+        while (index < cardsSize && (previousCard.compareTo(cards.get(index)) == -1) || index < cardsSize && ((previousCard.getRank().equals(Rank.ACE) && cards.get(index).getRank().equals(Rank.TWO)))) {
             previousCard = cards.get(index);
             index++;
         }
         // if the index is equal to the cards size so the hand is a straight
-        return index == cardsSize;
+        if (index == cardsSize) {
+            return Optional.of(cards);
+        }
+        return Optional.empty();
     }
 }
