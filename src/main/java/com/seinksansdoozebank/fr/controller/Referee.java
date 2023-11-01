@@ -4,6 +4,8 @@ import com.seinksansdoozebank.fr.model.Combinaison;
 import com.seinksansdoozebank.fr.model.CombinaisonValue;
 import com.seinksansdoozebank.fr.model.Hand;
 import com.seinksansdoozebank.fr.model.Victory;
+import com.seinksansdoozebank.fr.model.Card;
+import com.seinksansdoozebank.fr.model.Rank;
 
 import java.util.List;
 
