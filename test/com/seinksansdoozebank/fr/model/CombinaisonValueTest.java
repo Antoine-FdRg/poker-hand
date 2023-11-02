@@ -61,7 +61,7 @@ class CombinaisonValueTest {
      * @see CombinaisonValue#compareTo(CombinaisonValue)
      */
     @Test
-    void testCompareToSameCombinaison() {
+    void testCompareToWithTwoSameStraights() {
         // Test comparing two CombinaisonValue objects with the same combinaison
         Hand hand1 = new Hand(List.of("2", "3", "4", "5", "6"));
         Hand hand2 = new Hand(List.of("7", "8", "9", "10", "V"));
