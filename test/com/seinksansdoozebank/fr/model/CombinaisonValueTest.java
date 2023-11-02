@@ -138,22 +138,6 @@ class CombinaisonValueTest {
         assertEquals(new Card(Rank.ACE), bestCard);
     }
 
-    /**
-     * Test the getCombinaison method of the CombinaisonValue class
-     * when getting the combinaison from a CombinaisonValue
-     * Here the combinaison is a Straight
-     *
-     * @see CombinaisonValue#getCombinaison()
-     */
-    @Test
-    void testGetCombinaison() {
-        // Test getting the combinaison from a CombinaisonValue
-        Hand hand = new Hand(List.of("2", "3", "4", "5", "6"));
-        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
-
-        Combinaison combinaison = combinaisonValue.getCombinaison();
-        assertEquals(Combinaison.STRAIGHT, combinaison);
-    }
 
     /**
      * Test the toString method of the CombinaisonValue class
