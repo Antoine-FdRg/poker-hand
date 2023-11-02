@@ -123,7 +123,7 @@ class CombinaisonValueTest {
      * @see CombinaisonValue#getBestCard()
      */
     @Test
-    void testBestCardWithAce() {
+    void testBestCardInStraightWithAce() {
         // Test getting the best card from a CombinaisonValue with an Ace
         Hand hand = new Hand(List.of("A", "2", "3", "4", "5"));
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
