@@ -104,7 +104,7 @@ class CombinaisonValueTest {
      * @see CombinaisonValue#getBestCard()
      */
     @Test
-    void testGetBestCard() {
+    void testGetBestCardInStraight () {
         // Test getting the best card from a CombinaisonValue
         Hand hand = new Hand(List.of("2", "3", "4", "5", "6"));
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
