@@ -82,7 +82,7 @@ class CombinaisonValueTest {
      * @see CombinaisonValue#compareTo(CombinaisonValue)
      */
     @Test
-    void testCompareToDifferentCombinaison() {
+    void testCompareToWithTwoDiffrentsStraights() {
         // Test comparing two CombinaisonValue objects with different combinaisons
         Hand hand1 = new Hand(List.of("2", "3", "4", "5", "6"));
         Hand hand2 = new Hand(List.of("7", "8", "9", "10", "D"));
