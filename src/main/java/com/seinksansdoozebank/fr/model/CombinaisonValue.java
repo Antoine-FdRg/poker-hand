@@ -61,13 +61,17 @@ public class CombinaisonValue {
                     //Tri pour afficher la carte la plus élevée en premier
                     Collections.sort(cards2);
                     cards2.sort(Collections.reverseOrder());
-                    if (cards1.size() != 2 || cards2.size() != 2) throw new IllegalStateException("There is not two pair in the hand");
-                    if(cards1.get(0).compareTo(cards2.get(0)) != 0)
+                    if (cards1.size() != 2 || cards2.size() != 2) {
+                        throw new IllegalStateException("There is not two pair in the hand");
+                    }
+                    if(cards1.get(0).compareTo(cards2.get(0)) != 0) {
                         return cards1.get(0).compareTo(cards2.get(0));
-                    else if(cards1.get(1).compareTo(cards2.get(1)) != 0)
+                    }
+                    else if(cards1.get(1).compareTo(cards2.get(1)) != 0){
                         return cards1.get(1).compareTo(cards2.get(1));
-                    else
+                    } else{
                         return this.getKicker().compareTo(combinaison2.getKicker());
+                    }
                 }
                 default -> {
                     return this.getBestCard().compareTo(combinaison2.getBestCard());
@@ -90,7 +94,7 @@ public class CombinaisonValue {
                                 Function.identity(),
                                 v -> Collections.frequency(this.getHand().getCards(), v))
                         );
-                //Création d'une liste dans laquelle on ne garde que la cards qui apparait une fois dans la main
+                //Création d'une liste dans laquelle on ne garde que ls cards qui apparaissent une seule fois dans la main
                 List<Card> cards = new ArrayList<>(map.entrySet().stream()
                         .filter(entry -> entry.getValue() == 1)
                         .map(Map.Entry::getKey)
@@ -173,7 +177,7 @@ public class CombinaisonValue {
      * @return the best card of the combinaison
      */
     public Card getBestCard() {
-        // if the combinaison is a straight so the best card is the last card of the hand.
+        // if the combinaison is a straight then the best card is the last card of the hand.
         // And if there is an ACE in the hand, the ACE is NOT the best card.
         if (this.combinaison.equals(Combinaison.STRAIGHT)) {
             return this.hand.getCards().get(this.hand.getCards().size() - 1);

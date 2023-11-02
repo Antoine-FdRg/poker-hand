@@ -16,8 +16,6 @@ public class Hand {
         for (String card : cards) {
             this.cards.add(new Card(Rank.getRankFromSymbol(card)));
         }
-        //sorting cards
-        // this.cards.sort(Comparator.comparing(Card::getRank));
     }
 
     public List<Card> getCards() {
@@ -29,7 +27,6 @@ public class Hand {
     }
 
     public Card getBestCard() {
-        // return cards.get(cards.size() - 1);
         return this.getSortedCards().get(cards.size() - 1);
     }
 
