@@ -167,7 +167,6 @@ class RefereeTest {
 
         // The hand with the straight should win
         Victory result = referee.compareHands(hand1, hand2);
-        assertNotNull(result);
         assertEquals(Combinaison.STRAIGHT, result.getCombinaisonValue().getCombinaison());
     }
 
