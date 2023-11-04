@@ -139,7 +139,7 @@ public class CombinaisonValue {
                         .filter(entry -> entry.getValue() == 2)
                         .map(Map.Entry::getKey)
                         .toList());
-                //Tri pour afficheri la carte la plus élevée en premier
+                //Tri pour afficher la carte la plus élevée en premier
                 Collections.sort(cards);
                 if(cards.size() != 2)
                     throw new IllegalStateException("There is not two pair in the hand");
