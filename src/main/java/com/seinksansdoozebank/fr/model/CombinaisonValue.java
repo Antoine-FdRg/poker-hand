@@ -29,7 +29,7 @@ public class CombinaisonValue {
         } else if (result < 0) {
             return -1;
         } else {
-            switch(this.combinaison){
+            switch (this.combinaison) {
                 case TWO_PAIR -> {
                     //Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
                     Map<Card, Integer> map1 = hand.getCards().stream()
@@ -64,12 +64,11 @@ public class CombinaisonValue {
                     if (cards1.size() != 2 || cards2.size() != 2) {
                         throw new IllegalStateException("There is not two pair in the hand");
                     }
-                    if(cards1.get(0).compareTo(cards2.get(0)) != 0) {
+                    if (cards1.get(0).compareTo(cards2.get(0)) != 0) {
                         return cards1.get(0).compareTo(cards2.get(0));
-                    }
-                    else if(cards1.get(1).compareTo(cards2.get(1)) != 0){
+                    } else if (cards1.get(1).compareTo(cards2.get(1)) != 0) {
                         return cards1.get(1).compareTo(cards2.get(1));
-                    } else{
+                    } else {
                         return this.getKicker().compareTo(combinaison2.getKicker());
                     }
                 }
@@ -82,10 +81,11 @@ public class CombinaisonValue {
 
     /**
      * Get the kicker of the combinaison, usefull when two combinaison are equals
+     *
      * @return the kicker of the combinaison
      */
     protected Card getKicker() {
-        switch (this.combinaison){
+        switch (this.combinaison) {
             case TWO_PAIR -> {
                 //Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
                 Map<Card, Integer> map = this.getHand().getCards().stream()
@@ -121,10 +121,10 @@ public class CombinaisonValue {
      */
     @Override
     public String toString() {
-        String victoryCondition =  this.combinaison+" : ";
+        StringBuilder victoryCondition = new StringBuilder(this.combinaison + " : ");
         switch (this.combinaison) {
             case HIGHEST_CARD:
-                victoryCondition += this.getBestCard().getRank().getName();
+                victoryCondition.append(this.getBestCard().getRank().getName());
                 break;
             case TWO_PAIR:
                 //Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
@@ -141,18 +141,18 @@ public class CombinaisonValue {
                         .toList());
                 //Tri pour afficher la carte la plus élevée en premier
                 Collections.sort(cards);
-                if(cards.size() != 2)
+                if (cards.size() != 2)
                     throw new IllegalStateException("There is not two pair in the hand");
-                victoryCondition += cards.get(0) + " et " + cards.get(1);
+                victoryCondition.append(cards.get(0)).append(" et ").append(cards.get(1));
                 break;
             case STRAIGHT:
-                victoryCondition += this.toStringStraight();
+                victoryCondition.append(this.toStringStraight());
                 break;
             default:
-                victoryCondition += " : " + this.getBestCard().getRank().getName();
+                victoryCondition.append(" : ").append(this.getBestCard().getRank().getName());
                 break;
         }
-        return victoryCondition;
+        return victoryCondition.toString();
     }
 
     private String toStringStraight() {
