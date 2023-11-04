@@ -118,4 +118,37 @@ class RefereeTest {
        assertNotEquals(Combinaison.THREE_OF_A_KIND, referee.getBestCombinaison(hand2).getCombinaison());
     }
 
+    @Test
+    void threeOfAKindVictoryTest(){
+
+        /* case with same threeOfAKinds*/
+        hand1 = new Hand(new ArrayList<>(List.of("8","3","8","5","8")));
+        hand2 = new Hand(new ArrayList<>(List.of("8","3","8","5","8")));
+        victory = referee.compareHands(hand1, hand2);
+        assertNull(victory);
+
+        /* case with threeOfAKind combination and highest card combination*/
+        hand1 = new Hand(new ArrayList<>(List.of("8","3","8","5","8")));
+        hand2 = new Hand(new ArrayList<>(List.of("3","2","5","8","7")));
+        victory = referee.compareHands(hand1, hand2);
+        assertEquals(victory.getHand(), hand1);
+
+        /* case with two different threeOfAKind  */
+        hand1 = new Hand(new ArrayList<>(List.of("8","3","8","5","8")));
+        hand2 = new Hand(new ArrayList<>(List.of("A","3","A","5","A")));
+        victory = referee.compareHands(hand1, hand2);
+        assertEquals(victory.getHand(), hand2);
+
+        /* case with the same threeOfAKind but the highest card of each hand is different */
+        hand1 = new Hand(new ArrayList<>(List.of("8","3","8","5","8")));
+        hand2 = new Hand(new ArrayList<>(List.of("8","3","8","7","8")));
+        victory = referee.compareHands(hand1, hand2);
+        assertEquals(victory.getHand(), hand2);
+
+        /* We test if the straight is stronger than the threeOfAKind*/
+        hand1 = new Hand(new ArrayList<>(List.of("2","3","4","5","6")));
+        hand2 = new Hand(new ArrayList<>(List.of("2","3","4","3","3")));
+        victory = referee.compareHands(hand1, hand2);
+        assertEquals(victory.getHand(), hand1);
+    }
 }
