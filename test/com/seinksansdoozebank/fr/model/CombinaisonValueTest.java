@@ -95,6 +95,28 @@ class CombinaisonValueTest {
     }
 
     /**
+     * Test the compareTo method of the CombinaisonValue class
+     * when comparing two CombinaisonValue objects with the same combinaison
+     * but different best cards
+     * Here the compareTo method should return a number inferior to 0.
+     * Because the winner is hand2 with the best card of V
+     *
+     * @see CombinaisonValue#compareTo(CombinaisonValue)
+     */
+    @Test
+    void testCompareToWithTwoPairs() {
+        // Test comparing two CombinaisonValue objects with the same combinaison
+        Hand hand1 = new Hand(List.of("2", "2", "4", "5", "6"));
+        Hand hand2 = new Hand(List.of("7", "7", "9", "10", "V"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.PAIR, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.PAIR, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result < 0);
+    }
+
+    /**
      * Test the getBestCard method of the CombinaisonValue class
      * when getting the best card from a CombinaisonValue
      * Here the best card is the card with the rank of SIX
@@ -195,5 +217,32 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         assertEquals("Quinte Broadway", combinaisonValue.toString());
+    }
+
+    /**
+     * Test the toString method of the CombinaisonValue class
+     * when generating the string representation of a CombinaisonValue
+     * Here the combinaison is a Pair
+     * and the best card is a JACK
+     * <p>
+     * So it should return "Paire de V"
+     *
+     * @see CombinaisonValue#toString()
+     */
+    @Test
+    void testToStringPair() {
+        // Test generating the string representation of a Pair CombinaisonValue
+        Hand hand = new Hand(List.of("V", "V", "2", "3", "4"));
+        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.PAIR, hand.getCards());
+
+        assertEquals("Paire de Valet", combinaisonValue.toString());
+
+        // test with a pair of 10
+        hand = new Hand(List.of("10", "10", "2", "3", "4"));
+        combinaisonValue = new CombinaisonValue(Combinaison.PAIR, hand.getCards());
+
+        assertEquals("Paire de 10", combinaisonValue.toString());
+
+
     }
 }

@@ -1,6 +1,11 @@
 package com.seinksansdoozebank.fr.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class CombinaisonValue {
     private final Combinaison combinaison;
@@ -24,7 +29,50 @@ public class CombinaisonValue {
         } else if (result < 0) {
             return -1;
         } else {
-            return this.getBestCard().compareTo(combinaison2.getBestCard());
+            switch (this.combinaison) {
+                case PAIR -> {
+                    //Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
+                    Map<Card, Integer> map1 = cards.stream()
+                            .distinct()
+                            .collect(Collectors.toMap(
+                                    Function.identity(),
+                                    v -> Collections.frequency(cards, v))
+                            );
+                    //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
+                    List<Card> cards1 = new ArrayList<>(map1.entrySet().stream()
+                            .filter(entry -> entry.getValue() == 2)
+                            .map(Map.Entry::getKey)
+                            .toList());
+                    //Tri pour afficher la carte la plus élevée en premier
+                    Collections.sort(cards1);
+                    cards1.sort(Collections.reverseOrder());
+                    //Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
+                    Map<Card, Integer> map2 = combinaison2.getCards().stream()
+                            .distinct()
+                            .collect(Collectors.toMap(
+                                    Function.identity(),
+                                    v -> Collections.frequency(combinaison2.getCards(), v))
+                            );
+                    //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
+                    List<Card> cards2 = new ArrayList<>(map2.entrySet().stream()
+                            .filter(entry -> entry.getValue() == 2)
+                            .map(Map.Entry::getKey)
+                            .toList());
+                    //Tri pour afficher la carte la plus élevée en premier
+                    Collections.sort(cards2);
+                    cards2.sort(Collections.reverseOrder());
+                    if (cards1.size() != 1 || cards2.size() != 1) {
+                        throw new IllegalStateException("There is not a pair in the hand");
+                    }
+
+                    return this.getKicker().compareTo(combinaison2.getKicker());
+
+                }
+                default -> {
+                    return this.getBestCard().compareTo(combinaison2.getBestCard());
+                }
+            }
+
         }
     }
 
@@ -61,11 +109,56 @@ public class CombinaisonValue {
                     victoryCondition.append("Quinte de ").append(this.cards.get(size - 1).getRank().getName());
                 }
                 break;
+            case PAIR:
+                //Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
+                Map<Card, Integer> map = this.cards.stream()
+                        .distinct()
+                        .collect(Collectors.toMap(
+                                Function.identity(),
+                                v -> Collections.frequency(this.cards, v))
+                        );
+                //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
+                List<Card> cards = new ArrayList<>(map.entrySet().stream()
+                        .filter(entry -> entry.getValue() == 2)
+                        .map(Map.Entry::getKey)
+                        .toList());
+                //Tri pour afficher la carte la plus élevée en premier
+                Collections.sort(cards);
+                if (cards.size() != 1)
+                    throw new IllegalStateException("There is not one pair in the hand");
+                victoryCondition.append("Paire de ").append(cards.get(0).getRank().getName());
+                break;
             default:
                 victoryCondition.append(this.combinaison.getName()).append(" : ").append(this.getBestCard().getRank().getName());
                 break;
         }
         return victoryCondition.toString();
+    }
+
+    /**
+     * Get the kicker of the combinaison, usefull when two combinaison are equals
+     *
+     * @return the kicker of the combinaison
+     */
+    protected Card getKicker() {
+        switch (this.combinaison) {
+            case PAIR -> {
+                //Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
+                Map<Card, Integer> map = this.cards.stream()
+                        .distinct()
+                        .collect(Collectors.toMap(
+                                Function.identity(),
+                                v -> Collections.frequency(this.cards, v))
+                        );
+                //Création d'une liste dans laquelle on ne garde que ls cards qui apparaissent une seule fois dans la main
+                List<Card> cards = new ArrayList<>(map.entrySet().stream()
+                        .filter(entry -> entry.getValue() == 1)
+                        .map(Map.Entry::getKey)
+                        .toList());
+                return cards.get(0);
+            }
+            default -> throw new IllegalStateException("There is no kicker for this combinaison");
+        }
     }
 
     /**

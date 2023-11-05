@@ -2,7 +2,7 @@ package com.seinksansdoozebank.fr.model;
 
 public enum Combinaison {
     HIGHEST_CARD("carte la plus élevée"),   // meilleure carte
-    // PAIR("paire"),                          // deux cartes de même valeur
+     PAIR("paire"),                          // deux cartes de même valeur
     // DOUBLE_PAIR("double paire"),            // deux fois deux cartes de même valeur
     // THREE_OF_A_KIND("brelan"),              // trois cartes de même valeur
     STRAIGHT("suite");                      // cinq cartes qui se suivent
