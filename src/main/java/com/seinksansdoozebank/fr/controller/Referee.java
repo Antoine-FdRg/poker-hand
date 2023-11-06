@@ -1,6 +1,11 @@
 package com.seinksansdoozebank.fr.controller;
 
-import com.seinksansdoozebank.fr.model.*;
+import com.seinksansdoozebank.fr.model.Card;
+import com.seinksansdoozebank.fr.model.Combinaison;
+import com.seinksansdoozebank.fr.model.CombinaisonValue;
+import com.seinksansdoozebank.fr.model.Hand;
+import com.seinksansdoozebank.fr.model.Rank;
+import com.seinksansdoozebank.fr.model.Victory;
 
 import java.util.List;
 
@@ -34,8 +39,8 @@ public class Referee {
      * @return the best combinaison
      */
     protected CombinaisonValue getBestCombinaison(Hand hand) {
-        if(this.searchThreeOfAKind(hand)){
-            return new CombinaisonValue(Combinaison.THREE_OF_A_KIND,hand);
+        if (this.searchThreeOfAKind(hand)) {
+            return new CombinaisonValue(Combinaison.THREE_OF_A_KIND, hand);
         }
         if (hand.getCards().size() != 1 && this.isStraight(hand)) {
             return new CombinaisonValue(Combinaison.STRAIGHT, hand);
@@ -70,13 +75,18 @@ public class Referee {
         return index == cardsSize;
     }
 
-    private boolean searchThreeOfAKind(Hand hand){
-        int compteur=0;
-        for ( Card card: hand.getCards()){
-            if( compteur==3 ){ return true ; }
-            else { compteur = 0; }
-            for(Card card1: hand.getCards()){
-                if(card1.getRank().equals(card.getRank())){ compteur+=1;}
+    private boolean searchThreeOfAKind(Hand hand) {
+        int compteur = 0;
+        for (Card card : hand.getCards()) {
+            if (compteur == 3) {
+                return true;
+            } else {
+                compteur = 0;
+            }
+            for (Card card1 : hand.getCards()) {
+                if (card1.getRank().equals(card.getRank())) {
+                    compteur += 1;
+                }
             }
         }
         return false;

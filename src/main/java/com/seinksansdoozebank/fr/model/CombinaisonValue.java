@@ -24,46 +24,59 @@ public class CombinaisonValue {
         } else if (result < 0) {
             return -1;
         } else {
-            switch(this.combinaison){
+            switch (this.combinaison) {
                 case THREE_OF_A_KIND -> {
-                    int compteur1 = 0;
+                    int cptCard1 = 0;
                     ArrayList<Card> liste1 = new ArrayList<>();
                     Card cardBrelan1 = new Card(Rank.TWO);
                     for (Card card : hand.getCards()) {
-                        if(compteur1==3){ break; }
-                        compteur1=0;
-                        liste1=new ArrayList<>();
+                        if (cptCard1 == 3) {
+                            break;
+                        }
+                        cptCard1 = 0;
+                        liste1 = new ArrayList<>();
                         for (Card card1 : hand.getCards()) {
                             if (card1.getRank().equals(card.getRank())) {
-                                compteur1 += 1;
-                                if (compteur1 == 3) { cardBrelan1 = new Card(card1.getRank()); }
-                            } else { liste1.add(card1); }
+                                cptCard1 += 1;
+                                if (cptCard1 == 3) {
+                                    cardBrelan1 = new Card(card1.getRank());
+                                }
+                            } else {
+                                liste1.add(card1);
+                            }
                         }
                     }
-                    Card cardBrelan2= new Card(Rank.TWO);
-                    int compteur2 = 0;
+                    Card cardBrelan2 = new Card(Rank.TWO);
+                    int cptCard2 = 0;
                     ArrayList<Card> liste2 = new ArrayList<>();
                     for (Card card : combinaison2.getHand().getCards()) {
-                        if(compteur2==3){ break; }
-                        compteur2=0;
-                        liste2=new ArrayList<>();
+                        if (cptCard2 == 3) {
+                            break;
+                        }
+                        cptCard2 = 0;
+                        liste2 = new ArrayList<>();
                         for (Card card1 : combinaison2.getHand().getCards()) {
                             if (card1.getRank().equals(card.getRank())) {
-                                compteur2 += 1;
-                                if (compteur2 == 3) { cardBrelan2 = new Card(card1.getRank()); }
-                            } else { liste2.add(card1);}
+                                cptCard2 += 1;
+                                if (cptCard2 == 3) {
+                                    cardBrelan2 = new Card(card1.getRank());
+                                }
+                            } else {
+                                liste2.add(card1);
+                            }
                         }
                     }
-                    if (cardBrelan1.compareTo(cardBrelan2)!=0) {
+                    if (cardBrelan1.compareTo(cardBrelan2) != 0) {
                         return cardBrelan1.compareTo(cardBrelan2);
-                    }
-                    else{
+                    } else {
                         Collections.reverse(liste1);
                         Collections.reverse(liste2);
                         return liste1.get(0).compareTo(liste2.get(0));
                     }
                 }
-                default -> {return this.getBestCard().compareTo(combinaison2.getBestCard());}
+                default -> {
+                    return this.getBestCard().compareTo(combinaison2.getBestCard());
+                }
             }
 
         }
@@ -94,7 +107,7 @@ public class CombinaisonValue {
                 victoryCondition += "suite : " + this.toStringStraight();
                 break;
             case THREE_OF_A_KIND:
-                victoryCondition+= "brelan de : " + this.toStringThreeOfAKind();
+                victoryCondition += "brelan de : " + this.toStringThreeOfAKind();
                 break;
             default:
                 victoryCondition += this.combinaison.getName() + " : " + this.getBestCard().getRank().getName();
@@ -119,15 +132,20 @@ public class CombinaisonValue {
         return stringBuilder.toString();
     }
 
-    public String toStringThreeOfAKind(){
-        int compteur=0;
-        Card cardBrelan= new Card(Rank.TWO);
-        for ( Card card: hand.getCards()){
-            if( compteur==3 ){ break; }
-            compteur=0;
-            for(Card card1: hand.getCards()){
-                if(card1.getRank().equals(card.getRank())){ compteur+=1;
-                    if(compteur==3){ cardBrelan = card1; }
+    public String toStringThreeOfAKind() {
+        int compteur = 0;
+        Card cardBrelan = new Card(Rank.TWO);
+        for (Card card : hand.getCards()) {
+            if (compteur == 3) {
+                break;
+            }
+            compteur = 0;
+            for (Card card1 : hand.getCards()) {
+                if (card1.getRank().equals(card.getRank())) {
+                    compteur += 1;
+                    if (compteur == 3) {
+                        cardBrelan = card1;
+                    }
                 }
             }
         }
