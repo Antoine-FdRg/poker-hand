@@ -287,13 +287,13 @@ class CombinaisonValueTest {
     @Test
     void testToStringPair() {
         // Test generating the string representation of a Pair CombinaisonValue
-        Hand hand = new Hand(List.of("V", "V", "2", "3", "4"));
+        Hand hand = new Hand(List.of("VCa", "VCa", "2Ca", "3Ca", "4Ca"));
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.PAIR, hand.getCards());
 
         assertEquals("Paire de Valet", combinaisonValue.toString());
 
         // test with a pair of 10
-        hand = new Hand(List.of("10", "10", "2", "3", "4"));
+        hand = new Hand(List.of("10Ca", "10Ca", "2Ca", "3Ca", "4Ca"));
         combinaisonValue = new CombinaisonValue(Combinaison.PAIR, hand.getCards());
 
         assertEquals("Paire de 10", combinaisonValue.toString());
