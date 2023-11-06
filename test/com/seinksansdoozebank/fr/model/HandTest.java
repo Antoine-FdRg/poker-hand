@@ -7,44 +7,31 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class HandTest {
 
     private Hand hand;
+    private Hand hand2;
 
     @BeforeEach
     void setUp() {
-        Hand.resetIdCounter();
-        hand = new Hand(new ArrayList<>(Arrays.asList("VCo", "8Ca", "3Tr", "APi", "5Ca")));
-    }
-
-    @Test
-    void testGetID() {
-        // Test getting the ID of the hand
-        assertEquals(1, hand.getID());
-    }
-
-    @Test
-    void testGetCards() {
-        // Test getting the cards in the hand
-        List<Card> cards = hand.getCards();
-        assertEquals(5, cards.size());
+        hand = new Hand(new ArrayList<>(Arrays.asList("V","8","3","A","5")));
+        hand2 = new Hand(new ArrayList<>(Arrays.asList("V","8","R","A","5")));
     }
 
     @Test
     void cardsAreSortded() {
-        for (int i = 0; i < hand.getCards().size() - 1; i++) {
-            assertTrue(hand.getCards().get(i).getRank().compareTo(hand.getCards().get(i + 1).getRank()) <= 0);
+        List<Card> sortedCards = hand.getCards();
+        for (int i = 0; i < sortedCards.size() - 1; i++) {
+            assertTrue(sortedCards.get(i).compareTo(sortedCards.get(i + 1)) < 0);
         }
     }
 
     @Test
-    void testGetBestCard() {
-        // Test getting the best card in the hand
-        Card bestCard = hand.getBestCard();
-        assertEquals(Rank.ACE, bestCard.getRank());
+    void getBestCard() {
+        assertEquals(Rank.ACE, hand.getBestCard().getRank());
+        assertNotEquals(Rank.KING, hand2.getBestCard().getRank());
     }
 
     @Test

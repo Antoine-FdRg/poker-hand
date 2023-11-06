@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.controller;
 
+import com.seinksansdoozebank.fr.model.Card;
 import com.seinksansdoozebank.fr.model.Combinaison;
 import com.seinksansdoozebank.fr.model.CombinaisonValue;
 import com.seinksansdoozebank.fr.model.Hand;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,22 +27,45 @@ class RefereeTest {
         Hand.resetIdCounter();
     }
 
+    /**
+     * Test the compareHands method of the Referee class
+     * Here all the hand are straights with identical cards
+     * so the compareHands method should return null
+     *
+     * @see Referee#compareHands(Hand, Hand)
+     */
     @Test
     void compareHandsDraw() {
-        hand1 = new Hand(new ArrayList<>(List.of("ACa")));
-        hand2 = new Hand(new ArrayList<>(List.of("ACo")));
+        hand1 = new Hand(new ArrayList<>(List.of("ACa", "2Ca", "4Ca", "5Ca", "6Ca")));
+        hand2 = new Hand(new ArrayList<>(List.of("ACo", "2Co", "4Co", "5Co", "6Co")));
         victory = referee.compareHands(hand1, hand2);
         assertNull(victory);
     }
 
+    /**
+     * Test the compareHands method of the Referee class
+     * Here the hands have two different combinations
+     * so the compareHands method should return a Victory with the hand with the highest combination
+     * <p>
+     * Here the hand1 has a straight and the hand2 has a highest card
+     *
+     * @see Referee#compareHands(Hand, Hand)
+     */
     @Test
     void compareHandsFirstWin() {
-        hand1 = new Hand(new ArrayList<>(List.of("ACa")));
-        hand2 = new Hand(new ArrayList<>(List.of("2Co")));
+        hand1 = new Hand(new ArrayList<>(List.of("ACa", "2Ca", "4Ca", "5Ca", "6Ca")));
+        hand2 = new Hand(new ArrayList<>(List.of("9Co", "2Co", "4Co", "5Co", "6Co")));
         victory = referee.compareHands(hand1, hand2);
         assertEquals(victory.getHand(), hand1);
     }
 
+    /**
+     * Test the compareHands method of the Referee class
+     * Here all the hand are straights
+     * so the compareHands method should return a Victory with the hand with the highest straight
+     *
+     * @see Referee#compareHands(Hand, Hand)
+     */
     @Test
     void straighVictoryTest() {
         hand1 = new Hand(new ArrayList<>(List.of("2Ca", "3Co", "4Pi", "5Tr", "6Tr")));
@@ -61,7 +86,7 @@ class RefereeTest {
         hand1 = new Hand(new ArrayList<>(List.of("9Ca", "10Co", "RPi", "DTr", "VTr")));
         hand2 = new Hand(new ArrayList<>(List.of("10Ca", "RTr", "DPi", "VCo", "ACo")));
         victory = referee.compareHands(hand1, hand2);
-        assertEquals(victory.getHand(), hand1);
+        assertEquals(victory.getHand(), hand2);
 
         hand1 = new Hand(new ArrayList<>(List.of("4Ca", "5Co", "3Pi", "2Tr", "ATr")));
         hand2 = new Hand(new ArrayList<>(List.of("10Ca", "RTr", "DPi", "VCo", "ACo")));
@@ -69,6 +94,13 @@ class RefereeTest {
         assertEquals(victory.getHand(), hand1);
     }
 
+    /**
+     * Test the getBestCombinaison method of the Referee class
+     * Here all the hand are straights
+     * so the getBestCombinaison method should return a CombinaisonValue with the STRAIGHT combination
+     *
+     * @see Referee#getBestCombinaison(Hand)
+     */
     @Test
     void straighCombinaisonTest() {
         hand1 = new Hand(new ArrayList<>(List.of("2Ca", "3Co", "4Pi", "5Tr", "6Tr")));
@@ -97,21 +129,44 @@ class RefereeTest {
         assertNotEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
     }
 
+    /**
+     * Test the compareHands method of the Referee class
+     * Here there is 2 different combinations
+     * so the compareHands method should return a Victory with the hand with the highest combination
+     * <p>
+     * Here the hand1 has a straight and the hand2 has a highest card
+     *
+     * @see Referee#compareHands(Hand, Hand)
+     */
     @Test
     void compareHandsSecondWin() {
-        hand1 = new Hand(new ArrayList<>(List.of("2Ca")));
-        hand2 = new Hand(new ArrayList<>(List.of("ACo")));
+        hand1 = new Hand(new ArrayList<>(List.of("9Ca", "2Ca", "4Ca", "5Ca", "6Ca")));
+        hand2 = new Hand(new ArrayList<>(List.of("ACo", "2Co", "4Co", "5Co", "6Co")));
         victory = referee.compareHands(hand1, hand2);
         assertEquals(victory.getHand(), hand2);
     }
 
+    /**
+     * Test the getBestCombinaison method of the Referee class
+     * Here the hand has no combination except the highest card
+     * so the getBestCombinaison method should return a CombinaisonValue with the HIGHEST_CARD combinaison
+     *
+     * @see Referee#getBestCombinaison(Hand)
+     */
     @Test
     void getBestCombinaisonForHighestCard() {
-        hand1 = new Hand(new ArrayList<>(List.of("2Ca", "DTr", "7Pi")));
-        CombinaisonValue cv = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand1);
+        hand1 = new Hand(new ArrayList<>(List.of("2Ca", "DTr", "7Pi", "3Pi", "4Pi")));
+        CombinaisonValue cv = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand1.getBestCard()));
         assertEquals(cv.toString(), referee.getBestCombinaison(hand1).toString());
     }
 
+    /**
+     * Test the compareHands method of the Referee class
+     * Here the two hands have straights
+     * but the hand with the higher straight should win
+     *
+     * @see Referee#compareHands(Hand, Hand)
+     */
     @Test
     void testCompareHandsStraightWins() {
         // Create two hands, one with a straight and one without
@@ -126,6 +181,14 @@ class RefereeTest {
         assertEquals(Combinaison.STRAIGHT, result.getCombinaisonValue().getCombinaison());
     }
 
+    /**
+     * Test the compareHands method of the Referee class
+     * Here the two hands have straights
+     * but the hand with the lower straight should lose
+     * so the compareHands method should return a Victory with the hand with the lower straight
+     *
+     * @see Referee#compareHands(Hand, Hand)
+     */
     @Test
     void testCompareHandsStraightLoses() {
         // Create two hands, both with straights
@@ -140,6 +203,13 @@ class RefereeTest {
         assertEquals(Combinaison.STRAIGHT, result.getCombinaisonValue().getCombinaison());
     }
 
+    /**
+     * Test the compareHands method of the Referee class
+     * Here the two hands have the same combination with the same values
+     * so the compareHands method should return null
+     *
+     * @see Referee#compareHands(Hand, Hand)
+     */
     @Test
     void testCompareHandsDraw() {
         // Create two hands with the same ranks
@@ -153,6 +223,13 @@ class RefereeTest {
         assertNull(result);
     }
 
+    /**
+     * Test the getBestCombinaison method of the Referee class
+     * Here the hand has a straight
+     * so the getBestCombinaison method should return a CombinaisonValue with the STRAIGHT combinaison
+     *
+     * @see Referee#getBestCombinaison(Hand)
+     */
     @Test
     void testGetBestCombinaisonStraight() {
         // Create a hand with a straight
@@ -165,6 +242,13 @@ class RefereeTest {
         assertEquals(Combinaison.STRAIGHT, combinaisonValue.getCombinaison());
     }
 
+    /**
+     * Test the getBestCombinaison method of the Referee class
+     * Here the hand has no combination except the highest card
+     * so the getBestCombinaison method should return a CombinaisonValue with the HIGHEST_CARD combinaison
+     *
+     * @see Referee#getBestCombinaison(Hand)
+     */
     @Test
     void testGetBestCombinaisonNoStraight() {
         // Create a hand with no straight
@@ -177,26 +261,40 @@ class RefereeTest {
         assertEquals(Combinaison.HIGHEST_CARD, combinaisonValue.getCombinaison());
     }
 
+    /**
+     * Test the searchStraight method of the Referee class
+     * Here the hand is a straight
+     * so the searchStraight method should return a list of cards
+     *
+     * @see Referee#searchStraight(Hand)
+     */
     @Test
     void testIsStraightWithStraight() {
         // Create a hand with a straight
         Hand hand = new Hand(List.of("10Co", "VCa", "DTr", "RPi", "9Pi"));
 
         Referee referee = new Referee();
-        boolean isStraight = referee.isStraight(hand);
+        Optional<List<Card>> isStraight = referee.searchStraight(hand);
 
-        assertTrue(isStraight);
+        assertTrue(isStraight.isPresent());
     }
 
+    /**
+     * Test the searchStraight method of the Referee class
+     * Here the hand is not a straight
+     * so the searchStraight method should return an empty optional
+     *
+     * @see Referee#searchStraight(Hand)
+     */
     @Test
     void testIsStraightNoStraight() {
         // Create a hand with no straight
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
 
         Referee referee = new Referee();
-        boolean isStraight = referee.isStraight(hand);
+        Optional<List<Card>> isStraight = referee.searchStraight(hand);
 
-        assertFalse(isStraight);
+        assertFalse(isStraight.isPresent());
     }
 
 }

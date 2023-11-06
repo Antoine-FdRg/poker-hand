@@ -2,8 +2,7 @@ package com.seinksansdoozebank.fr.model;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RankTest {
 
@@ -43,6 +42,7 @@ class RankTest {
         assertEquals("R", Rank.KING.getSymbol());
         assertEquals("A", Rank.ACE.getSymbol());
     }
+
 
     @Test
     void testGetName() {

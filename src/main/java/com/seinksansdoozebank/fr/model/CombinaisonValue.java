@@ -4,11 +4,11 @@ import java.util.List;
 
 public class CombinaisonValue {
     private final Combinaison combinaison;
-    private final Hand hand;
+    private final List<Card> cards;
 
-    public CombinaisonValue(Combinaison combinaison, Hand hand) {
+    public CombinaisonValue(Combinaison combinaison, List<Card> cards) {
         this.combinaison = combinaison;
-        this.hand = hand;
+        this.cards = cards;
     }
 
     /**
@@ -44,19 +44,28 @@ public class CombinaisonValue {
      */
     @Override
     public String toString() {
-        String victoryCondition = "";
+        StringBuilder victoryCondition = new StringBuilder();
         switch (this.combinaison) {
             case HIGHEST_CARD:
-                victoryCondition += "carte la plus élevée : " + this.getBestCard().getRank().getName();
+                victoryCondition.append("carte la plus élevée : ").append(this.getBestCard().getRank().getName());
                 break;
             case STRAIGHT:
-                victoryCondition += "suite : " + this.toStringStraight();
+                int size = this.cards.size();
+                if (this.cards.get(size - 1).getRank().equals(Rank.ACE)) {
+                    victoryCondition.append("Quinte Broadway");
+                } else if (this.cards.get(0).getRank().equals(Rank.ACE)) {
+                    victoryCondition.append("Quinte à l'As");
+                } else if (this.cards.get(size - 1).getRank().equals(Rank.FIVE)) {
+                    victoryCondition.append("Quinte à 5");
+                } else {
+                    victoryCondition.append("Quinte de ").append(this.cards.get(size - 1).getRank().getName());
+                }
                 break;
             default:
-                victoryCondition += this.combinaison.getName() + " : " + this.getBestCard().getRank().getName();
+                victoryCondition.append(this.combinaison.getName()).append(" : ").append(this.getBestCard().getRank().getName());
                 break;
         }
-        return victoryCondition;
+        return victoryCondition.toString();
     }
 
     /**
@@ -66,7 +75,7 @@ public class CombinaisonValue {
      * @return the string representation of the straight
      */
     String toStringStraight() {
-        List<Card> cards = this.hand.getCards();
+        List<Card> cards = this.getCards();
         StringBuilder stringBuilder = new StringBuilder();
         if (cards.contains(new Card(Rank.ACE, Suit.CLUB)) || cards.contains(new Card(Rank.ACE, Suit.DIAMOND)) || cards.contains(new Card(Rank.ACE, Suit.HEART)) || cards.contains(new Card(Rank.ACE, Suit.SPADE)))
         {
@@ -91,13 +100,13 @@ public class CombinaisonValue {
         // if the combinaison is a straight so the best card is the last card of the hand.
         // And if there is an ACE in the hand, the ACE is NOT the best card.
         if (this.combinaison.equals(Combinaison.STRAIGHT)) {
-            List<Card> cards = this.hand.getCards();
+            List<Card> cards = this.getCards();
             if (cards.contains(new Card(Rank.ACE, Suit.CLUB)) || cards.contains(new Card(Rank.ACE, Suit.DIAMOND)) || cards.contains(new Card(Rank.ACE, Suit.HEART)) || cards.contains(new Card(Rank.ACE, Suit.SPADE)))
             {
                 return cards.get(cards.size() - 2);
             }
-            return this.hand.getCards().get(this.hand.getCards().size() - 1);
-        } return this.hand.getBestCard();
+            return this.getCards().get(this.getCards().size() - 1);
+        } return this.getBestCard();
     }
 
     /**
@@ -106,7 +115,7 @@ public class CombinaisonValue {
      * @return the cards of the combinaison
      */
     public List<Card> getCards() {
-        return this.hand.getCards();
+        return this.cards;
     }
 
     /**
