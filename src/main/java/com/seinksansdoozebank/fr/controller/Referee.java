@@ -42,6 +42,9 @@ public class Referee {
      */
     protected CombinaisonValue getBestCombinaison(Hand hand) {
         Optional<List<Card>> response = this.searchStraight(hand);
+        if(searchFourOfAKind()){
+            return new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, hand.getCards());
+        }
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.STRAIGHT, response.get());
         }
@@ -77,5 +80,9 @@ public class Referee {
             return Optional.of(cards);
         }
         return Optional.empty();
+    }
+
+    public boolean searchFourOfAKind(){
+        return true;
     }
 }
