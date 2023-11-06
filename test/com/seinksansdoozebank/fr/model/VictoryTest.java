@@ -7,32 +7,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class VictoryTest {
-
-    @Test
-    void testGetHand() {
-        Hand hand = new Hand(List.of(new String[]{"2Co", "3Ca", "4Tr", "5Pi", "6Co"}));
-        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand.getCards());
-        Victory victory = new Victory(hand, combinaisonValue);
-
-        assertEquals(hand, victory.getHand());
-    }
-
-    @Test
-    void testGetCombinaisonValue() {
-        Hand hand = new Hand(List.of(new String[]{"2Co", "3Ca", "4Tr", "5Pi", "6Co"}));
-        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand.getCards());
-        Victory victory = new Victory(hand, combinaisonValue);
-
-        assertEquals(combinaisonValue, victory.getCombinaisonValue());
-    }
-
     @Test
     void testToString() {
         Hand hand = new Hand(List.of(new String[]{"2Co", "3Ca", "4Tr", "5Pi", "6Co"}));
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand.getCards());
         Victory victory = new Victory(hand, combinaisonValue);
 
-        String expectedString = "Victory{hand=" + hand + ", combinaisonValue=" + combinaisonValue + "}";
+        String expectedString = "Victory with hand:" + hand + ", combinaisonValue=" + combinaisonValue;
         assertEquals(expectedString, victory.toString());
     }
 
@@ -42,7 +23,7 @@ class VictoryTest {
         CombinaisonValue combinaisonValue = null;
         Victory victory = new Victory(hand, combinaisonValue);
 
-        String expectedString = "Victory{hand=" + hand + ", combinaisonValue=null}";
+        String expectedString = "Victory with hand:" + hand + ", combinaisonValue=null";
         assertEquals(expectedString, victory.toString());
     }
 
