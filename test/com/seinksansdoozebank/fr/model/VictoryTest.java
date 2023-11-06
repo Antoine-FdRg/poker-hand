@@ -33,7 +33,7 @@ class VictoryTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.HIGHEST_CARD, new Hand(List.of(new String[]{"2Co", "3Ca", "4Tr", "5Pi", "6Co"})).getCards());
         Victory victory = new Victory(hand, combinaisonValue);
 
-        String expectedString = "Victory{hand=null, combinaisonValue=" + combinaisonValue + "}";
+        String expectedString = "Victory with hand:null, combinaisonValue=" + combinaisonValue;
         assertEquals(expectedString, victory.toString());
     }
 }

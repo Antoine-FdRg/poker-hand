@@ -103,6 +103,7 @@ class RefereeTest {
      */
     @Test
     void straighCombinaisonTest() {
+        //TODO: Split this test into multiple tests
         hand1 = new Hand(new ArrayList<>(List.of("2Ca", "3Co", "4Pi", "5Tr", "6Tr")));
         hand2 = new Hand(new ArrayList<>(List.of("2Ca", "3Tr", "4Pi", "5Co", "6Co")));
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
