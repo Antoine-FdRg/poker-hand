@@ -1,6 +1,5 @@
 package com.seinksansdoozebank.fr.view;
 
-import com.seinksansdoozebank.fr.model.Card;
 import com.seinksansdoozebank.fr.model.Victory;
 
 import java.util.ArrayList;
