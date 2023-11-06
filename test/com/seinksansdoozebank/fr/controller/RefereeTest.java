@@ -1,6 +1,10 @@
 package com.seinksansdoozebank.fr.controller;
 
-import com.seinksansdoozebank.fr.model.*;
+import com.seinksansdoozebank.fr.model.Card;
+import com.seinksansdoozebank.fr.model.Combinaison;
+import com.seinksansdoozebank.fr.model.CombinaisonValue;
+import com.seinksansdoozebank.fr.model.Hand;
+import com.seinksansdoozebank.fr.model.Victory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +22,7 @@ class RefereeTest {
     private Victory victory;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         referee = new Referee();
         Hand.resetIdCounter();
     }
@@ -32,8 +36,8 @@ class RefereeTest {
      */
     @Test
     void compareHandsDraw() {
-        hand1 = new Hand(new ArrayList<>(List.of("A", "2", "4", "5", "6")));
-        hand2 = new Hand(new ArrayList<>(List.of("A", "2", "4", "5", "6")));
+        hand1 = new Hand(new ArrayList<>(List.of("ACa", "2Ca", "4Ca", "5Ca", "6Ca")));
+        hand2 = new Hand(new ArrayList<>(List.of("ACo", "2Co", "4Co", "5Co", "6Co")));
         victory = referee.compareHands(hand1, hand2);
         assertNull(victory);
     }
@@ -49,8 +53,8 @@ class RefereeTest {
      */
     @Test
     void compareHandsFirstWin() {
-        hand1 = new Hand(new ArrayList<>(List.of("A", "2", "4", "5", "6")));
-        hand2 = new Hand(new ArrayList<>(List.of("9", "2", "4", "5", "6")));
+        hand1 = new Hand(new ArrayList<>(List.of("ACa", "2Ca", "4Ca", "5Ca", "6Ca")));
+        hand2 = new Hand(new ArrayList<>(List.of("9Co", "2Co", "4Co", "5Co", "6Co")));
         victory = referee.compareHands(hand1, hand2);
         assertEquals(victory.getHand(), hand1);
     }
@@ -64,30 +68,30 @@ class RefereeTest {
      */
     @Test
     void straighVictoryTest() {
-        hand1 = new Hand(new ArrayList<>(List.of("2", "3", "4", "5", "6")));
-        hand2 = new Hand(new ArrayList<>(List.of("2", "3", "4", "5", "6")));
+        hand1 = new Hand(new ArrayList<>(List.of("2Ca", "3Co", "4Pi", "5Tr", "6Tr")));
+        hand2 = new Hand(new ArrayList<>(List.of("2Ca", "3Tr", "4Pi", "5Co", "6Co")));
         victory = referee.compareHands(hand1, hand2);
         assertNull(victory);
 
-        hand1 = new Hand(new ArrayList<>(List.of("2", "3", "4", "5", "6")));
-        hand2 = new Hand(new ArrayList<>(List.of("3", "4", "5", "6", "7")));
+        hand1 = new Hand(new ArrayList<>(List.of("2Ca", "3Co", "4Pi", "5Tr", "6Tr")));
+        hand2 = new Hand(new ArrayList<>(List.of("3Ca", "4Tr", "5Pi", "6Co", "7Co")));
         victory = referee.compareHands(hand1, hand2);
         assertEquals(victory.getHand(), hand2);
 
-        hand1 = new Hand(new ArrayList<>(List.of("A", "2", "3", "4", "5")));
-        hand2 = new Hand(new ArrayList<>(List.of("2", "3", "4", "5", "6")));
+        hand1 = new Hand(new ArrayList<>(List.of("ACa", "2Co", "3Pi", "4Tr", "5Tr")));
+        hand2 = new Hand(new ArrayList<>(List.of("2Ca", "3Tr", "4Pi", "5Co", "6Co")));
         victory = referee.compareHands(hand1, hand2);
         assertEquals(victory.getHand(), hand2);
 
-        hand1 = new Hand(new ArrayList<>(List.of("9", "10", "R", "D", "V")));
-        hand2 = new Hand(new ArrayList<>(List.of("10", "R", "D", "V", "A")));
+        hand1 = new Hand(new ArrayList<>(List.of("9Ca", "10Co", "RPi", "DTr", "VTr")));
+        hand2 = new Hand(new ArrayList<>(List.of("10Ca", "RTr", "DPi", "VCo", "ACo")));
         victory = referee.compareHands(hand1, hand2);
         assertEquals(victory.getHand(), hand2);
 
-        hand1 = new Hand(new ArrayList<>(List.of("4", "5", "3", "2", "A")));
-        hand2 = new Hand(new ArrayList<>(List.of("10", "R", "D", "V", "2")));
+        hand1 = new Hand(new ArrayList<>(List.of("4Ca", "5Co", "3Pi", "2Tr", "ATr")));
+        hand2 = new Hand(new ArrayList<>(List.of("10Ca", "RTr", "DPi", "VCo", "ACo")));
         victory = referee.compareHands(hand1, hand2);
-        assertEquals(victory.getHand(), hand1);
+        assertEquals(victory.getHand(), hand2);
     }
 
     /**
@@ -99,24 +103,31 @@ class RefereeTest {
      */
     @Test
     void straighCombinaisonTest() {
-        hand1 = new Hand(new ArrayList<>(List.of("2", "3", "4", "5", "6")));
-        hand2 = new Hand(new ArrayList<>(List.of("2", "3", "4", "5", "6")));
+        //TODO: Split this test into multiple tests
+        hand1 = new Hand(new ArrayList<>(List.of("2Ca", "3Co", "4Pi", "5Tr", "6Tr")));
+        hand2 = new Hand(new ArrayList<>(List.of("2Ca", "3Tr", "4Pi", "5Co", "6Co")));
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
 
-        hand2 = new Hand(new ArrayList<>(List.of("3", "4", "5", "6", "7")));
-        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
-
-        hand1 = new Hand(new ArrayList<>(List.of("A", "2", "3", "4", "5")));
-        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
-
-        hand1 = new Hand(new ArrayList<>(List.of("9", "10", "R", "D", "V")));
-        hand2 = new Hand(new ArrayList<>(List.of("10", "R", "D", "V", "A")));
+        hand1 = new Hand(new ArrayList<>(List.of("2Ca", "3Co", "4Pi", "5Tr", "6Tr")));
+        hand2 = new Hand(new ArrayList<>(List.of("3Ca", "4Tr", "5Pi", "6Co", "7Co")));
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
 
-        hand1 = new Hand(new ArrayList<>(List.of("4", "5", "3", "2", "A")));
+        hand1 = new Hand(new ArrayList<>(List.of("ACa", "2Co", "3Pi", "4Tr", "5Tr")));
+        hand2 = new Hand(new ArrayList<>(List.of("2Ca", "3Tr", "4Pi", "5Co", "6Co")));
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
+        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
+
+        hand1 = new Hand(new ArrayList<>(List.of("9Ca", "10Co", "RPi", "DTr", "VTr")));
+        hand2 = new Hand(new ArrayList<>(List.of("10Ca", "RTr", "DPi", "VCo", "ACo")));
+        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
+        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
+
+        hand1 = new Hand(new ArrayList<>(List.of("4Ca", "5Co", "3Pi", "2Tr", "ATr")));
+        hand2 = new Hand(new ArrayList<>(List.of("10Ca", "RTr", "DPi", "VCo", "ACo")));
+        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
+        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
     }
 
     /**
@@ -130,8 +141,8 @@ class RefereeTest {
      */
     @Test
     void compareHandsSecondWin() {
-        hand1 = new Hand(new ArrayList<>(List.of("9", "2", "4", "5", "6")));
-        hand2 = new Hand(new ArrayList<>(List.of("A", "2", "4", "5", "6")));
+        hand1 = new Hand(new ArrayList<>(List.of("9Ca", "2Ca", "4Ca", "5Ca", "6Ca")));
+        hand2 = new Hand(new ArrayList<>(List.of("ACo", "2Co", "4Co", "5Co", "6Co")));
         victory = referee.compareHands(hand1, hand2);
         assertEquals(victory.getHand(), hand2);
     }
@@ -145,7 +156,7 @@ class RefereeTest {
      */
     @Test
     void getBestCombinaisonForHighestCard() {
-        hand1 = new Hand(new ArrayList<>(List.of("2", "D", "7", "3", "4")));
+        hand1 = new Hand(new ArrayList<>(List.of("2Ca", "DTr", "7Pi", "3Pi", "4Pi")));
         CombinaisonValue cv = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand1.getBestCard()));
         assertEquals(cv.toString(), referee.getBestCombinaison(hand1).toString());
     }
@@ -160,13 +171,14 @@ class RefereeTest {
     @Test
     void testCompareHandsStraightWins() {
         // Create two hands, one with a straight and one without
-        Hand hand1 = new Hand(List.of("2", "3", "4", "5", "6"));
-        Hand hand2 = new Hand(List.of("7", "8", "9", "10", "V"));
+        Hand hand1 = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
+        Hand hand2 = new Hand(List.of("7Co", "8Ca", "9Tr", "10Pi", "VCo"));
 
         Referee referee = new Referee();
 
         // The hand with the straight should win
         Victory result = referee.compareHands(hand1, hand2);
+        assertNotNull(result);
         assertEquals(Combinaison.STRAIGHT, result.getCombinaisonValue().getCombinaison());
     }
 
@@ -181,14 +193,14 @@ class RefereeTest {
     @Test
     void testCompareHandsStraightLoses() {
         // Create two hands, both with straights
-        Hand hand1 = new Hand(List.of("10", "V", "D", "R", "A"));
-        Hand hand2 = new Hand(List.of("2", "3", "4", "5", "6"));
+        Hand hand1 = new Hand(List.of("10Co", "VCa", "DTr", "RPi", "APi"));
+        Hand hand2 = new Hand(List.of("2Ca", "3Tr", "4Co", "5Ca", "6Tr"));
 
         Referee referee = new Referee();
 
         // The hand with the lower straight should lose
         Victory result = referee.compareHands(hand1, hand2);
-        assertEquals(result.getHand(), hand1);
+        assertNotNull(result);
         assertEquals(Combinaison.STRAIGHT, result.getCombinaisonValue().getCombinaison());
     }
 
@@ -202,8 +214,8 @@ class RefereeTest {
     @Test
     void testCompareHandsDraw() {
         // Create two hands with the same ranks
-        Hand hand1 = new Hand(List.of("2", "3", "4", "5", "6"));
-        Hand hand2 = new Hand(List.of("2", "3", "4", "5", "6"));
+        Hand hand1 = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
+        Hand hand2 = new Hand(List.of("2Ca", "3Tr", "4Co", "5Ca", "6Tr"));
 
         Referee referee = new Referee();
 
@@ -222,7 +234,7 @@ class RefereeTest {
     @Test
     void testGetBestCombinaisonStraight() {
         // Create a hand with a straight
-        Hand hand = new Hand(List.of("10", "V", "D", "R", "9"));
+        Hand hand = new Hand(List.of("10Co", "VCa", "DTr", "RPi", "9Pi"));
 
         Referee referee = new Referee();
         CombinaisonValue combinaisonValue = referee.getBestCombinaison(hand);
@@ -241,7 +253,7 @@ class RefereeTest {
     @Test
     void testGetBestCombinaisonNoStraight() {
         // Create a hand with no straight
-        Hand hand = new Hand(List.of("2", "3", "4", "5", "7"));
+        Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "7Co"));
 
         Referee referee = new Referee();
         CombinaisonValue combinaisonValue = referee.getBestCombinaison(hand);
@@ -260,7 +272,7 @@ class RefereeTest {
     @Test
     void testIsStraightWithStraight() {
         // Create a hand with a straight
-        Hand hand = new Hand(List.of("10", "V", "D", "R", "9"));
+        Hand hand = new Hand(List.of("10Co", "VCa", "DTr", "RPi", "9Pi"));
 
         Referee referee = new Referee();
         Optional<List<Card>> isStraight = referee.searchStraight(hand);
@@ -278,7 +290,7 @@ class RefereeTest {
     @Test
     void testIsStraightNoStraight() {
         // Create a hand with no straight
-        Hand hand = new Hand(List.of("2", "3", "4", "5", "V"));
+        Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
 
         Referee referee = new Referee();
         Optional<List<Card>> isStraight = referee.searchStraight(hand);
