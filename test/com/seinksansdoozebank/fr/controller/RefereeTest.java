@@ -91,7 +91,7 @@ class RefereeTest {
         hand1 = new Hand(new ArrayList<>(List.of("4Ca", "5Co", "3Pi", "2Tr", "ATr")));
         hand2 = new Hand(new ArrayList<>(List.of("10Ca", "RTr", "DPi", "VCo", "ACo")));
         victory = referee.compareHands(hand1, hand2);
-        assertEquals(victory.getHand(), hand1);
+        assertEquals(victory.getHand(), hand2);
     }
 
     /**
@@ -121,12 +121,12 @@ class RefereeTest {
         hand1 = new Hand(new ArrayList<>(List.of("9Ca", "10Co", "RPi", "DTr", "VTr")));
         hand2 = new Hand(new ArrayList<>(List.of("10Ca", "RTr", "DPi", "VCo", "ACo")));
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
-        assertNotEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
+        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
 
         hand1 = new Hand(new ArrayList<>(List.of("4Ca", "5Co", "3Pi", "2Tr", "ATr")));
         hand2 = new Hand(new ArrayList<>(List.of("10Ca", "RTr", "DPi", "VCo", "ACo")));
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
-        assertNotEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
+        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
     }
 
     /**

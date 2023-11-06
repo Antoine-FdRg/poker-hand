@@ -16,8 +16,8 @@ class HandTest {
 
     @BeforeEach
     void setUp() {
-        hand = new Hand(new ArrayList<>(Arrays.asList("V","8","3","A","5")));
-        hand2 = new Hand(new ArrayList<>(Arrays.asList("V","8","R","A","5")));
+        hand = new Hand(new ArrayList<>(Arrays.asList("VCo","8Co","3Co","ACo","5Co")));
+        hand2 = new Hand(new ArrayList<>(Arrays.asList("VCo","8Co","RCo","ACo","5Co")));
     }
 
     @Test

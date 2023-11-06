@@ -11,7 +11,7 @@ class VictoryTest {
     @Test
     void testGetHand() {
         Hand hand = new Hand(List.of(new String[]{"2Co", "3Ca", "4Tr", "5Pi", "6Co"}));
-        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand);
+        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand.getCards());
         Victory victory = new Victory(hand, combinaisonValue);
 
         assertEquals(hand, victory.getHand());
@@ -20,7 +20,7 @@ class VictoryTest {
     @Test
     void testGetCombinaisonValue() {
         Hand hand = new Hand(List.of(new String[]{"2Co", "3Ca", "4Tr", "5Pi", "6Co"}));
-        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand);
+        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand.getCards());
         Victory victory = new Victory(hand, combinaisonValue);
 
         assertEquals(combinaisonValue, victory.getCombinaisonValue());
@@ -29,7 +29,7 @@ class VictoryTest {
     @Test
     void testToString() {
         Hand hand = new Hand(List.of(new String[]{"2Co", "3Ca", "4Tr", "5Pi", "6Co"}));
-        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand);
+        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand.getCards());
         Victory victory = new Victory(hand, combinaisonValue);
 
         String expectedString = "Victory{hand=" + hand + ", combinaisonValue=" + combinaisonValue + "}";
@@ -49,7 +49,7 @@ class VictoryTest {
     @Test
     void testToStringNullHand() {
         Hand hand = null;
-        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.HIGHEST_CARD, new Hand(List.of(new String[]{"2Co", "3Ca", "4Tr", "5Pi", "6Co"})));
+        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.HIGHEST_CARD, new Hand(List.of(new String[]{"2Co", "3Ca", "4Tr", "5Pi", "6Co"})).getCards());
         Victory victory = new Victory(hand, combinaisonValue);
 
         String expectedString = "Victory{hand=null, combinaisonValue=" + combinaisonValue + "}";

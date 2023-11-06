@@ -77,8 +77,7 @@ public class CombinaisonValue {
     String toStringStraight() {
         List<Card> cards = this.getCards();
         StringBuilder stringBuilder = new StringBuilder();
-        if (cards.contains(new Card(Rank.ACE, Suit.CLUB)) || cards.contains(new Card(Rank.ACE, Suit.DIAMOND)) || cards.contains(new Card(Rank.ACE, Suit.HEART)) || cards.contains(new Card(Rank.ACE, Suit.SPADE)))
-        {
+        if (cards.contains(new Card(Rank.ACE, Suit.CLUB)) || cards.contains(new Card(Rank.ACE, Suit.DIAMOND)) || cards.contains(new Card(Rank.ACE, Suit.HEART)) || cards.contains(new Card(Rank.ACE, Suit.SPADE))) {
             stringBuilder.append("A ");
         }
         // if there is a ACE in the hand, the ACE is set to the first card
@@ -97,16 +96,11 @@ public class CombinaisonValue {
      * @return the best card of the combinaison
      */
     public Card getBestCard() {
-        // if the combinaison is a straight so the best card is the last card of the hand.
-        // And if there is an ACE in the hand, the ACE is NOT the best card.
-        if (this.combinaison.equals(Combinaison.STRAIGHT)) {
-            List<Card> cards = this.getCards();
-            if (cards.contains(new Card(Rank.ACE, Suit.CLUB)) || cards.contains(new Card(Rank.ACE, Suit.DIAMOND)) || cards.contains(new Card(Rank.ACE, Suit.HEART)) || cards.contains(new Card(Rank.ACE, Suit.SPADE)))
-            {
-                return cards.get(cards.size() - 2);
-            }
-            return this.getCards().get(this.getCards().size() - 1);
-        } return this.getBestCard();
+        // if the combinaison is a straight
+        if (this.combinaison.equals(Combinaison.STRAIGHT) && (this.cards.get(0).getRank().equals(Rank.TWO) && this.cards.get(this.cards.size() - 1).getRank().equals(Rank.ACE))) {
+            return this.cards.get(this.cards.size() - 2);
+        }
+        return this.cards.get(this.cards.size() - 1);
     }
 
     /**
