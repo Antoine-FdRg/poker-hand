@@ -29,10 +29,25 @@ public class Hand {
     }
 
     public Card getBestCard() {
-        return cards.get(cards.size() - 1);
+        Card bestCard = cards.get(0);
+        for (Card card : cards) {
+            if (card.compareTo(bestCard) > 0) {
+                bestCard = card;
+            }
+        }
+        return bestCard;
     }
 
     public static void resetIdCounter(){
         idCounter = 1;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Card card : cards) {
+            stringBuilder.append(card.getRank().getSymbol()).append(" ");
+        }
+        return stringBuilder.toString();
     }
 }
