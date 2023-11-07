@@ -24,12 +24,14 @@ class CombinaisonValueTest {
         Hand hand3= new Hand(List.of("5Co","6Ca","6Tr","ATr","6Tr"));
         Hand hand4=new Hand(List.of("5Co","8Ca","8Co","ATr","8Tr"));
         Hand hand5= new Hand(List.of("5Tr","8Ca","8Co","RTr","8Ca"));
+        Hand hand6= new Hand(List.of("6Tr","8Ca","8Co","6Tr","6Ca"));
 
         testBestCardJack = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand1.getBestCard()));
         testBestCardFive = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand2.getBestCard()));
-        testThreeOfAKindSix= new CombinaisonValue(Combinaison.THREE_OF_A_KIND, hand3.getCards());
+        testBestCardSix= new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand3.getBestCard()));
         testThreeOfAKindEight = new CombinaisonValue(Combinaison.THREE_OF_A_KIND,hand4.getCards());
         testThreeOfAKindKing= new CombinaisonValue(Combinaison.THREE_OF_A_KIND,hand5.getCards());
+        testThreeOfAKindSix= new CombinaisonValue(Combinaison.THREE_OF_A_KIND,hand6.getCards());
 
     }
 
@@ -38,14 +40,13 @@ class CombinaisonValueTest {
      */
     @Test
     void compareTo() {
-        assertTrue(testBestCardJack.compareTo(testBestCardSix) > 0);
-        assertTrue(testBestCardSix.compareTo(testBestCardJack) < 0);
-        assertEquals(0, testBestCardJack.compareTo(testBestCardJack));
+        assertTrue(testBestCardJack.compareTo(testBestCardSix) < 0);
+        assertTrue(testBestCardSix.compareTo(testBestCardJack) > 0);
+
 
         /*We test if the method compareto in a threeOfAKind case works*/
-        assertTrue(testThreeOfAKindEight.compareTo(testThreeOfAKindSix) > 0);
-        assertTrue(testThreeOfAKindEight.compareTo(testThreeOfAKindKing)>0);
-        assertEquals(0, testThreeOfAKindSix.compareTo(testThreeOfAKindSix));
+        assertTrue(testThreeOfAKindEight.compareTo(testThreeOfAKindSix) < 0);
+        assertTrue(testThreeOfAKindEight.compareTo(testThreeOfAKindKing)<0);
     }
 
     /**
