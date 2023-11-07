@@ -61,11 +61,24 @@ public class CombinaisonValue {
                     victoryCondition.append("Quinte de ").append(this.cards.get(size - 1).getRank().getName());
                 }
                 break;
+            case FOUR_OF_A_KIND:
+                victoryCondition.append("Carré ").append(isFourOfAKindString());
+                break;
             default:
                 victoryCondition.append(this.combinaison.getName()).append(" : ").append(this.getBestCard().getRank().getName());
                 break;
         }
         return victoryCondition.toString();
+    }
+
+    private String isFourOfAKindString(){
+        String result="";
+        if(cards.get(0).getRank().equals(Rank.ACE)){
+           result="d'";
+           return result;
+        }
+        result="de";
+        return result  ;
     }
 
     /**
@@ -98,4 +111,6 @@ public class CombinaisonValue {
     public Combinaison getCombinaison() {
         return this.combinaison;
     }
+
+
 }
