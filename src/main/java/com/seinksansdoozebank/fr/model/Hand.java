@@ -14,10 +14,8 @@ public class Hand {
         this.id = idCounter++;
         this.cards = new ArrayList<>();
         for (String card : cards) {
-            this.cards.add(new Card(Rank.getRankFromSymbol(card)));
+            this.cards.add(new Card(Rank.getRankFromSymbol(card), Suit.getSuitFromSymbol(card)));
         }
-        //sorting cards
-        this.cards.sort(Comparator.comparing(Card::getRank));
     }
 
     public List<Card> getCards() {

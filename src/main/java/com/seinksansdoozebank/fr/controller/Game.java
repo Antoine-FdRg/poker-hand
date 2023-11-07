@@ -52,7 +52,7 @@ public class Game {
             return false;
         }
         for (String card : cards) {
-            if (!card.matches("^10|[2-9]|[VDRA]$")) {
+            if (!card.matches("^(10|[2-9]|[VDRA])(Co|Ca|Tr|Pi)$")) {
                 view.displayAlertInvalidCard();
                 return false;
             }
