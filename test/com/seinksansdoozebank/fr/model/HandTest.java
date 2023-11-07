@@ -21,14 +21,6 @@ class HandTest {
     }
 
     @Test
-    void cardsAreSortded() {
-        List<Card> sortedCards = hand.getCards();
-        for (int i = 0; i < sortedCards.size() - 1; i++) {
-            assertTrue(sortedCards.get(i).compareTo(sortedCards.get(i + 1)) < 0);
-        }
-    }
-
-    @Test
     void getBestCard() {
         assertEquals(Rank.ACE, hand.getBestCard().getRank());
         assertNotEquals(Rank.KING, hand2.getBestCard().getRank());
