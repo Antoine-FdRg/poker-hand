@@ -25,6 +25,7 @@ public class CombinaisonValue {
             return -1;
         } else {
             switch (this.combinaison) {
+                // Flush est géré dans default
                 default -> {
                     // compare all kickers of the pair
                     List<Card> kickers = this.getCards();
