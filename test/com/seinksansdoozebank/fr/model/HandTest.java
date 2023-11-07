@@ -12,17 +12,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class HandTest {
 
     private Hand hand;
+    private Hand hand2;
 
     @BeforeEach
     void setUp() {
         hand = new Hand(new ArrayList<>(Arrays.asList("V","8","3","A","5")));
+        hand2 = new Hand(new ArrayList<>(Arrays.asList("V","8","R","A","5")));
     }
 
     @Test
     void cardsAreSortded() {
-        assertFalse(hand.getCards().get(0).compareTo(hand.getCards().get(1)) < 0);
-
-        List<Card> sortedCards = hand.getSortedCards();
+        List<Card> sortedCards = hand.getCards();
         for (int i = 0; i < sortedCards.size() - 1; i++) {
             assertTrue(sortedCards.get(i).compareTo(sortedCards.get(i + 1)) < 0);
         }
@@ -30,6 +30,7 @@ class HandTest {
 
     @Test
     void getBestCard() {
-        assertEquals(hand.getBestCard().getRank(), new Card(Rank.ACE).getRank());
+        assertEquals(Rank.ACE, hand.getBestCard().getRank());
+        assertNotEquals(Rank.KING, hand2.getBestCard().getRank());
     }
 }

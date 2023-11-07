@@ -4,11 +4,11 @@ import java.util.*;
 
 public class CombinaisonValue {
     private final Combinaison combinaison;
-    private final Hand hand;
+    private final List<Card> cards;
 
-    public CombinaisonValue(Combinaison combinaison, Hand hand) {
+    public CombinaisonValue(Combinaison combinaison, List<Card> cards) {
         this.combinaison = combinaison;
-        this.hand = hand;
+        this.cards = cards;
     }
 
     /**
@@ -26,52 +26,10 @@ public class CombinaisonValue {
         } else {
             switch (this.combinaison) {
                 case THREE_OF_A_KIND -> {
-                    int cptCard1 = 0;
-                    ArrayList<Card> liste1 = new ArrayList<>();
-                    Card cardBrelan1 = new Card(Rank.TWO);
-                    for (Card card : hand.getCards()) {
-                        if (cptCard1 == 3) {
-                            break;
-                        }
-                        cptCard1 = 0;
-                        liste1 = new ArrayList<>();
-                        for (Card card1 : hand.getCards()) {
-                            if (card1.getRank().equals(card.getRank())) {
-                                cptCard1 += 1;
-                                if (cptCard1 == 3) {
-                                    cardBrelan1 = new Card(card1.getRank());
-                                }
-                            } else {
-                                liste1.add(card1);
-                            }
-                        }
-                    }
-                    Card cardBrelan2 = new Card(Rank.TWO);
-                    int cptCard2 = 0;
-                    ArrayList<Card> liste2 = new ArrayList<>();
-                    for (Card card : combinaison2.getHand().getCards()) {
-                        if (cptCard2 == 3) {
-                            break;
-                        }
-                        cptCard2 = 0;
-                        liste2 = new ArrayList<>();
-                        for (Card card1 : combinaison2.getHand().getCards()) {
-                            if (card1.getRank().equals(card.getRank())) {
-                                cptCard2 += 1;
-                                if (cptCard2 == 3) {
-                                    cardBrelan2 = new Card(card1.getRank());
-                                }
-                            } else {
-                                liste2.add(card1);
-                            }
-                        }
-                    }
-                    if (cardBrelan1.compareTo(cardBrelan2) != 0) {
-                        return cardBrelan1.compareTo(cardBrelan2);
-                    } else {
-                        Collections.reverse(liste1);
-                        Collections.reverse(liste2);
-                        return liste1.get(0).compareTo(liste2.get(0));
+                    if(cards.get(0).compareTo(combinaison2.cards.get(0))>0){
+                        return 1;
+                    }else {
+                        return -1;
                     }
                 }
                 default -> {
@@ -98,59 +56,45 @@ public class CombinaisonValue {
      */
     @Override
     public String toString() {
-        String victoryCondition = "";
+        StringBuilder victoryCondition = new StringBuilder();
         switch (this.combinaison) {
             case HIGHEST_CARD:
-                victoryCondition += "carte la plus élevée : " + this.getBestCard().getRank().getName();
+                victoryCondition.append("carte la plus élevée : ").append(this.getBestCard().getRank().getName());
                 break;
             case STRAIGHT:
-                victoryCondition += "suite : " + this.toStringStraight();
+                int size = this.cards.size();
+                if (this.cards.get(size - 1).getRank().equals(Rank.ACE)) {
+                    victoryCondition.append("Quinte Broadway");
+                } else if (this.cards.get(0).getRank().equals(Rank.ACE)) {
+                    victoryCondition.append("Quinte à l'As");
+                } else if (this.cards.get(size - 1).getRank().equals(Rank.FIVE)) {
+                    victoryCondition.append("Quinte à 5");
+                } else {
+                    victoryCondition.append("Quinte de ").append(this.cards.get(size - 1).getRank().getName());
+                }
                 break;
             case THREE_OF_A_KIND:
-                victoryCondition += "brelan de : " + this.toStringThreeOfAKind();
+                String followedCondition= toStringThreeOfAKind();
+                victoryCondition.append("Brelan ").append(followedCondition);
                 break;
             default:
-                victoryCondition += this.combinaison.getName() + " : " + this.getBestCard().getRank().getName();
+                victoryCondition.append(this.combinaison.getName()).append(" : ").append(this.getBestCard().getRank().getName());
                 break;
         }
-        return victoryCondition;
-    }
-
-    private String toStringStraight() {
-        List<Card> cards = this.hand.getSortedCards();
-        StringBuilder stringBuilder = new StringBuilder();
-        if (cards.contains(new Card(Rank.ACE))) {
-            stringBuilder.append("A ");
-        }
-        // if there is a ACE in the hand, the ACE is set to the first card
-        for (Card card : cards) {
-            if (card.getRank().equals(Rank.ACE)) {
-                continue;
-            }
-            stringBuilder.append(card.getRank().getSymbol()).append(" ");
-        }
-        return stringBuilder.toString();
+        return victoryCondition.toString();
     }
 
     public String toStringThreeOfAKind() {
-        int compteur = 0;
-        Card cardBrelan = new Card(Rank.TWO);
-        for (Card card : hand.getCards()) {
-            if (compteur == 3) {
-                break;
-            }
-            compteur = 0;
-            for (Card card1 : hand.getCards()) {
-                if (card1.getRank().equals(card.getRank())) {
-                    compteur += 1;
-                    if (compteur == 3) {
-                        cardBrelan = card1;
-                    }
-                }
-            }
+        String result="";
+        if (cards.get(0).getRank().equals(Rank.ACE)) {
+            result = "d'" + cards.get(0).getRank().getName();
+        } else {
+            result = "de " +cards.get(0).getRank().getName();
         }
-        return cardBrelan.getRank().getName();
+        return result;
     }
+
+
 
     /**
      * Get the best card of the combinaison
@@ -158,12 +102,11 @@ public class CombinaisonValue {
      * @return the best card of the combinaison
      */
     public Card getBestCard() {
-        // if the combinaison is a straight so the best card is the last card of the hand.
-        // And if there is an ACE in the hand, the ACE is NOT the best card.
-        if (this.combinaison.equals(Combinaison.STRAIGHT)) {
-            return this.hand.getCards().get(this.hand.getCards().size() - 1);
+        // if the combinaison is a straight
+        if (this.combinaison.equals(Combinaison.STRAIGHT) && (this.cards.get(0).getRank().equals(Rank.TWO) && this.cards.get(this.cards.size() - 1).getRank().equals(Rank.ACE))) {
+            return this.cards.get(this.cards.size() - 2);
         }
-        return this.hand.getBestCard();
+        return this.cards.get(this.cards.size() - 1);
     }
 
     /**
@@ -172,7 +115,7 @@ public class CombinaisonValue {
      * @return the cards of the combinaison
      */
     public List<Card> getCards() {
-        return this.hand.getCards();
+        return this.cards;
     }
 
     /**
@@ -184,8 +127,4 @@ public class CombinaisonValue {
         return this.combinaison;
     }
 
-
-    public Hand getHand() {
-        return hand;
-    }
 }

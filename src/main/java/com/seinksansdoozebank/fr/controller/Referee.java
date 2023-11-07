@@ -1,13 +1,15 @@
 package com.seinksansdoozebank.fr.controller;
 
+
 import com.seinksansdoozebank.fr.model.Card;
-import com.seinksansdoozebank.fr.model.Combinaison;
 import com.seinksansdoozebank.fr.model.CombinaisonValue;
 import com.seinksansdoozebank.fr.model.Hand;
-import com.seinksansdoozebank.fr.model.Rank;
 import com.seinksansdoozebank.fr.model.Victory;
+import com.seinksansdoozebank.fr.model.Combinaison;
+import com.seinksansdoozebank.fr.model.Rank;
 
 import java.util.List;
+import java.util.Optional;
 
 public class Referee {
 
@@ -39,56 +41,64 @@ public class Referee {
      * @return the best combinaison
      */
     protected CombinaisonValue getBestCombinaison(Hand hand) {
-        if (this.searchThreeOfAKind(hand)) {
-            return new CombinaisonValue(Combinaison.THREE_OF_A_KIND, hand);
+        Optional<List<Card>> response = this.searchStraight(hand);
+        if (response.isPresent()) {
+            return new CombinaisonValue(Combinaison.STRAIGHT, response.get());
         }
-        if (hand.getCards().size() != 1 && this.isStraight(hand)) {
-            return new CombinaisonValue(Combinaison.STRAIGHT, hand);
+        response = this.searchThreeOfAKind(hand);
+        if(response.isPresent()){
+            return new CombinaisonValue(Combinaison.THREE_OF_A_KIND,response.get());
         }
-
-        return new CombinaisonValue(Combinaison.HIGHEST_CARD, hand);
+        return new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand.getBestCard()));
     }
 
     /**
-     * Check if the hand is a straight
+     * Search if the hand is a straight
      *
      * @param hand the hand
-     * @return true if the hand is a straight, false otherwise
+     * @return the list of cards if the hand is a straight, empty optional otherwise
      */
-    private boolean isStraight(Hand hand) {
-        List<Card> cards = hand.getSortedCards();
-        // if the last card is an ACE put it at first
-        if (cards.get(cards.size() - 1).getRank().equals(Rank.ACE)) {
+    public Optional<List<Card>> searchStraight(Hand hand) {
+        // Sorted list of cards
+        List<Card> cards = hand.getCards();
+        // if the first Card is a TWO and the last one is an ACE put the ACE at the beginning of the list
+        if (cards.get(0).getRank().equals(Rank.TWO) && cards.get(cards.size() - 1).getRank().equals(Rank.ACE)) {
             cards.add(0, cards.remove(cards.size() - 1));
         }
         int cardsSize = cards.size();
         Card previousCard = cards.get(0);
         int index = 1;
-        // if the index is less than the size of the list and the previous card is the precedent value of the current card
-        while (index < cardsSize &&
-                (previousCard.compareTo(cards.get(index)) == -1) ||
-                (previousCard.getRank().equals(Rank.ACE) && cards.get(index).getRank().equals(Rank.TWO))) {
+        // while the index is inferior to the cards size and
+        // the previous card is inferior to the current card or
+        // the previous card is an ACE and the current card is a TWO or
+        // the previous card is a KING and the current card is an ACE
+        while (index < cardsSize && (previousCard.compareTo(cards.get(index)) == -1) || index < cardsSize && ((previousCard.getRank().equals(Rank.ACE) && cards.get(index).getRank().equals(Rank.TWO)))) {
             previousCard = cards.get(index);
             index++;
         }
         // if the index is equal to the cards size so the hand is a straight
-        return index == cardsSize;
+        if (index == cardsSize) {
+            return Optional.of(cards);
+        }
+        return Optional.empty();
     }
 
-    private boolean searchThreeOfAKind(Hand hand) {
-        int compteur = 0;
+    private Optional<List<Card>> searchThreeOfAKind(Hand hand) {
+        int counterOfIdenticCard = 0;
+        List<Card> cards = hand.getCards();
         for (Card card : hand.getCards()) {
-            if (compteur == 3) {
-                return true;
+            if (counterOfIdenticCard == 3) {
+                cards.add(card);
+                return Optional.of(cards);
             } else {
-                compteur = 0;
+                counterOfIdenticCard = 0;
             }
             for (Card card1 : hand.getCards()) {
                 if (card1.getRank().equals(card.getRank())) {
-                    compteur += 1;
+                    counterOfIdenticCard += 1;
                 }
             }
         }
-        return false;
+        return Optional.empty();
     }
 }

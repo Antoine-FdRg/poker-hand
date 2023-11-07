@@ -27,6 +27,6 @@ public enum Combinaison {
 
     @Override
     public String toString() {
-        return "Combinaison{" + "name='" + name + '\'' + '}';
+        return this.name;
     }
 }
