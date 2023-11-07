@@ -25,6 +25,9 @@ public class CombinaisonValue {
             return -1;
         } else {
             switch (this.combinaison) {
+                case STRAIGHT -> {
+                    return this.getBestCard().compareTo(combinaison2.getBestCard());
+                }
                 // Flush est géré dans default
                 default -> {
                     // compare all kickers of the pair
