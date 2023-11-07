@@ -41,6 +41,9 @@ public class CombinaisonValue {
                     // compare all kickers of the pair
                     List<Card> kickers = this.getKickers();
                     List<Card> comparedKickers = combinaison2.getKickers();
+                    if (kickers.size() != comparedKickers.size()) {
+                        throw new IllegalStateException("There is not the same number of kickers");
+                    }
                     for (int i = 0; i < kickers.size(); i++) {
                         result = kickers.get(i).compareTo(comparedKickers.get(i));
                         if (result > 0) {
