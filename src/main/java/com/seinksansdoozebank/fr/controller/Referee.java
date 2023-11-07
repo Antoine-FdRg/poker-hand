@@ -8,6 +8,7 @@ import com.seinksansdoozebank.fr.model.Victory;
 import com.seinksansdoozebank.fr.model.Combinaison;
 import com.seinksansdoozebank.fr.model.Rank;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,7 +61,7 @@ public class Referee {
      */
     public Optional<List<Card>> searchStraight(Hand hand) {
         // Sorted list of cards
-        List<Card> cards = hand.getCards();
+        List<Card> cards = new ArrayList<>(List.copyOf(hand.getCards()));
         // if the first Card is a TWO and the last one is an ACE put the ACE at the beginning of the list
         if (cards.get(0).getRank().equals(Rank.TWO) && cards.get(cards.size() - 1).getRank().equals(Rank.ACE)) {
             cards.add(0, cards.remove(cards.size() - 1));

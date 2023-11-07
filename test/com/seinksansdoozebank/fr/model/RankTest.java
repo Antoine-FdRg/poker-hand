@@ -5,11 +5,19 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RankTest {
+
     @Test
-    void getRankFromSymbol() {
-        assertEquals(Rank.ACE, Rank.getRankFromSymbol("A"));
-        assertEquals(Rank.TEN, Rank.getRankFromSymbol("10"));
-        assertEquals(Rank.FOUR, Rank.getRankFromSymbol("4"));
+    void testGetRankFromSymbolValid() {
+        // Test getting a rank from a valid symbol
+        assertEquals(Rank.TWO, Rank.getRankFromSymbol("2Co"));
+        assertEquals(Rank.THREE, Rank.getRankFromSymbol("3Ca"));
+        assertEquals(Rank.FOUR, Rank.getRankFromSymbol("4Tr"));
+        assertEquals(Rank.FIVE, Rank.getRankFromSymbol("5Pi"));
+        assertEquals(Rank.SIX, Rank.getRankFromSymbol("6Co"));
+        assertEquals(Rank.JACK, Rank.getRankFromSymbol("VCo"));
+        assertEquals(Rank.QUEEN, Rank.getRankFromSymbol("DCa"));
+        assertEquals(Rank.KING, Rank.getRankFromSymbol("RTr"));
+        assertEquals(Rank.ACE, Rank.getRankFromSymbol("APi"));
     }
 
     @Test
@@ -34,6 +42,7 @@ class RankTest {
         assertEquals("R", Rank.KING.getSymbol());
         assertEquals("A", Rank.ACE.getSymbol());
     }
+
 
     @Test
     void testGetName() {
