@@ -1,6 +1,11 @@
 package com.seinksansdoozebank.fr.controller;
 
-import com.seinksansdoozebank.fr.model.*;
+import com.seinksansdoozebank.fr.model.CombinaisonValue;
+import com.seinksansdoozebank.fr.model.Card;
+import com.seinksansdoozebank.fr.model.Combinaison;
+import com.seinksansdoozebank.fr.model.Hand;
+import com.seinksansdoozebank.fr.model.Victory;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
