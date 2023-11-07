@@ -63,6 +63,7 @@ public class Referee {
         // Sorted list of cards
         // Get a copy of the list of cards
         List<Card> cards = new ArrayList<>(List.copyOf(hand.getCards()));
+        cards.sort(Card::compareTo);
         // if the first Card is a TWO and the last one is an ACE put the ACE at the beginning of the list
         if (cards.get(0).getRank().equals(Rank.TWO) && cards.get(cards.size() - 1).getRank().equals(Rank.ACE)) {
             cards.add(0, cards.remove(cards.size() - 1));

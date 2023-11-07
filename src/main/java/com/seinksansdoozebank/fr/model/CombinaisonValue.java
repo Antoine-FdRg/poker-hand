@@ -93,7 +93,6 @@ public class CombinaisonValue {
         return victoryCondition.toString();
     }
 
-
     /**
      * Get the best card of the combinaison
      *
