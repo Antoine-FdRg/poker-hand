@@ -45,9 +45,16 @@ public class CombinaisonValue {
                     if (cards1.size() != 1 || cards2.size() != 1) {
                         throw new IllegalStateException("There is not a pair in the hand");
                     }
-
-                    return this.getKicker().compareTo(combinaison2.getKicker());
-
+                    // compare all kickers of the pair
+                    for (int i = 0; i < this.getKickers().size(); i++) {
+                        result = this.getKickers().get(i).compareTo(combinaison2.getKickers().get(i));
+                        if (result > 0) {
+                            return 1;
+                        } else if (result < 0) {
+                            return -1;
+                        }
+                    }
+                    return 0;
                 }
                 default -> {
                     return this.getBestCard().compareTo(combinaison2.getBestCard());
@@ -134,48 +141,15 @@ public class CombinaisonValue {
      *
      * @return the kicker of the combinaison
      */
-    protected Card getKicker() {
+    protected List<Card> getKickers() {
         switch (this.combinaison) {
             case PAIR -> {
-                //Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
-                Map<Card, Integer> map = this.cards.stream()
-                        .distinct()
-                        .collect(Collectors.toMap(
-                                Function.identity(),
-                                v -> Collections.frequency(this.cards, v))
-                        );
                 //Création d'une liste dans laquelle on ne garde que ls cards qui apparaissent une seule fois dans la main
-                List<Card> cards = new ArrayList<>(map.entrySet().stream()
-                        .filter(entry -> entry.getValue() == 1)
-                        .map(Map.Entry::getKey)
-                        .sorted(Collections.reverseOrder())
-                        .toList());
-                return cards.get(0);
+                List<Card> cards = this.getCardsWithOccurence(this.cards, 1).stream().sorted(Collections.reverseOrder()).toList();
+                return cards;
             }
             default -> throw new IllegalStateException("There is no kicker for this combinaison");
         }
-    }
-
-    /**
-     * Get the string representation of the straight
-     * The straight is represented by the cards symbols separated by a space
-     *
-     * @return the string representation of the straight
-     */
-    String toStringStraight() {
-        List<Card> cards = this.getCards();
-        StringBuilder stringBuilder = new StringBuilder();
-        if (cards.contains(new Card(Rank.ACE, Suit.CLUB)) || cards.contains(new Card(Rank.ACE, Suit.DIAMOND)) || cards.contains(new Card(Rank.ACE, Suit.HEART)) || cards.contains(new Card(Rank.ACE, Suit.SPADE))) {
-            stringBuilder.append("A ");
-        }
-        // if there is a ACE in the hand, the ACE is set to the first card
-        for (Card card : cards) {
-            if (card.getRank().equals(Rank.ACE)) {
-                continue;
-            }
-            stringBuilder.append(card.getRank().getSymbol()).append(" ");
-        }
-        return stringBuilder.toString();
     }
 
     /**

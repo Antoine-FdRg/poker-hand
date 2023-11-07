@@ -327,14 +327,12 @@ class CombinaisonValueTest {
 
     /**
      * Test Pair vs Pair equals comparison
-     * Here the Pair of 2 should lose because it's third kicker is a 6
-     *
      */
     @Test
     void testComparePairVsPairEqualsKicker3() {
         // Test comparing two Pairs
-        Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "6Co"));
-        Hand hand2 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "7Co"));
+        Hand hand1 = new Hand(List.of("2Co", "2Ca", "3Tr", "5Pi", "6Co"));
+        Hand hand2 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "6Co"));
 
         CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.PAIR, hand1.getCards());
         CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.PAIR, hand2.getCards());
