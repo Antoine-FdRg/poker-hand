@@ -25,12 +25,16 @@ public class CombinaisonValue {
             return -1;
         } else {
             switch (this.combinaison) {
-                /* we compare two different threeOfAKind, there is no null case for this combination */
+                /* we compare two different threeOfAKind, there is no null case for this combination so we throw an exception */
                 case THREE_OF_A_KIND -> {
                     if (cards.get(0).compareTo(combinaison2.cards.get(0)) > 0) {
                         return 1;
-                    } else {
+                    }
+                    else if (cards.get(0).compareTo(combinaison2.cards.get(0)) < 0) {
                         return -1;
+                    }
+                    else {
+                        throw new IllegalArgumentException("Il est impossible d'avoir deux brelans identiques");
                     }
                 }
                 default -> {
