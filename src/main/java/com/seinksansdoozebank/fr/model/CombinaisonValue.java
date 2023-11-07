@@ -110,22 +110,6 @@ public class CombinaisonValue {
                 }
                 break;
             case PAIR:
-                //Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
-                Map<Card, Integer> map = this.cards.stream()
-                        .distinct()
-                        .collect(Collectors.toMap(
-                                Function.identity(),
-                                v -> Collections.frequency(this.cards, v))
-                        );
-                //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
-                List<Card> cards = new ArrayList<>(map.entrySet().stream()
-                        .filter(entry -> entry.getValue() == 2)
-                        .map(Map.Entry::getKey)
-                        .toList());
-                //Tri pour afficher la carte la plus élevée en premier
-                Collections.sort(cards);
-                if (cards.size() != 1)
-                    throw new IllegalStateException("There is not one pair in the hand");
                 victoryCondition.append("Paire de ").append(cards.get(0).getRank().getName());
                 break;
             default:
@@ -154,6 +138,7 @@ public class CombinaisonValue {
                 List<Card> cards = new ArrayList<>(map.entrySet().stream()
                         .filter(entry -> entry.getValue() == 1)
                         .map(Map.Entry::getKey)
+                        .sorted(Collections.reverseOrder())
                         .toList());
                 return cards.get(0);
             }

@@ -275,6 +275,96 @@ class CombinaisonValueTest {
     }
 
     /**
+     * Test Pair vs Straight comparison
+     * Here the Pair should lose
+     * because the Pair is a Pair of 2
+     * and the Straight is a Straight of 6
+     */
+    @Test
+    void testComparePairVsStraight() {
+        // Test comparing a Pair and a Straight
+        Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "6Co"));
+        Hand hand2 = new Hand(List.of("7Co", "8Ca", "9Tr", "10Pi", "VCo"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.PAIR, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.STRAIGHT, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result < 0);
+    }
+
+    /**
+     * Test Pair vs Pair comparison
+     * Here the Pair of 2 should lose
+     */
+    @Test
+    void testComparePairVsPair() {
+        // Test comparing two Pairs
+        Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "6Co"));
+        Hand hand2 = new Hand(List.of("7Co", "7Ca", "9Tr", "10Pi", "VCo"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.PAIR, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.PAIR, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result < 0);
+    }
+
+    /**
+     * Test Pair vs Pair equals comparison
+     * Here the Pair of 2 should lose because it's first kicker is a 6
+     * and the Pair of 7 has a 10 as first kicker
+     */
+    @Test
+    void testComparePairVsPairEqualsKicker1() {
+        // Test comparing two Pairs
+        Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "6Co"));
+        Hand hand2 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "7Co"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.PAIR, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.PAIR, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result < 0);
+    }
+
+    /**
+     * Test Pair vs Pair equals comparison
+     * Here the Pair of 2 should lose because it's second kicker is a 7
+     */
+    @Test
+    void testComparePairVsPairEqualsKicker2() {
+        // Test comparing two Pairs
+        Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "6Co"));
+        Hand hand2 = new Hand(List.of("2Co", "2Ca", "4Tr", "6Pi", "7Co"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.PAIR, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.PAIR, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result < 0);
+    }
+
+    /**
+     * Test Pair vs Pair equals comparison
+     * Here the Pair of 2 should lose because it's third kicker is a 6
+     *
+     */
+    @Test
+    void testComparePairVsPairEqualsKicker3() {
+        // Test comparing two Pairs
+        Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "6Co"));
+        Hand hand2 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "7Co"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.PAIR, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.PAIR, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result < 0);
+    }
+
+
+    /**
      * Test the toString method of the CombinaisonValue class
      * when generating the string representation of a CombinaisonValue
      * Here the combinaison is a Pair

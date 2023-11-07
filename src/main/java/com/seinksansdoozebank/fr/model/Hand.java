@@ -17,7 +17,7 @@ public class Hand {
             this.cards.add(new Card(Rank.getRankFromSymbol(card), Suit.getSuitFromSymbol(card)));
         }
         //sorting cards
-        this.cards.sort(Comparator.comparing(Card::getRank));
+        //this.cards.sort(Comparator.comparing(Card::getRank));
     }
 
     public List<Card> getCards() {

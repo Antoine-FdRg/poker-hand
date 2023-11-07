@@ -298,4 +298,39 @@ class RefereeTest {
         assertFalse(isStraight.isPresent());
     }
 
+    /**
+     * Test the searchPair method of the Referee class
+     * Here the hand is a pair
+     * so the searchPair method should return a list of cards
+     *
+     * @see Referee#searchPair(Hand)
+     */
+    @Test
+    void testIsPairWithPair() {
+        // Create a hand with a pair
+        Hand hand = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "VCo"));
+
+        Referee referee = new Referee();
+        Optional<List<Card>> isPair = referee.searchPair(hand);
+
+        assertTrue(isPair.isPresent());
+    }
+
+    /**
+     * Test the searchPair method of the Referee class
+     * Here the hand is not a pair
+     * so the searchPair method should return an empty optional
+     *
+     * @see Referee#searchPair(Hand)
+     */
+    @Test
+    void testIsPairNoPair() {
+        // Create a hand with no pair
+        Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
+
+        Referee referee = new Referee();
+        Optional<List<Card>> isPair = referee.searchPair(hand);
+
+        assertFalse(isPair.isPresent());
+    }
 }
