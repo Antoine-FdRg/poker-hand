@@ -315,7 +315,7 @@ class CombinaisonValueTest {
     @Test
     void testComparePairVsPairEqualsKicker2() {
         // Test comparing two Pairs
-        Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "6Co"));
+        Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "7Ca"));
         Hand hand2 = new Hand(List.of("2Co", "2Ca", "4Tr", "6Pi", "7Co"));
 
         CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.PAIR, hand1.getCards());
