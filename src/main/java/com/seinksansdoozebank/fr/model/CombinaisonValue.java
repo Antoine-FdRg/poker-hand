@@ -31,33 +31,14 @@ public class CombinaisonValue {
         } else {
             switch (this.combinaison) {
                 case PAIR -> {
-                    //Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
-                    Map<Card, Integer> map1 = cards.stream()
-                            .distinct()
-                            .collect(Collectors.toMap(
-                                    Function.identity(),
-                                    v -> Collections.frequency(cards, v))
-                            );
                     //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
-                    List<Card> cards1 = new ArrayList<>(map1.entrySet().stream()
-                            .filter(entry -> entry.getValue() == 2)
-                            .map(Map.Entry::getKey)
-                            .toList());
+                    List<Card> cards1 = this.getCardsWithOccurence(this.cards, 2);
                     //Tri pour afficher la carte la plus élevée en premier
                     Collections.sort(cards1);
                     cards1.sort(Collections.reverseOrder());
-                    //Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
-                    Map<Card, Integer> map2 = combinaison2.getCards().stream()
-                            .distinct()
-                            .collect(Collectors.toMap(
-                                    Function.identity(),
-                                    v -> Collections.frequency(combinaison2.getCards(), v))
-                            );
+
                     //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
-                    List<Card> cards2 = new ArrayList<>(map2.entrySet().stream()
-                            .filter(entry -> entry.getValue() == 2)
-                            .map(Map.Entry::getKey)
-                            .toList());
+                    List<Card> cards2 = this.getCardsWithOccurence(combinaison2.getCards(), 2);
                     //Tri pour afficher la carte la plus élevée en premier
                     Collections.sort(cards2);
                     cards2.sort(Collections.reverseOrder());
@@ -74,6 +55,35 @@ public class CombinaisonValue {
             }
 
         }
+    }
+
+    /*
+     *  Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
+     *
+     * @param cards
+     * @return Map<Card, Integer> map
+     */
+    protected Map<Card, Integer> createMapCountingOccurences(List<Card> cards) {
+        return cards.stream()
+                .distinct()
+                .collect(Collectors.toMap(
+                        Function.identity(),
+                        v -> Collections.frequency(cards, v))
+                );
+    }
+
+    /**
+     * Création d'une liste dans laquelle on ne garde que les cards qui apparaissent un certain nombre de fois dans la main
+     * @param cards La liste de cartes
+     * @param occurence Le nombre de fois qu'une carte doit apparaitre dans la main
+     * @return  List<Card> cards
+     */
+    protected List<Card> getCardsWithOccurence(List<Card> cards, int occurence) {
+        Map<Card, Integer> map = this.createMapCountingOccurences(cards);
+        return new ArrayList<>(map.entrySet().stream()
+                .filter(entry -> entry.getValue() == occurence)
+                .map(Map.Entry::getKey)
+                .toList());
     }
 
     /**

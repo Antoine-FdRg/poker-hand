@@ -109,7 +109,7 @@ public class Referee {
 
         if (cards.size() == 1){
             // remove the card who's in the pair and sort the other card descending
-            List<Card> list = new java.util.ArrayList<>(hand.getCards().stream()
+            List<Card> list = new ArrayList<>(hand.getCards().stream()
                     .filter(card -> !card.equals(cards.get(0)))
                     .sorted(Collections.reverseOrder())
                     .toList());
