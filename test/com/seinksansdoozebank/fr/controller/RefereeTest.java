@@ -322,11 +322,6 @@ class RefereeTest {
         victory = referee.compareHands(threeOfAKindHandOfEight, threeOfAKindHandOfAce);
         assertEquals(victory.getHand(), threeOfAKindHandOfAce);
 
-        /* case with the same threeOfAKind but the highest card of each hand is different */
-        Hand threeOfAKindHandOfEightStronger = new Hand(new ArrayList<>(List.of("8Ca","3Tr","8Tr","7Tr","8Tr")));
-        victory = referee.compareHands(threeOfAKindHandOfEight, threeOfAKindHandOfEightStronger);
-        assertEquals(victory.getHand(), threeOfAKindHandOfEightStronger);
-
         /* We test if the straight is stronger than the threeOfAKind*/
         Hand straigthHand = new Hand(new ArrayList<>(List.of("2Co","3Tr","4Tr","5Tr","6Tr")));
         Hand threeOfAKindHandOfthree = new Hand(new ArrayList<>(List.of("2Pi","3Tr","4Tr","3Tr","3Tr")));

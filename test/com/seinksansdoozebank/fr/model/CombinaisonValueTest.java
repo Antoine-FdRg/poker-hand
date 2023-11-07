@@ -46,7 +46,7 @@ class CombinaisonValueTest {
 
         /*We test if the method compareto in a threeOfAKind case works*/
         assertTrue(testThreeOfAKindEight.compareTo(testThreeOfAKindSix) < 0);
-        assertThrows(IllegalArgumentException.class,()->testThreeOfAKindEight.compareTo(testThreeOfAKindKing),"Il est impossible d'avoir deux brelans identiques");
+        assertThrows(IllegalStateException.class,()->testThreeOfAKindEight.compareTo(testThreeOfAKindKing),"Il est impossible d'avoir deux brelans identiques");
     }
 
     /**

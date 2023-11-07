@@ -34,7 +34,7 @@ public class CombinaisonValue {
                         return -1;
                     }
                     else {
-                        throw new IllegalArgumentException("Il est impossible d'avoir deux brelans identiques");
+                        throw new IllegalStateException("Il est impossible d'avoir deux brelans identiques");
                     }
                 }
                 default -> {
