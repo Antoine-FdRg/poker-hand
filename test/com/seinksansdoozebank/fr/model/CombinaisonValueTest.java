@@ -177,6 +177,12 @@ class CombinaisonValueTest {
         assertEquals("Quinte Broadway", combinaisonValue.toString());
     }
 
+    /**
+     * Test comparing two CombinaisonValue objects with the same combinaison.
+     * Here the hand2 is the winner because the best card is a JACK
+     *
+     * @see CombinaisonValue#compareTo(CombinaisonValue)
+     */
     @Test
     void testCompareToSameCombinaison() {
         // Test comparing two CombinaisonValue objects with the same combinaison
@@ -190,6 +196,12 @@ class CombinaisonValueTest {
         assertTrue(result < 0);
     }
 
+    /**
+     * Test comparing two CombinaisonValue objects with different combinaisons.
+     * Here the hand1 is the winner because the combinaison is a Straight
+     *
+     * @see CombinaisonValue#compareTo(CombinaisonValue)
+     */
     @Test
     void testCompareToDifferentCombinaison() {
         // Test comparing two CombinaisonValue objects with different combinaisons
@@ -200,9 +212,15 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand2.getCards());
 
         int result = combinaisonValue1.compareTo(combinaisonValue2);
-        assertTrue(result > 0); // Straight is lower than Highest Card
+        assertTrue(result > 0);
     }
 
+    /**
+     * Test getting the best card from a CombinaisonValue.
+     * Here the best card is a JACK
+     *
+     * @see CombinaisonValue#getBestCard()
+     */
     @Test
     void testGetBestCard() {
         // Test getting the best card from a CombinaisonValue
@@ -213,6 +231,12 @@ class CombinaisonValueTest {
         assertEquals(new Card(Rank.SIX, Suit.CLUB), bestCard);
     }
 
+    /**
+     * Test getting the combinaison from a CombinaisonValue.
+     * Here the combinaison is a Straight
+     *
+     * @see CombinaisonValue#getCombinaison()
+     */
     @Test
     void testGetCombinaison() {
         // Test getting the combinaison from a CombinaisonValue
@@ -223,23 +247,33 @@ class CombinaisonValueTest {
         assertEquals(Combinaison.STRAIGHT, combinaison);
     }
 
+    /**
+     * Test generating the string representation of a CombinaisonValue for a STRAIGHT.
+     * Here the combinaison is a Straight of 6
+     *
+     * @see CombinaisonValue#toString()
+     */
     @Test
     void testStraightToString() {
         // Test generating the string representation of a CombinaisonValue
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
-        String stringValue = combinaisonValue.toString();
-        assertEquals("Quinte de 6", stringValue); //TODO: check if this is the best way to print it
+        assertEquals("Quinte de 6", combinaisonValue.toString()); //TODO: check if this is the best way to print it
     }
 
+    /**
+     * Test generating the string representation of a CombinaisonValue for a FLUSH.
+     * Here the combinaison is a Flush of Heart
+     *
+     * @see CombinaisonValue#toString()
+     */
     @Test
     void testFlushToString() {
         // Test generating the string representation of a CombinaisonValue
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "6Co"));
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.FLUSH, hand.getCards());
 
-        String stringValue = combinaisonValue.toString();
-        assertEquals("Couleur de Coeur", stringValue);
+        assertEquals("Couleur de Coeur", combinaisonValue.toString());
     }
 }

@@ -24,7 +24,25 @@ public class CombinaisonValue {
         } else if (result < 0) {
             return -1;
         } else {
-            return this.getBestCard().compareTo(combinaison2.getBestCard());
+            switch (this.combinaison) {
+                default -> {
+                    // compare all kickers of the pair
+                    List<Card> kickers = this.getCards();
+                    List<Card> comparedKickers = combinaison2.getCards();
+                    if (kickers.size() != comparedKickers.size()) {
+                        throw new IllegalStateException("There is not the same number of kickers");
+                    }
+                    for (int i = 0; i < kickers.size(); i++) {
+                        result = kickers.get(i).compareTo(comparedKickers.get(i));
+                        if (result > 0) {
+                            return 1;
+                        } else if (result < 0) {
+                            return -1;
+                        }
+                    }
+                    return 0;
+                }
+            }
         }
     }
 
@@ -70,6 +88,7 @@ public class CombinaisonValue {
         }
         return victoryCondition.toString();
     }
+
 
     /**
      * Get the best card of the combinaison

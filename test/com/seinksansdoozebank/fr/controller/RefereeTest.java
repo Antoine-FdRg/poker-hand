@@ -303,7 +303,7 @@ class RefereeTest {
      * @see Referee#compareHands(Hand, Hand)
      */
     @Test
-    void testVictoryFullAgainstDoublePair() {
+    void testVictoryFlushAgainstThreeOfAKind() {
         // Create a hand with a full house
         Hand hand = new Hand(List.of("2Co", "3Co", "10Co", "VCo", "ACo"));
         Hand hand2 = new Hand(List.of("2Co", "2Ca", "2Tr", "3Pi", "4Co"));
@@ -379,7 +379,7 @@ class RefereeTest {
     /**
      * Test the compareHands method of the Referee class
      * Here the hand1 has a flush
-     * and the hand2 has a flush to with different cards
+     * and the hand2 has a flush too, but with different cards
      * so the Victory should be null
      *
      * @see Referee#compareHands(Hand, Hand)
