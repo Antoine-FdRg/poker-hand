@@ -52,7 +52,7 @@ public class Referee {
         }
         response=this.searchPair(hand);
         if (response.isPresent()) {
-            return new CombinaisonValue(Combinaison.STRAIGHT, response.get());
+            return new CombinaisonValue(Combinaison.PAIR, response.get());
         }
         return new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand.getBestCard()));
     }
