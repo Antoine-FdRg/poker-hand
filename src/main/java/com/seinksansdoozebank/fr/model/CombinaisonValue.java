@@ -49,6 +49,9 @@ public class CombinaisonValue {
             case HIGHEST_CARD:
                 victoryCondition.append("carte la plus élevée : ").append(this.getBestCard().getRank().getName());
                 break;
+            case FLUSH:
+                victoryCondition.append("Couleur de ").append(this.getBestCard().getSuit().getName());
+                break;
             case STRAIGHT:
                 int size = this.cards.size();
                 if (this.cards.get(size - 1).getRank().equals(Rank.ACE)) {
@@ -66,28 +69,6 @@ public class CombinaisonValue {
                 break;
         }
         return victoryCondition.toString();
-    }
-
-    /**
-     * Get the string representation of the straight
-     * The straight is represented by the cards symbols separated by a space
-     *
-     * @return the string representation of the straight
-     */
-    String toStringStraight() {
-        List<Card> cards = this.getCards();
-        StringBuilder stringBuilder = new StringBuilder();
-        if (cards.contains(new Card(Rank.ACE, Suit.CLUB)) || cards.contains(new Card(Rank.ACE, Suit.DIAMOND)) || cards.contains(new Card(Rank.ACE, Suit.HEART)) || cards.contains(new Card(Rank.ACE, Suit.SPADE))) {
-            stringBuilder.append("A ");
-        }
-        // if there is a ACE in the hand, the ACE is set to the first card
-        for (Card card : cards) {
-            if (card.getRank().equals(Rank.ACE)) {
-                continue;
-            }
-            stringBuilder.append(card.getRank().getSymbol()).append(" ");
-        }
-        return stringBuilder.toString();
     }
 
     /**

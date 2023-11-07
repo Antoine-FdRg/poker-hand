@@ -1,10 +1,6 @@
 package com.seinksansdoozebank.fr.controller;
 
-import com.seinksansdoozebank.fr.model.Card;
-import com.seinksansdoozebank.fr.model.Combinaison;
-import com.seinksansdoozebank.fr.model.CombinaisonValue;
-import com.seinksansdoozebank.fr.model.Hand;
-import com.seinksansdoozebank.fr.model.Victory;
+import com.seinksansdoozebank.fr.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -296,6 +292,145 @@ class RefereeTest {
         Optional<List<Card>> isStraight = referee.searchStraight(hand);
 
         assertFalse(isStraight.isPresent());
+    }
+
+    /**
+     * Test the compareHands method of the Referee class
+     * Here the hand has a flush
+     * and the hand2 has a double pair
+     * So the victory should be for the hand with the flush
+     *
+     * @see Referee#compareHands(Hand, Hand)
+     */
+    @Test
+    void testVictoryFullAgainstDoublePair() {
+        // Create a hand with a full house
+        Hand hand = new Hand(List.of("2Co", "3Co", "10Co", "VCo", "ACo"));
+        Hand hand2 = new Hand(List.of("2Co", "2Ca", "2Tr", "3Pi", "4Co"));
+
+        Referee referee = new Referee();
+        Victory victory = referee.compareHands(hand, hand2);
+
+        assertNotNull(victory);
+        assertEquals(Combinaison.FLUSH, victory.getCombinaisonValue().getCombinaison());
+    }
+
+    /**
+     * Test the compareHands method of the Referee class
+     * Here the hand has a flush
+     * And the hand2 has a straight
+     * So the victory should be for the hand with the flush
+     *
+     * @see Referee#compareHands(Hand, Hand)
+     */
+    @Test
+    void testVictoryFlushAgainstStraight() {
+        // Create a hand with a flush
+        Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
+        Hand hand2 = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
+
+        Referee referee = new Referee();
+        Victory victory = referee.compareHands(hand, hand2);
+
+        assertNotNull(victory);
+        assertEquals(Combinaison.FLUSH, victory.getCombinaisonValue().getCombinaison());
+    }
+
+    /**
+     * Test the getBestCombinaison method of the Referee class
+     * Here the hand has a flush
+     * so the getBestCombinaison method should return a CombinaisonValue with the FLUSH combinaison
+     * and the list of cards of the flush
+     *
+     * @see Referee#getBestCombinaison(Hand)
+     */
+    @Test
+    void testGetBestCombinaisonFlush() {
+        // Create a hand with a flush
+        Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
+
+        Referee referee = new Referee();
+        CombinaisonValue combinaisonValue = referee.getBestCombinaison(hand);
+
+        assertNotNull(combinaisonValue);
+        assertEquals(Combinaison.FLUSH, combinaisonValue.getCombinaison());
+    }
+
+    /**
+     * Test the compareHands method of the Referee class
+     * Here the hand1 has a flush
+     * and the hand2 has a flush to with the exact same cards
+     * so the Victory should be null
+     *
+     * @see Referee#compareHands(Hand, Hand)
+     */
+    @Test
+    void testVictoryFlushAgainstFlush() {
+        // Create a hand with a flush
+        Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
+        Hand hand2 = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
+
+        Referee referee = new Referee();
+        Victory victory = referee.compareHands(hand, hand2);
+
+        assertNull(victory);
+    }
+
+    /**
+     * Test the compareHands method of the Referee class
+     * Here the hand1 has a flush
+     * and the hand2 has a flush to with different cards
+     * so the Victory should be null
+     *
+     * @see Referee#compareHands(Hand, Hand)
+     */
+    @Test
+    void testVictoryFlushAgainstFlushDifferentCards() {
+        // Create a hand with a flush
+        Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
+        Hand hand2 = new Hand(List.of("2Ca", "3Ca", "4Ca", "5Ca", "VCo"));
+
+        Referee referee = new Referee();
+        Victory victory = referee.compareHands(hand, hand2);
+
+        assertNotNull(victory);
+        assertEquals(Combinaison.FLUSH, victory.getCombinaisonValue().getCombinaison());
+    }
+
+    /**
+     * Test the searchFlush method of the Referee class
+     * Here the hand is a flush
+     * so the searchFlush method should return a list of cards
+     *
+     * @see Referee#searchFlush(Hand)
+     */
+    @Test
+    void testIsFlushWithFlush() {
+        // Create a hand with a flush
+        Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
+
+        Referee referee = new Referee();
+        Optional<List<Card>> isFlush = referee.searchFlush(hand);
+
+        assertTrue(isFlush.isPresent());
+    }
+
+    /**
+     * Test the searchFlush method of the Referee class
+     * Here the hand is not a flush
+     * so the searchFlush method should return an empty optional
+     *
+     * @see Referee#searchFlush(Hand)
+     */
+    @Test
+    void testIsFlushNoFlush() {
+        // Create a hand with no flush
+        Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
+
+        Referee referee = new Referee();
+        Optional<List<Card>> isFlush = referee.searchFlush(hand);
+
+        assertFalse(isFlush.isPresent());
     }
 
 }

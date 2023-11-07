@@ -1,13 +1,9 @@
 package com.seinksansdoozebank.fr.controller;
 
 
-import com.seinksansdoozebank.fr.model.Card;
-import com.seinksansdoozebank.fr.model.CombinaisonValue;
-import com.seinksansdoozebank.fr.model.Hand;
-import com.seinksansdoozebank.fr.model.Victory;
-import com.seinksansdoozebank.fr.model.Combinaison;
-import com.seinksansdoozebank.fr.model.Rank;
+import com.seinksansdoozebank.fr.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +37,11 @@ public class Referee {
      * @return the best combinaison
      */
     protected CombinaisonValue getBestCombinaison(Hand hand) {
-        Optional<List<Card>> response = this.searchStraight(hand);
+        Optional<List<Card>> response = this.searchFlush(hand);
+        if (response.isPresent()) {
+            return new CombinaisonValue(Combinaison.FLUSH, response.get());
+        }
+        response = this.searchStraight(hand);
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.STRAIGHT, response.get());
         }
@@ -56,7 +56,9 @@ public class Referee {
      */
     public Optional<List<Card>> searchStraight(Hand hand) {
         // Sorted list of cards
-        List<Card> cards = hand.getCards();
+        // Get a copy of the list of cards
+
+        List<Card> cards = new ArrayList<>(List.copyOf(hand.getCards()));
         // if the first Card is a TWO and the last one is an ACE put the ACE at the beginning of the list
         if (cards.get(0).getRank().equals(Rank.TWO) && cards.get(cards.size() - 1).getRank().equals(Rank.ACE)) {
             cards.add(0, cards.remove(cards.size() - 1));
@@ -73,6 +75,21 @@ public class Referee {
             index++;
         }
         // if the index is equal to the cards size so the hand is a straight
+        if (index == cardsSize) {
+            return Optional.of(cards);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<List<Card>> searchFlush(Hand hand) {
+        List<Card> cards = hand.getCards();
+        int cardsSize = cards.size();
+        Card previousCard = cards.get(0);
+        int index = 1;
+        while (index < cardsSize && previousCard.getSuit().equals(cards.get(index).getSuit())) {
+            previousCard = cards.get(index);
+            index++;
+        }
         if (index == cardsSize) {
             return Optional.of(cards);
         }
