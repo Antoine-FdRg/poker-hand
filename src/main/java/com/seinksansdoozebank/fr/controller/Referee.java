@@ -11,10 +11,7 @@ import com.seinksansdoozebank.fr.model.Rank;
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class Referee {
 
@@ -96,16 +93,7 @@ public class Referee {
      * @return the list of cards if the hand is a pair, empty optional otherwise
      */
     protected Optional<List<Card>> searchPair(Hand hand) {
-        Map<Card, Integer> map = hand.getCards().stream()
-                .distinct()
-                .collect(Collectors.toMap(
-                        Function.identity(),
-                        v -> Collections.frequency(hand.getCards(), v))
-                );
-        List<Card> cards = map.entrySet().stream()
-                .filter(entry -> entry.getValue() == 2)
-                .map(Map.Entry::getKey)
-                .toList();
+        List<Card> cards = CombinaisonValue.getCardsFilteredByOccurence(hand.getCards(), 2);
 
         if (cards.size() == 1){
             // remove the card who's in the pair and sort the other card descending

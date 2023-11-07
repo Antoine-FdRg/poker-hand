@@ -32,22 +32,17 @@ public class CombinaisonValue {
             switch (this.combinaison) {
                 case PAIR -> {
                     //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
-                    List<Card> cards1 = this.getCardsWithOccurence(this.cards, 2);
-                    //Tri pour afficher la carte la plus élevée en premier
-                    Collections.sort(cards1);
-                    cards1.sort(Collections.reverseOrder());
-
+                    List<Card> cardsFilteredByOccurence = getCardsFilteredByOccurence(this.cards, 2);
                     //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
-                    List<Card> cards2 = this.getCardsWithOccurence(combinaison2.getCards(), 2);
-                    //Tri pour afficher la carte la plus élevée en premier
-                    Collections.sort(cards2);
-                    cards2.sort(Collections.reverseOrder());
-                    if (cards1.size() != 1 || cards2.size() != 1) {
+                    List<Card> comparedCardsFilteredByOccurence = getCardsFilteredByOccurence(combinaison2.getCards(), 2);
+                    if (cardsFilteredByOccurence.size() != 1 || comparedCardsFilteredByOccurence.size() != 1) {
                         throw new IllegalStateException("There is not a pair in the hand");
                     }
                     // compare all kickers of the pair
-                    for (int i = 0; i < this.getKickers().size(); i++) {
-                        result = this.getKickers().get(i).compareTo(combinaison2.getKickers().get(i));
+                    List<Card> kickers = this.getKickers();
+                    List<Card> comparedKickers = combinaison2.getKickers();
+                    for (int i = 0; i < kickers.size(); i++) {
+                        result = kickers.get(i).compareTo(comparedKickers.get(i));
                         if (result > 0) {
                             return 1;
                         } else if (result < 0) {
@@ -70,7 +65,7 @@ public class CombinaisonValue {
      * @param cards
      * @return Map<Card, Integer> map
      */
-    protected Map<Card, Integer> createMapCountingOccurences(List<Card> cards) {
+    protected static Map<Card, Integer> createMapCountingOccurences(List<Card> cards) {
         return cards.stream()
                 .distinct()
                 .collect(Collectors.toMap(
@@ -85,8 +80,8 @@ public class CombinaisonValue {
      * @param occurence Le nombre de fois qu'une carte doit apparaitre dans la main
      * @return  List<Card> cards
      */
-    protected List<Card> getCardsWithOccurence(List<Card> cards, int occurence) {
-        Map<Card, Integer> map = this.createMapCountingOccurences(cards);
+    public static List<Card> getCardsFilteredByOccurence(List<Card> cards, int occurence) {
+        Map<Card, Integer> map = createMapCountingOccurences(cards);
         return new ArrayList<>(map.entrySet().stream()
                 .filter(entry -> entry.getValue() == occurence)
                 .map(Map.Entry::getKey)
@@ -144,9 +139,7 @@ public class CombinaisonValue {
     protected List<Card> getKickers() {
         switch (this.combinaison) {
             case PAIR -> {
-                //Création d'une liste dans laquelle on ne garde que ls cards qui apparaissent une seule fois dans la main
-                List<Card> cards = this.getCardsWithOccurence(this.cards, 1).stream().sorted(Collections.reverseOrder()).toList();
-                return cards;
+                return getCardsFilteredByOccurence(this.cards, 1).stream().sorted(Collections.reverseOrder()).toList();
             }
             default -> throw new IllegalStateException("There is no kicker for this combinaison");
         }
