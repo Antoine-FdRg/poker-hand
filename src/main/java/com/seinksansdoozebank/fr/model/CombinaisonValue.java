@@ -25,10 +25,11 @@ public class CombinaisonValue {
             return -1;
         } else {
             switch (this.combinaison) {
+                /* we compare two different threeOfAKind, there is no null case for this combination */
                 case THREE_OF_A_KIND -> {
-                    if(cards.get(0).compareTo(combinaison2.cards.get(0))>0){
+                    if (cards.get(0).compareTo(combinaison2.cards.get(0)) > 0) {
                         return 1;
-                    }else {
+                    } else {
                         return -1;
                     }
                 }
@@ -74,7 +75,7 @@ public class CombinaisonValue {
                 }
                 break;
             case THREE_OF_A_KIND:
-                String followedCondition= toStringThreeOfAKind();
+                String followedCondition = toStringThreeOfAKind();
                 victoryCondition.append("Brelan ").append(followedCondition);
                 break;
             default:
@@ -84,16 +85,16 @@ public class CombinaisonValue {
         return victoryCondition.toString();
     }
 
+    /* We change the string result if it's an Ace or other cards*/
     public String toStringThreeOfAKind() {
-        String result="";
+        String result = "";
         if (cards.get(0).getRank().equals(Rank.ACE)) {
             result = "d'" + cards.get(0).getRank().getName();
         } else {
-            result = "de " +cards.get(0).getRank().getName();
+            result = "de " + cards.get(0).getRank().getName();
         }
         return result;
     }
-
 
 
     /**

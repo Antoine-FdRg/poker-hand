@@ -83,8 +83,12 @@ public class Referee {
         }
         return Optional.empty();
     }
-
+    /**
+     * Search if the hand is a threeOfAKind
+     * @return the list of cards if the hand is a threeOfAKind, empty optional otherwise
+     */
     private Optional<List<Card>> searchThreeOfAKind(Hand hand) {
+        /*We initialize a counter to count if a card is present 3times or not*/
         int counterOfIdenticCard = 0;
         List<Card> cards = hand.getCards();
         for (Card card : hand.getCards()) {
