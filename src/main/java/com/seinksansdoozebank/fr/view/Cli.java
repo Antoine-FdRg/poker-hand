@@ -37,6 +37,13 @@ public class Cli {
     }
 
     /**
+     * Display the alert for a card already used
+     */
+    public void displayAlertCardAlreadyUsed() {
+        System.out.println("Veuillez entrer des cartes différentes");
+    }
+
+    /**
      * Display the winner of the game
      *
      * @param winner the winner of the game

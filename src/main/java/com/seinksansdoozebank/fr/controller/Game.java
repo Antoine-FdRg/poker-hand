@@ -1,7 +1,11 @@
 package com.seinksansdoozebank.fr.controller;
 
 
-import com.seinksansdoozebank.fr.model.*;
+import com.seinksansdoozebank.fr.model.Card;
+import com.seinksansdoozebank.fr.model.Hand;
+import com.seinksansdoozebank.fr.model.Rank;
+import com.seinksansdoozebank.fr.model.Suit;
+import com.seinksansdoozebank.fr.model.Victory;
 import com.seinksansdoozebank.fr.view.Cli;
 
 import java.util.ArrayList;
@@ -58,7 +62,7 @@ public class Game {
             }
             Card testCardPresence = new Card(Rank.getRankFromSymbol(card), Suit.getSuitFromSymbol(card));
             if (deck.contains(testCardPresence)) {
-                view.displayAlertInvalidCard();
+                view.displayAlertCardAlreadyUsed();
                 return false;
             }else{
                 deck.add(testCardPresence);
