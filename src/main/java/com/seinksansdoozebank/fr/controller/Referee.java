@@ -93,16 +93,16 @@ public class Referee {
      * @return the list of cards if the hand is a pair, empty optional otherwise
      */
     protected Optional<List<Card>> searchPair(Hand hand) {
-        List<Card> cards = CombinaisonValue.getCardsFilteredByOccurence(hand.getCards(), 2);
+        List<Card> cardsFilteredByOccurence = CombinaisonValue.getCardsFilteredByOccurence(hand.getCards(), 2);
 
-        if (cards.size() == 1){
+        if (cardsFilteredByOccurence.size() == 1){
             // remove the card who's in the pair and sort the other card descending
             List<Card> list = new ArrayList<>(hand.getCards().stream()
-                    .filter(card -> !card.equals(cards.get(0)))
+                    .filter(card -> !card.equals(cardsFilteredByOccurence.get(0)))
                     .sorted(Collections.reverseOrder())
                     .toList());
             // add the card who's in the pair at the beginning of the list
-            list.add(0, cards.get(0));
+            list.add(0, cardsFilteredByOccurence.get(0));
             return Optional.of(list);
         }
 

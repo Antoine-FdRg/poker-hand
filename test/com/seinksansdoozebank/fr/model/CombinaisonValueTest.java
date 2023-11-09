@@ -280,7 +280,7 @@ class CombinaisonValueTest {
     @Test
     void testComparePairVsPair() {
         // Test comparing two Pairs
-        Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "6Co"));
+        Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "RPi", "6Co"));
         Hand hand2 = new Hand(List.of("7Co", "7Ca", "9Tr", "10Pi", "VCo"));
 
         CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.PAIR, hand1.getCards());

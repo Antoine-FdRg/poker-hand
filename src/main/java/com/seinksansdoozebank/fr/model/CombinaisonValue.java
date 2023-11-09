@@ -38,6 +38,13 @@ public class CombinaisonValue {
                     if (cardsFilteredByOccurence.size() != 1 || comparedCardsFilteredByOccurence.size() != 1) {
                         throw new IllegalStateException("There is not a pair in the hand");
                     }
+                    // compare the pair of the combinaison
+                    result = cardsFilteredByOccurence.get(0).compareTo(comparedCardsFilteredByOccurence.get(0));
+                    if (result > 0) {
+                        return 1;
+                    } else if (result < 0) {
+                        return -1;
+                    }
                     // compare all kickers of the pair
                     List<Card> kickers = this.getKickers();
                     List<Card> comparedKickers = combinaison2.getKickers();
