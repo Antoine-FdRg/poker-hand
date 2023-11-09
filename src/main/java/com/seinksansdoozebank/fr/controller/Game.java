@@ -62,7 +62,7 @@ public class Game {
             }
             Card testCardPresence = new Card(Rank.getRankFromSymbol(card), Suit.getSuitFromSymbol(card));
             if (deck.contains(testCardPresence)) {
-                view.displayAlertCardAlreadyUsed();
+                view.displayAlertCardAlreadyUsed(testCardPresence);
                 return false;
             }else{
                 deck.add(testCardPresence);
