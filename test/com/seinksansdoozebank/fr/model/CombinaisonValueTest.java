@@ -131,7 +131,7 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.SIX,Suit.CLUB), bestCard);
+        assertEquals(new Card(Rank.SIX,Suit.HEART), bestCard);
     }
 
     /**
@@ -150,7 +150,7 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.FIVE,Suit.CLUB), bestCard);
+        assertEquals(new Card(Rank.FIVE,Suit.HEART), bestCard);
 
         hand = new Hand(List.of("10Co", "RCo", "DCo", "VCo", "ACo"));
         combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
@@ -231,7 +231,7 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.SIX, Suit.CLUB), bestCard);
+        assertEquals(new Card(Rank.SIX, Suit.HEART), bestCard);
     }
 
     @Test

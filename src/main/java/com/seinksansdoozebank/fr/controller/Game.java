@@ -1,7 +1,10 @@
 package com.seinksansdoozebank.fr.controller;
 
 
+import com.seinksansdoozebank.fr.model.Card;
 import com.seinksansdoozebank.fr.model.Hand;
+import com.seinksansdoozebank.fr.model.Rank;
+import com.seinksansdoozebank.fr.model.Suit;
 import com.seinksansdoozebank.fr.model.Victory;
 import com.seinksansdoozebank.fr.view.Cli;
 
@@ -14,6 +17,7 @@ public class Game {
     private final List<Hand> hands = new ArrayList<>();
     private final int nbrOfHands;
     private final int nbrOfCards;
+    private static List<Card> deck = new ArrayList<>();
 
     public Game(int nbrOfHands, int nbrOfCards) {
         this.nbrOfCards = nbrOfCards;
@@ -56,7 +60,18 @@ public class Game {
                 view.displayAlertInvalidCard();
                 return false;
             }
+            Card testCardPresence = new Card(Rank.getRankFromSymbol(card), Suit.getSuitFromSymbol(card));
+            if (deck.contains(testCardPresence)) {
+                view.displayAlertCardAlreadyUsed(testCardPresence);
+                return false;
+            }else{
+                deck.add(testCardPresence);
+            }
         }
         return true;
+    }
+
+    public static void resetDeck(){
+        deck = new ArrayList<>();
     }
 }
