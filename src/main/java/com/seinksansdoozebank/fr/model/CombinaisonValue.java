@@ -32,10 +32,10 @@ public class CombinaisonValue {
             switch (this.combinaison) {
                 case PAIR -> {
                     //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
-                    List<Card> cardsFilteredByOccurence = getCardsFilteredByOccurence(this.cards, 2);
+                    List<Card> cardsFilteredByOccurence = getCardsFilteredByOccurence(this.cards, 2); // 2 because the map count card with differents suits as different cards
                     //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
-                    List<Card> comparedCardsFilteredByOccurence = getCardsFilteredByOccurence(combinaison2.getCards(), 2);
-                    if (cardsFilteredByOccurence.size() != 1 || comparedCardsFilteredByOccurence.size() != 1) {
+                    List<Card> comparedCardsFilteredByOccurence = getCardsFilteredByOccurence(combinaison2.getCards(), 2); // 2 because the map count card with differents suits as different cards
+                    if (cardsFilteredByOccurence.size() != 2 || comparedCardsFilteredByOccurence.size() != 2) {
                         throw new IllegalStateException("There is not a pair in the hand");
                     }
                     // compare the pair of the combinaison
@@ -80,8 +80,18 @@ public class CombinaisonValue {
                 .distinct()
                 .collect(Collectors.toMap(
                         Function.identity(),
-                        v -> Collections.frequency(cards, v))
+                        v -> frequency(cards, v))
                 );
+    }
+
+    protected static int frequency(List<Card> list, Card elem) {
+        int count = 0;
+        for (Card e : list) {
+            if (elem.equalsIgnoringSuit(e)) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**

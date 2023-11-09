@@ -95,7 +95,7 @@ public class Referee {
     protected Optional<List<Card>> searchPair(Hand hand) {
         List<Card> cardsFilteredByOccurence = CombinaisonValue.getCardsFilteredByOccurence(hand.getCards(), 2);
 
-        if (cardsFilteredByOccurence.size() == 1){
+        if (cardsFilteredByOccurence.size() == 2){ // 2 because the map count card with differents suits as different cards
             // remove the card who's in the pair and sort the other card descending
             List<Card> list = new ArrayList<>(hand.getCards().stream()
                     .filter(card -> !card.equals(cardsFilteredByOccurence.get(0)))

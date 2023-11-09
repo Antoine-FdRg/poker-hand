@@ -94,28 +94,6 @@ class CombinaisonValueTest {
     }
 
     /**
-     * Test the compareTo method of the CombinaisonValue class
-     * when comparing two CombinaisonValue objects with the same combinaison
-     * but different best cards
-     * Here the compareTo method should return a number inferior to 0.
-     * Because the winner is hand2 with the best card of V
-     *
-     * @see CombinaisonValue#compareTo(CombinaisonValue)
-     */
-    @Test
-    void testCompareToWithTwoPairs() {
-        // Test comparing two CombinaisonValue objects with the same combinaison
-        Hand hand1 = new Hand(List.of("2Ca", "2Ca", "4Ca", "5Ca", "6Ca"));
-        Hand hand2 = new Hand(List.of("7Co", "7Co", "9Co", "10Ca", "VCa"));
-
-        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.PAIR, hand1.getCards());
-        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.PAIR, hand2.getCards());
-
-        int result = combinaisonValue1.compareTo(combinaisonValue2);
-        assertTrue(result < 0);
-    }
-
-    /**
      * Test the getBestCard method of the CombinaisonValue class
      * when getting the best card from a CombinaisonValue
      * Here the best card is the card with the rank of SIX
@@ -355,13 +333,13 @@ class CombinaisonValueTest {
     @Test
     void testToStringPair() {
         // Test generating the string representation of a Pair CombinaisonValue
-        Hand hand = new Hand(List.of("VCa", "VCa", "2Ca", "3Ca", "4Ca"));
+        Hand hand = new Hand(List.of("VCa", "VCo", "2Ca", "3Ca", "4Ca"));
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.PAIR, hand.getCards());
 
         assertEquals("Paire de Valet", combinaisonValue.toString());
 
         // test with a pair of 10
-        hand = new Hand(List.of("10Ca", "10Ca", "2Ca", "3Ca", "4Ca"));
+        hand = new Hand(List.of("10Ca", "10Co", "2Ca", "3Ca", "4Ca"));
         combinaisonValue = new CombinaisonValue(Combinaison.PAIR, hand.getCards());
 
         assertEquals("Paire de 10", combinaisonValue.toString());

@@ -13,7 +13,12 @@ public class Hand {
         this.id = idCounter++;
         this.cards = new ArrayList<>();
         for (String card : cards) {
-            this.cards.add(new Card(Rank.getRankFromSymbol(card), Suit.getSuitFromSymbol(card)));
+            Card newCard = new Card(Rank.getRankFromSymbol(card), Suit.getSuitFromSymbol(card));
+            if (!this.cards.contains(newCard)) {
+                this.cards.add(newCard);
+            } else {
+                throw new IllegalArgumentException("The card " + newCard + " is already in the hand");
+            }
         }
     }
 
@@ -35,7 +40,7 @@ public class Hand {
         return bestCard;
     }
 
-    public static void resetIdCounter(){
+    public static void resetIdCounter() {
         idCounter = 1;
     }
 
