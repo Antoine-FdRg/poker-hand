@@ -35,6 +35,7 @@ class GameTest {
         cards.add("3Ci");
         assertFalse(game.checkInput(cards));
         cards.remove(2);
+        Game.resetDeck();
         cards.add("2Ca");
         assertTrue(game.checkInput(cards));
     }

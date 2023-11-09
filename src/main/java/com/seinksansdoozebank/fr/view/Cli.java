@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.view;
 
+import com.seinksansdoozebank.fr.model.Card;
 import com.seinksansdoozebank.fr.model.Victory;
 
 import java.util.ArrayList;
@@ -34,6 +35,13 @@ public class Cli {
      */
     public void displayAlertInvalidCard() {
         System.out.println("Veuillez entrer des cartes valides");
+    }
+
+    /**
+     * Display the alert for a card already used
+     */
+    public void displayAlertCardAlreadyUsed(Card card) {
+        System.out.println("Veuillez entrer des cartes différentes (carte déjà utilisée: " + card + ")");
     }
 
     /**
