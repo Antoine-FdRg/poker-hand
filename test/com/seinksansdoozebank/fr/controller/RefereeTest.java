@@ -264,6 +264,7 @@ class RefereeTest {
         assertEquals(Combinaison.HIGHEST_CARD, combinaisonValue.getCombinaison());
     }
 
+
     /**
      * Test the searchStraight method of the Referee class
      * Here the hand is a straight
@@ -359,9 +360,44 @@ class RefereeTest {
     void threeOfAKindVictoryTestWithASTraight() {
         /* We test if the straight is stronger than the threeOfAKind*/
         Hand straigthHand = new Hand(new ArrayList<>(List.of("2Co", "3Tr", "4Tr", "5Tr", "6Tr")));
-        Hand threeOfAKindHandOfthree = new Hand(new ArrayList<>(List.of("2Pi", "3Pi", "4Ca", "3Tr", "3Tr")));
+        Hand threeOfAKindHandOfthree = new Hand(new ArrayList<>(List.of("2Pi", "3Pi", "4Ca", "3Tr", "3Ca")));
         victory = referee.compareHands(straigthHand, threeOfAKindHandOfthree);
         assertEquals(victory.getHand(), straigthHand);
     }
 
+    /**
+     * Test the searchPair method of the Referee class
+     * Here the hand is a pair
+     * so the searchPair method should return a list of cards
+     *
+     * @see Referee#searchPair(Hand)
+     */
+    @Test
+    void testIsPairWithPair() {
+        // Create a hand with a pair
+        Hand hand = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "VCo"));
+
+        Referee referee = new Referee();
+        Optional<List<Card>> isPair = referee.searchPair(hand);
+
+        assertTrue(isPair.isPresent());
+    }
+
+    /**
+     * Test the searchPair method of the Referee class
+     * Here the hand is not a pair
+     * so the searchPair method should return an empty optional
+     *
+     * @see Referee#searchPair(Hand)
+     */
+    @Test
+    void testIsPairNoPair() {
+        // Create a hand with no pair
+        Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
+
+        Referee referee = new Referee();
+        Optional<List<Card>> isPair = referee.searchPair(hand);
+
+        assertFalse(isPair.isPresent());
+    }
 }

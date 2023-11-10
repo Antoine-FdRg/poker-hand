@@ -1,7 +1,6 @@
 package com.seinksansdoozebank.fr.model;
 
 import com.seinksansdoozebank.fr.controller.Referee;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -135,7 +134,7 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.SIX, Suit.CLUB), bestCard);
+        assertEquals(new Card(Rank.SIX,Suit.HEART), bestCard);
     }
 
     /**
@@ -154,7 +153,7 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.FIVE, Suit.CLUB), bestCard);
+        assertEquals(new Card(Rank.FIVE,Suit.HEART), bestCard);
 
         hand = new Hand(List.of("10Co", "RCo", "DCo", "VCo", "ACo"));
         combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
@@ -235,7 +234,7 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.SIX, Suit.CLUB), bestCard);
+        assertEquals(new Card(Rank.SIX, Suit.HEART), bestCard);
     }
 
     @Test
@@ -258,6 +257,120 @@ class CombinaisonValueTest {
         assertEquals("Quinte de 6", stringValue); //TODO: check if this is the best way to print it
     }
 
+    /**
+     * Test Pair vs Straight comparison
+     * Here the Pair should lose
+     * because the Pair is a Pair of 2
+     * and the Straight is a Straight of 6
+     */
+    @Test
+    void testComparePairVsStraight() {
+        // Test comparing a Pair and a Straight
+        Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "6Co"));
+        Hand hand2 = new Hand(List.of("7Co", "8Ca", "9Tr", "10Pi", "VCo"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.PAIR, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.STRAIGHT, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result < 0);
+    }
+
+    /**
+     * Test Pair vs Pair comparison
+     * Here the Pair of 2 should lose
+     */
+    @Test
+    void testComparePairVsPair() {
+        // Test comparing two Pairs
+        Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "RPi", "6Co"));
+        Hand hand2 = new Hand(List.of("7Co", "7Ca", "9Tr", "10Pi", "VCo"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.PAIR, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.PAIR, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result < 0);
+    }
+
+    /**
+     * Test Pair vs Pair equals comparison
+     * Here the Pair of 2 should lose because it's first kicker is a 6
+     * and the Pair of 7 has a 10 as first kicker
+     */
+    @Test
+    void testComparePairVsPairEqualsKicker1() {
+        // Test comparing two Pairs
+        Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "6Co", "5Pi"));
+        Hand hand2 = new Hand(List.of("2Co", "2Ca", "7Co", "4Tr", "5Pi"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.PAIR, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.PAIR, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result < 0);
+    }
+
+    /**
+     * Test Pair vs Pair equals comparison
+     * Here the Pair of 2 should lose because it's second kicker is a 7
+     */
+    @Test
+    void testComparePairVsPairEqualsKicker2() {
+        // Test comparing two Pairs
+        Hand hand1 = new Hand(List.of("2Co", "2Ca", "7Ca", "4Tr", "5Pi"));
+        Hand hand2 = new Hand(List.of("2Co", "2Ca", "4Tr", "6Pi", "7Co"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.PAIR, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.PAIR, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result < 0);
+    }
+
+    /**
+     * Test Pair vs Pair equals comparison
+     */
+    @Test
+    void testComparePairVsPairEqualsKicker3() {
+        // Test comparing two Pairs
+        Hand hand1 = new Hand(List.of("2Co", "2Ca", "3Tr", "5Pi", "6Co"));
+        Hand hand2 = new Hand(List.of("2Co", "2Ca", "5Pi", "4Tr", "6Co"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.PAIR, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.PAIR, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result < 0);
+    }
+
+
+    /**
+     * Test the toString method of the CombinaisonValue class
+     * when generating the string representation of a CombinaisonValue
+     * Here the combinaison is a Pair
+     * and the best card is a JACK
+     * <p>
+     * So it should return "Paire de V"
+     *
+     * @see CombinaisonValue#toString()
+     */
+    @Test
+    void testToStringPair() {
+        // Test generating the string representation of a Pair CombinaisonValue
+        Hand hand = new Hand(List.of("VCa", "VCo", "2Ca", "3Ca", "4Ca"));
+        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.PAIR, hand.getCards());
+
+        assertEquals("Paire de Valet", combinaisonValue.toString());
+
+        // test with a pair of 10
+        hand = new Hand(List.of("10Ca", "10Co", "2Ca", "3Ca", "4Ca"));
+        combinaisonValue = new CombinaisonValue(Combinaison.PAIR, hand.getCards());
+
+        assertEquals("Paire de 10", combinaisonValue.toString());
+
+
+    }
     @Test
     void testToStringThreeOfAKindBasicCard() {
         CombinaisonValue threeOfAKindOfTenCombinaison = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.TEN,Suit.CLUB)));
@@ -269,4 +382,20 @@ class CombinaisonValueTest {
         CombinaisonValue threeOfAKindOfAceCombinaison = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.ACE,Suit.CLUB)));
         assertEquals("Brelan d'As", threeOfAKindOfAceCombinaison.toString());
     }
+
+    /**
+     * Test Pair vs three of a kind comparison
+     */
+    @Test
+    void testThreeOAKindVSPair() {
+
+        Hand pairHand = new Hand(List.of("2Co", "2Ca", "5Pi", "4Tr", "6Co"));
+
+        CombinaisonValue threeOfAKindCombination = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.TWO,Suit.HEART)));
+        CombinaisonValue pairCombination = new CombinaisonValue(Combinaison.PAIR, pairHand.getCards());
+
+        int result = threeOfAKindCombination.compareTo(pairCombination);
+        assertTrue(result >0);
+    }
+
 }

@@ -27,6 +27,13 @@ public class Card implements Comparable<Card> {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Card card) {
+            return this.rank.equals(card.rank) && this.suit.equals(card.suit);
+        }
+        return false;
+    }
+
+    public boolean equalsIgnoringSuit(Object obj) {
+        if (obj instanceof Card card) {
             return this.rank.equals(card.rank);
         }
         return false;
@@ -38,8 +45,6 @@ public class Card implements Comparable<Card> {
 
     @Override
     public String toString() {
-        return "Card{" +
-                "rank=" + rank +
-                '}';
+        return rank.getName() + " de " + suit.getName();
     }
 }
