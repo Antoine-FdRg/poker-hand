@@ -26,7 +26,7 @@ class RefereeTest {
     void setUp() {
         referee = new Referee();
         Hand.resetIdCounter();
-        threeOfAKindHandOfEight = new Hand(new ArrayList<>(List.of("8Ca", "3Tr", "8Tr", "5Tr", "8Tr")));
+        threeOfAKindHandOfEight = new Hand(new ArrayList<>(List.of("8Ca", "3Tr", "8Tr", "5Tr", "8Co")));
     }
 
     /**
@@ -299,15 +299,43 @@ class RefereeTest {
 
         assertFalse(isStraight.isPresent());
     }
+    /**
+     * Test the searchThreeOfAKind method of the Referee class
+     * Here the hand is not a threeOfAKind hand
+     * So the searchThreeOfAKind method will return false
+     *
+     * @see Referee#searchThreeOfAKind(Hand)
+     */
+    @Test
+    void searchmissedThreeOfAKindTest(){
+        Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
+        Referee referee = new Referee();
+        Optional<List<Card>> isStraight = referee.searchThreeOfAKind(hand);
+        assertFalse(isStraight.isPresent());
+    }
+    /**
+     * Test the searchThreeOfAKind method of the Referee class
+     * Here the hand has a three of a kind
+     * So the searchThreeOfAKind method will return an optional list with one card
+     *
+     * @see Referee#searchThreeOfAKind(Hand)
+     */
+    @Test
+    void searchThreeOfAKindTest(){
+        Hand hand = new Hand(List.of("2Co", "3Ca", "2Tr", "2Pi", "VCo"));
+        Referee referee = new Referee();
+        Optional<List<Card>> isStraight = referee.searchThreeOfAKind(hand);
+        assertTrue(isStraight.isPresent());
+    }
 
     @Test
     void threeOfAKindCombinaisonTest() {
 
         /* we check if the method searchThreeOfAKind works */
-        Hand hand1 = new Hand(new ArrayList<>(List.of("2Ca", "2Tr", "3Tr", "4Tr", "2Tr")));
-        Hand hand2 = new Hand(new ArrayList<>(List.of("2Ca", "ATr", "3Tr", "4Tr", "2Tr")));
-        assertEquals(Combinaison.THREE_OF_A_KIND, referee.getBestCombinaison(hand1).getCombinaison());
-        assertNotEquals(Combinaison.THREE_OF_A_KIND, referee.getBestCombinaison(hand2).getCombinaison());
+        Hand threeOfAKindOfTwo = new Hand(new ArrayList<>(List.of("2Ca", "2Tr", "3Tr", "4Tr", "2Co")));
+        Hand pairCombination = new Hand(new ArrayList<>(List.of("2Ca", "ATr", "3Tr", "4Tr", "2Tr")));
+        assertEquals(Combinaison.THREE_OF_A_KIND, referee.getBestCombinaison(threeOfAKindOfTwo).getCombinaison());
+        assertNotEquals(Combinaison.THREE_OF_A_KIND, referee.getBestCombinaison(pairCombination).getCombinaison());
     }
 
     @Test
@@ -322,7 +350,7 @@ class RefereeTest {
     @Test
     void threeOfAKindVictoryTestWithTwoDifferentsThreeOfAKind() {
         /* case with two different threeOfAKind  */
-        Hand threeOfAKindHandOfAce = new Hand(new ArrayList<>(List.of("ACa", "3Tr", "ATr", "5Tr", "ATr")));
+        Hand threeOfAKindHandOfAce = new Hand(new ArrayList<>(List.of("ACa", "3Tr", "ATr", "5Tr", "ACo")));
         victory = referee.compareHands(threeOfAKindHandOfEight, threeOfAKindHandOfAce);
         assertEquals(victory.getHand(), threeOfAKindHandOfAce);
     }
@@ -331,8 +359,9 @@ class RefereeTest {
     void threeOfAKindVictoryTestWithASTraight() {
         /* We test if the straight is stronger than the threeOfAKind*/
         Hand straigthHand = new Hand(new ArrayList<>(List.of("2Co", "3Tr", "4Tr", "5Tr", "6Tr")));
-        Hand threeOfAKindHandOfthree = new Hand(new ArrayList<>(List.of("2Pi", "3Tr", "4Tr", "3Tr", "3Tr")));
+        Hand threeOfAKindHandOfthree = new Hand(new ArrayList<>(List.of("2Pi", "3Pi", "4Ca", "3Tr", "3Tr")));
         victory = referee.compareHands(straigthHand, threeOfAKindHandOfthree);
         assertEquals(victory.getHand(), straigthHand);
     }
+
 }

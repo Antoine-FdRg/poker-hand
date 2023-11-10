@@ -23,14 +23,14 @@ class CombinaisonValueTest {
     void setUp() {
         Hand handHighestCardJack = new Hand(List.of("VCa", "2Ca", "3Ca", "4Ca", "5Ca"));
         Hand handHighestCardSix = new Hand(List.of("5Co", "2Ca", "3Ca", "4Ca", "6Ca"));
-        Hand threeOfAKindSix = new Hand(List.of("5Co", "6Ca", "6Tr", "ATr", "6Tr"));
+        Hand threeOfAKindSix = new Hand(List.of("5Co", "6Ca", "6Tr", "ATr", "6Co"));
         Hand threeOfAKindEight = new Hand(List.of("5Co", "8Ca", "8Co", "ATr", "8Tr"));
         Hand threeOfAKindKing = new Hand(List.of("5Co", "RCa", "RCo", "ATr", "RTr"));
         referee = new Referee();
         testBestCardJack = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(handHighestCardJack.getBestCard()));
         testBestCardSix = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(threeOfAKindSix.getBestCard()));
-        testThreeOfAKindEight = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, referee.searchThreeOfAKind(threeOfAKindEight).get());
-        testThreeOfAKindSix = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, referee.searchThreeOfAKind(threeOfAKindSix).get());
+        testThreeOfAKindEight = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.EIGHT,Suit.CLUB)));
+        testThreeOfAKindSix = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.SIX,Suit.CLUB)));
 
     }
 
@@ -260,16 +260,13 @@ class CombinaisonValueTest {
 
     @Test
     void testToStringThreeOfAKindBasicCard() {
-        Hand threeOfAKindOfTenHand = new Hand(List.of("10Co", "10Tr", "ATr", "10Tr", "ACo"));
-
-        CombinaisonValue threeOfAKindOfTenCombinaison = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, referee.searchThreeOfAKind(threeOfAKindOfTenHand).get());
+        CombinaisonValue threeOfAKindOfTenCombinaison = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.TEN,Suit.CLUB)));
         assertEquals("Brelan de 10", threeOfAKindOfTenCombinaison.toString());
     }
 
     @Test
     void testToStringThreeOfAKindAceCard() {
-        Hand threeOfAKindOfAceHand = new Hand(List.of("10Ca", "APi", "ACo", "DTr", "ATr"));
-        CombinaisonValue threeOfAKindOfAceCombinaison = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, referee.searchThreeOfAKind(threeOfAKindOfAceHand).get());
+        CombinaisonValue threeOfAKindOfAceCombinaison = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.ACE,Suit.CLUB)));
         assertEquals("Brelan d'As", threeOfAKindOfAceCombinaison.toString());
     }
 }
