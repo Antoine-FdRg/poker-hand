@@ -49,4 +49,9 @@ public enum Rank implements Comparable<Rank> {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
 }

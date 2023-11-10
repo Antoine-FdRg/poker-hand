@@ -1,13 +1,13 @@
 package com.seinksansdoozebank.fr.model;
 
 import com.seinksansdoozebank.fr.controller.Referee;
-import com.seinksansdoozebank.fr.controller.Referee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CombinaisonValueTest {
     private CombinaisonValue testBestCardJack;
@@ -104,13 +104,13 @@ class CombinaisonValueTest {
      * @see CombinaisonValue#getBestCard()
      */
     @Test
-    void testGetBestCardInStraight () {
+    void testGetBestCardInStraight() {
         // Test getting the best card from a CombinaisonValue
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "6Co"));
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.SIX,Suit.CLUB), bestCard);
+        assertEquals(new Card(Rank.SIX, Suit.CLUB), bestCard);
     }
 
     /**
@@ -129,13 +129,13 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.FIVE,Suit.CLUB), bestCard);
+        assertEquals(new Card(Rank.FIVE, Suit.CLUB), bestCard);
 
         hand = new Hand(List.of("10Co", "RCo", "DCo", "VCo", "ACo"));
         combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.ACE,Suit.HEART), bestCard);
+        assertEquals(new Card(Rank.ACE, Suit.HEART), bestCard);
     }
 
     /**
@@ -275,5 +275,33 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.FLUSH, hand.getCards());
 
         assertEquals("Couleur de Coeur", combinaisonValue.toString());
+    }
+
+    /**
+     * Test generating the string representation of a CombinaisonValue for a HIGHEST_CARD.
+     * Here the combination is the Highest Card with the best Card of JACK and the worst Card of SEVEN
+     * The second combination is the same but with the best Card of Jack and the worst Card of 8
+     * <p>
+     * So the combination Two is winning
+     *
+     * @see CombinaisonValue#compareTo(CombinaisonValue)
+     * @see CombinaisonValue#getCardMakingTheDifference()
+     */
+    @Test
+    void testCompareKickers() {
+        //7Co VPi 10Ca RCo DPi
+        Hand hand1 = new Hand(List.of("7Co", "VPi", "10Ca", "RCo", "DPi"));
+        //RCo VPi 10Ca 8Co DTr
+        Hand hand2 = new Hand(List.of("RCo", "VPi", "10Ca", "8Co", "DTr"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+
+        // Assert the expected result
+        assertEquals(-1, result);
+
+        assertEquals(new Card(Rank.EIGHT, Suit.HEART), combinaisonValue2.getCardMakingTheDifference());
     }
 }

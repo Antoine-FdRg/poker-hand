@@ -329,7 +329,7 @@ class RefereeTest {
      * @see Referee#compareHands(Hand, Hand)
      */
     @Test
-    void testVictoryFlushAgainstStraight() {
+    void testVictoryFlushAgainstStraightExpectFlushWinning() {
         // Create a hand with a flush
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
         Hand hand2 = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
@@ -370,7 +370,7 @@ class RefereeTest {
      * @see Referee#compareHands(Hand, Hand)
      */
     @Test
-    void testVictoryFlushAgainstFlush() {
+    void testEqualFlushAgainstFlush() {
         // Create a hand with a flush
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
         Hand hand2 = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
@@ -383,9 +383,9 @@ class RefereeTest {
 
     /**
      * Test the compareHands method of the Referee class
-     * Here the hand1 has a flush
-     * and the hand2 has a flush too, but with different cards
-     * so the Victory should be null
+     * Here the hand1 has a flush with best card as V
+     * and the hand2 has a flush too, but with best card as 10
+     * so the Victory should be for the hand with the flush with best card as V
      *
      * @see Referee#compareHands(Hand, Hand)
      */
@@ -393,13 +393,33 @@ class RefereeTest {
     void testVictoryFlushAgainstFlushDifferentCards() {
         // Create a hand with a flush
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
-        Hand hand2 = new Hand(List.of("2Ca", "3Ca", "4Ca", "5Ca", "VCo"));
+        Hand hand2 = new Hand(List.of("2Ca", "3Ca", "4Ca", "5Ca", "10Ca"));
 
         Referee referee = new Referee();
         Victory victory = referee.compareHands(hand, hand2);
 
         assertNotNull(victory);
         assertEquals(Combinaison.FLUSH, victory.getCombinaisonValue().getCombinaison());
+    }
+
+    /**
+     * Test the compareHands method of the Referee class
+     * Here the hand1 has a flush
+     * and the hand2 has a flush too, but with different suits
+     * so the Victory should be null
+     *
+     * @see Referee#compareHands(Hand, Hand)
+     */
+    @Test
+    void testEqualFlushWithDifferentSuits() {
+        // Create a hand with a flush
+        Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
+        Hand hand2 = new Hand(List.of("2Ca", "3Ca", "4Ca", "5Ca", "VCa"));
+
+        Referee referee = new Referee();
+        Victory victory = referee.compareHands(hand, hand2);
+
+        assertNull(victory);
     }
 
     /**

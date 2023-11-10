@@ -5,6 +5,7 @@ import java.util.List;
 public class CombinaisonValue {
     private final Combinaison combinaison;
     private final List<Card> cards;
+    private Card cardMakingTheDifference;
 
     public CombinaisonValue(Combinaison combinaison, List<Card> cards) {
         this.combinaison = combinaison;
@@ -33,21 +34,29 @@ public class CombinaisonValue {
                     // compare all kickers of the pair
                     List<Card> kickers = this.getCards();
                     List<Card> comparedKickers = combinaison2.getCards();
-                    if (kickers.size() != comparedKickers.size()) {
-                        throw new IllegalStateException("There is not the same number of kickers");
-                    }
-                    for (int i = 0; i < kickers.size(); i++) {
-                        result = kickers.get(i).compareTo(comparedKickers.get(i));
-                        if (result > 0) {
-                            return 1;
-                        } else if (result < 0) {
-                            return -1;
-                        }
-                    }
-                    return 0;
+                    return compareKickers(kickers, comparedKickers, combinaison2);
                 }
             }
         }
+    }
+
+    protected int compareKickers(List<Card> kickers, List<Card> comparedKickers, CombinaisonValue combinaisonValue2) {
+        if (kickers.size() != comparedKickers.size()) {
+            throw new IllegalStateException("There is not the same number of kickers");
+        }
+        kickers.sort(Card::compareTo);
+        comparedKickers.sort(Card::compareTo);
+        for (int i = 0; i < kickers.size(); i++) {
+            int result = kickers.get(i).compareTo(comparedKickers.get(i));
+            if (result > 0) {
+                this.cardMakingTheDifference = kickers.get(i);
+                return 1;
+            } else if (result < 0) {
+                combinaisonValue2.setCardMakingTheDifference(comparedKickers.get(i));
+                return -1;
+            }
+        }
+        return 0;
     }
 
     /**
@@ -69,7 +78,7 @@ public class CombinaisonValue {
         StringBuilder victoryCondition = new StringBuilder();
         switch (this.combinaison) {
             case HIGHEST_CARD:
-                victoryCondition.append("carte la plus élevée : ").append(this.getBestCard().getRank().getName());
+                victoryCondition.append("carte la plus élevée : ").append(this.cardMakingTheDifference.toString());
                 break;
             case FLUSH:
                 victoryCondition.append("Couleur de ").append(this.getBestCard().getSuit().getName());
@@ -122,5 +131,13 @@ public class CombinaisonValue {
      */
     public Combinaison getCombinaison() {
         return this.combinaison;
+    }
+
+    public void setCardMakingTheDifference(Card cardMakingTheDifference) {
+        this.cardMakingTheDifference = cardMakingTheDifference;
+    }
+
+    public Card getCardMakingTheDifference() {
+        return this.cardMakingTheDifference;
     }
 }

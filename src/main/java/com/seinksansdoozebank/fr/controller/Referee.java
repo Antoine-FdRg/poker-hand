@@ -50,7 +50,7 @@ public class Referee {
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.STRAIGHT, response.get());
         }
-        return new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand.getBestCard()));
+        return new CombinaisonValue(Combinaison.HIGHEST_CARD, hand.getCards());
     }
 
     /**
