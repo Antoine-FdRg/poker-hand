@@ -110,7 +110,7 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.SIX,Suit.CLUB), bestCard);
+        assertEquals(new Card(Rank.SIX,Suit.HEART), bestCard);
     }
 
     /**
@@ -129,9 +129,9 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.FIVE,Suit.CLUB), bestCard);
+        assertEquals(new Card(Rank.FIVE,Suit.HEART), bestCard);
 
-        hand = new Hand(List.of("ACo", "10Co", "RCo", "DCo", "VCo"));
+        hand = new Hand(List.of("10Co", "RCo", "DCo", "VCo", "ACo"));
         combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         bestCard = combinaisonValue.getBestCard();
@@ -171,7 +171,7 @@ class CombinaisonValueTest {
     @Test
     void testToStringStraightWithHighAce() {
         // Test generating the string representation of a straight with an Ace
-        Hand hand = new Hand(List.of("ACo", "10Co", "RCo", "DCo", "VCo"));
+        Hand hand = new Hand(List.of("10Co", "RCo", "DCo", "VCo", "ACo"));
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         assertEquals("Quinte Broadway", combinaisonValue.toString());
@@ -210,7 +210,7 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.SIX, Suit.CLUB), bestCard);
+        assertEquals(new Card(Rank.SIX, Suit.HEART), bestCard);
     }
 
     @Test
@@ -221,26 +221,6 @@ class CombinaisonValueTest {
 
         Combinaison combinaison = combinaisonValue.getCombinaison();
         assertEquals(Combinaison.STRAIGHT, combinaison);
-    }
-
-    @Test
-    void testToStringStraight() {
-        // Test generating the string representation of a straight CombinaisonValue
-        Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
-        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
-
-        String straightString = combinaisonValue.toStringStraight();
-        assertEquals("2 3 4 5 6 ", straightString);
-    }
-
-    @Test
-    void testToStringStraightWithAce() {
-        // Test generating the string representation of a straight with an Ace
-        Hand hand = new Hand(List.of("ACo", "2Ca", "3Tr", "4Pi", "5Co"));
-        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
-
-        String straightString = combinaisonValue.toStringStraight();
-        assertEquals("A 2 3 4 5 ", straightString);
     }
 
     @Test
