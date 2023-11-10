@@ -1,39 +1,39 @@
 package com.seinksansdoozebank.fr.model;
 
 import com.seinksansdoozebank.fr.controller.Referee;
-import com.seinksansdoozebank.fr.controller.Referee;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 class CombinaisonValueTest {
     private CombinaisonValue testBestCardJack;
-    private CombinaisonValue testBestCardFive;
     private CombinaisonValue testThreeOfAKindSix;
     private CombinaisonValue testThreeOfAKindEight;
-    private CombinaisonValue testThreeOfAKindKing;
     private CombinaisonValue testBestCardSix;
+    private Referee referee;
 
     @BeforeEach
     void setUp() {
-        Hand hand1 = new Hand(List.of("VCa", "2Ca", "3Ca", "4Ca", "5Ca"));
-        Hand hand2 = new Hand(List.of("5Co", "2Ca", "3Ca", "4Ca", "6Ca"));
-        Hand hand3= new Hand(List.of("5Co","6Ca","6Tr","ATr","6Tr"));
-        Hand hand4=new Hand(List.of("5Co","8Ca","8Co","ATr","8Tr"));
-        Hand hand5= new Hand(List.of("5Tr","8Ca","8Co","RTr","8Ca"));
-        Hand hand6= new Hand(List.of("6Tr","8Ca","8Co","6Tr","6Ca"));
-
-        testBestCardJack = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand1.getBestCard()));
-        testBestCardFive = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand2.getBestCard()));
-        testBestCardSix= new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand3.getBestCard()));
-        testThreeOfAKindEight = new CombinaisonValue(Combinaison.THREE_OF_A_KIND,hand4.getCards());
-        testThreeOfAKindKing= new CombinaisonValue(Combinaison.THREE_OF_A_KIND,hand5.getCards());
-        testThreeOfAKindSix= new CombinaisonValue(Combinaison.THREE_OF_A_KIND,hand6.getCards());
+        Hand handHighestCardJack = new Hand(List.of("VCa", "2Ca", "3Ca", "4Ca", "5Ca"));
+        Hand handHighestCardSix = new Hand(List.of("5Co", "2Ca", "3Ca", "4Ca", "6Ca"));
+        Hand threeOfAKindSix = new Hand(List.of("5Co", "6Ca", "6Tr", "ATr", "6Tr"));
+        Hand threeOfAKindEight = new Hand(List.of("5Co", "8Ca", "8Co", "ATr", "8Tr"));
+        Hand threeOfAKindKing = new Hand(List.of("5Co", "RCa", "RCo", "ATr", "RTr"));
+        referee = new Referee();
+        testBestCardJack = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(handHighestCardJack.getBestCard()));
+        testBestCardSix = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(threeOfAKindSix.getBestCard()));
+        testThreeOfAKindEight = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, referee.searchThreeOfAKind(threeOfAKindEight).get());
+        testThreeOfAKindSix = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, referee.searchThreeOfAKind(threeOfAKindSix).get());
 
     }
+
 
     /**
      * Test the compareTo method of the CombinaisonValue class
@@ -42,11 +42,18 @@ class CombinaisonValueTest {
     void compareTo() {
         assertTrue(testBestCardJack.compareTo(testBestCardSix) < 0);
         assertTrue(testBestCardSix.compareTo(testBestCardJack) > 0);
+    }
 
+    @Test
+    void compareTowithThreeOfAKindDifferent() {
+        /*We test if the method compareto in a threeOfAKind case when there are different works*/
+        assertTrue(testThreeOfAKindEight.compareTo(testThreeOfAKindSix) > 0);
+    }
 
-        /*We test if the method compareto in a threeOfAKind case works*/
-        assertTrue(testThreeOfAKindEight.compareTo(testThreeOfAKindSix) < 0);
-        assertThrows(IllegalStateException.class,()->testThreeOfAKindEight.compareTo(testThreeOfAKindKing),"Il est impossible d'avoir deux brelans identiques");
+    @Test
+    void compareTowithThreeOfAKindEquality() {
+        /*We test if the method compareto in a threeOfAKind case when there are equals works*/
+        assertThrows(IllegalStateException.class, () -> testThreeOfAKindEight.compareTo(testThreeOfAKindEight), "Il est impossible d'avoir deux brelans identiques");
     }
 
     /**
@@ -122,13 +129,13 @@ class CombinaisonValueTest {
      * @see CombinaisonValue#getBestCard()
      */
     @Test
-    void testGetBestCardInStraight () {
+    void testGetBestCardInStraight() {
         // Test getting the best card from a CombinaisonValue
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "6Co"));
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.SIX,Suit.CLUB), bestCard);
+        assertEquals(new Card(Rank.SIX, Suit.CLUB), bestCard);
     }
 
     /**
@@ -147,13 +154,13 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.FIVE,Suit.CLUB), bestCard);
+        assertEquals(new Card(Rank.FIVE, Suit.CLUB), bestCard);
 
         hand = new Hand(List.of("10Co", "RCo", "DCo", "VCo", "ACo"));
         combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.ACE,Suit.HEART), bestCard);
+        assertEquals(new Card(Rank.ACE, Suit.HEART), bestCard);
     }
 
     /**
@@ -250,13 +257,19 @@ class CombinaisonValueTest {
         String stringValue = combinaisonValue.toString();
         assertEquals("Quinte de 6", stringValue); //TODO: check if this is the best way to print it
     }
+
     @Test
-    void testToStringThreeOfAKind() {
-        Hand threeOfAKindOfAceHand = new Hand(List.of("APi", "10Ca", "ACo", "DTr", "ATr"));
-        Hand threeOfAKindOfTenHand= new Hand(List.of("10Co", "10Tr", "ATr", "10Tr", "ACo"));
-        CombinaisonValue threeOfAKindOfAceCombinaison = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, threeOfAKindOfAceHand.getCards());
-        CombinaisonValue threeOfAKindOfTenCombinaison=new CombinaisonValue(Combinaison.THREE_OF_A_KIND, threeOfAKindOfTenHand.getCards());
-        assertEquals("Brelan d'As", threeOfAKindOfAceCombinaison.toString());
+    void testToStringThreeOfAKindBasicCard() {
+        Hand threeOfAKindOfTenHand = new Hand(List.of("10Co", "10Tr", "ATr", "10Tr", "ACo"));
+
+        CombinaisonValue threeOfAKindOfTenCombinaison = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, referee.searchThreeOfAKind(threeOfAKindOfTenHand).get());
         assertEquals("Brelan de 10", threeOfAKindOfTenCombinaison.toString());
     }
+
+    @Test
+    void testToStringThreeOfAKindAceCard() {
+        Hand threeOfAKindOfAceHand = new Hand(List.of("10Ca", "APi", "ACo", "DTr", "ATr"));
+        CombinaisonValue threeOfAKindOfAceCombinaison = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, referee.searchThreeOfAKind(threeOfAKindOfAceHand).get());
+        assertEquals("Brelan d'As", threeOfAKindOfAceCombinaison.toString());
     }
+}

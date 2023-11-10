@@ -1,6 +1,6 @@
 package com.seinksansdoozebank.fr.model;
 
-import java.util.*;
+import java.util.List;
 
 public class CombinaisonValue {
     private final Combinaison combinaison;
@@ -29,11 +29,9 @@ public class CombinaisonValue {
                 case THREE_OF_A_KIND -> {
                     if (cards.get(0).compareTo(combinaison2.cards.get(0)) > 0) {
                         return 1;
-                    }
-                    else if (cards.get(0).compareTo(combinaison2.cards.get(0)) < 0) {
+                    } else if (cards.get(0).compareTo(combinaison2.cards.get(0)) < 0) {
                         return -1;
-                    }
-                    else {
+                    } else {
                         throw new IllegalStateException("Il est impossible d'avoir deux brelans identiques");
                     }
                 }
@@ -90,7 +88,7 @@ public class CombinaisonValue {
     }
 
     /* We change the string result if it's an Ace or other cards*/
-    public String toStringThreeOfAKind() {
+    private String toStringThreeOfAKind() {
         String result = "";
         if (cards.get(0).getRank().equals(Rank.ACE)) {
             result = "d'" + cards.get(0).getRank().getName();

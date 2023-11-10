@@ -4,12 +4,15 @@ package com.seinksansdoozebank.fr.controller;
 import com.seinksansdoozebank.fr.model.Card;
 import com.seinksansdoozebank.fr.model.CombinaisonValue;
 import com.seinksansdoozebank.fr.model.Hand;
+import com.seinksansdoozebank.fr.model.Suit;
 import com.seinksansdoozebank.fr.model.Victory;
 import com.seinksansdoozebank.fr.model.Combinaison;
 import com.seinksansdoozebank.fr.model.Rank;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class Referee {
@@ -47,8 +50,8 @@ public class Referee {
             return new CombinaisonValue(Combinaison.STRAIGHT, response.get());
         }
         response = this.searchThreeOfAKind(hand);
-        if(response.isPresent()){
-            return new CombinaisonValue(Combinaison.THREE_OF_A_KIND,response.get());
+        if (response.isPresent()) {
+            return new CombinaisonValue(Combinaison.THREE_OF_A_KIND, response.get());
         }
         return new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand.getBestCard()));
     }
@@ -84,27 +87,31 @@ public class Referee {
         }
         return Optional.empty();
     }
+
     /**
      * Search if the hand is a threeOfAKind
+     *
      * @return the list of cards if the hand is a threeOfAKind, empty optional otherwise
      */
-    private Optional<List<Card>> searchThreeOfAKind(Hand hand) {
-        /*We initialize a counter to count if a card is present 3times or not*/
-        int counterOfIdenticCard = 0;
+    public Optional<List<Card>> searchThreeOfAKind(Hand hand) {
+
+        Map<Rank, Integer> cardsCounter = new HashMap<>();
         List<Card> cards = hand.getCards();
-        for (Card card : hand.getCards()) {
-            if (counterOfIdenticCard == 3) {
-                cards.add(card);
-                return Optional.of(cards);
+        for (Card card : cards) {
+            if (cardsCounter.containsKey(card.getRank())) {
+                cardsCounter.replace(card.getRank(), cardsCounter.get(card.getRank()) + 1);
             } else {
-                counterOfIdenticCard = 0;
+                cardsCounter.put(card.getRank(), 1);
             }
-            for (Card card1 : hand.getCards()) {
-                if (card1.getRank().equals(card.getRank())) {
-                    counterOfIdenticCard += 1;
-                }
+
+        }
+        for (Map.Entry<Rank, Integer> entry : cardsCounter.entrySet()) {
+            if (entry.getValue() == 3) {
+                Card cardThreeOfAKind = new Card(entry.getKey(), Suit.CLUB);
+                return Optional.of(List.of(cardThreeOfAKind));
             }
         }
         return Optional.empty();
     }
+
 }
