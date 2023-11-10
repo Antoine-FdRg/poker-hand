@@ -78,7 +78,11 @@ public class CombinaisonValue {
         StringBuilder victoryCondition = new StringBuilder();
         switch (this.combinaison) {
             case HIGHEST_CARD:
-                victoryCondition.append("carte la plus élevée : ").append(this.cardMakingTheDifference.toString());
+                if (this.cardMakingTheDifference == null) {
+                    victoryCondition.append("carte la plus élevée : ").append(this.getBestCard().toString());
+                } else {
+                    victoryCondition.append("carte la plus élevée : ").append(this.cardMakingTheDifference.toString());
+                }
                 break;
             case FLUSH:
                 victoryCondition.append("Couleur de ").append(this.getBestCard().getSuit().getName());

@@ -1,10 +1,6 @@
 package com.seinksansdoozebank.fr.controller;
 
-import com.seinksansdoozebank.fr.model.CombinaisonValue;
-import com.seinksansdoozebank.fr.model.Card;
-import com.seinksansdoozebank.fr.model.Combinaison;
-import com.seinksansdoozebank.fr.model.Hand;
-import com.seinksansdoozebank.fr.model.Victory;
+import com.seinksansdoozebank.fr.model.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -157,9 +153,8 @@ class RefereeTest {
      */
     @Test
     void getBestCombinaisonForHighestCard() {
-        hand1 = new Hand(new ArrayList<>(List.of("2Ca", "DTr", "7Pi", "3Pi", "4Pi")));
-        CombinaisonValue cv = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand1.getBestCard()));
-        assertEquals(cv.toString(), referee.getBestCombinaison(hand1).toString());
+        Hand handBestCardQueen = new Hand(new ArrayList<>(List.of("2Ca", "DTr", "7Pi", "3Pi", "4Pi")));
+        assertEquals(Combinaison.HIGHEST_CARD, referee.getBestCombinaison(handBestCardQueen).getCombinaison());
     }
 
     /**

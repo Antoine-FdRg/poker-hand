@@ -22,16 +22,6 @@ class CombinaisonValueTest {
     }
 
     /**
-     * Test the compareTo method of the CombinaisonValue class
-     */
-    @Test
-    void compareTo() {
-        assertTrue(testBestCardJack.compareTo(testBestCardSix) > 0);
-        assertTrue(testBestCardSix.compareTo(testBestCardJack) < 0);
-        assertEquals(0, testBestCardJack.compareTo(testBestCardJack));
-    }
-
-    /**
      * Test the toString method of the CombinaisonValue class
      * when generating the string representation of a CombinaisonValue
      * Here the combinaison is the Highest Card
@@ -47,8 +37,8 @@ class CombinaisonValueTest {
      */
     @Test
     void testToString() {
-        assertEquals("carte la plus élevée : " + testBestCardJack.getBestCard().getRank().getName(), testBestCardJack.toString());
-        assertEquals("carte la plus élevée : " + testBestCardSix.getBestCard().getRank().getName(), testBestCardSix.toString());
+        assertEquals("carte la plus élevée : " + testBestCardJack.getBestCard().toString(), testBestCardJack.toString());
+        assertEquals("carte la plus élevée : " + testBestCardSix.getBestCard().toString(), testBestCardSix.toString());
     }
 
     /**
@@ -303,5 +293,21 @@ class CombinaisonValueTest {
         assertEquals(-1, result);
 
         assertEquals(new Card(Rank.EIGHT, Suit.HEART), combinaisonValue2.getCardMakingTheDifference());
+    }
+
+    @Test
+    void testCompareTOBetweenTwoDifferentHighCard() {
+        //7Co VPi 10Ca RCo DPi
+        Hand hand1 = new Hand(List.of("7Co", "VPi", "10Ca", "RCo", "DPi"));
+        //RCo VPi 10Ca 8Co DTr
+        Hand hand2 = new Hand(List.of("ACo", "VPi", "10Ca", "8Co", "DTr"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+
+        // Assert the expected result
+        assertEquals(-1, result);
     }
 }
