@@ -17,10 +17,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RefereeTest {
 
-    Referee referee;
-    Hand hand1;
-    Hand hand2;
-    Victory victory;
+    private Referee referee;
+    private Hand hand1;
+    private Hand hand2;
+    private Victory victory;
 
     @BeforeEach
     void setUp() {
@@ -189,7 +189,6 @@ class RefereeTest {
      */
     @Test
     void testCompareHandsStraightWins() {
-        // Create two hands, one with a straight and one without
         Hand hand1 = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
         Hand hand2 = new Hand(List.of("7Co", "8Ca", "9Tr", "10Pi", "VCo"));
 
@@ -198,6 +197,7 @@ class RefereeTest {
         // The hand with the straight should win
         Victory result = referee.compareHands(hand1, hand2);
         assertNotNull(result);
+        assertEquals(hand2, result.getHand());
         assertEquals(Combinaison.STRAIGHT, result.getCombinaisonValue().getCombinaison());
     }
 
@@ -205,13 +205,12 @@ class RefereeTest {
      * Test the compareHands method of the Referee class
      * Here the two hands have straights
      * but the hand with the lower straight should lose
-     * so the compareHands method should return a Victory with the hand with the lower straight
+     * so the compareHands method should return a Victory with the hand with the highest straight
      *
      * @see Referee#compareHands(Hand, Hand)
      */
     @Test
     void testCompareHandsStraightLoses() {
-        // Create two hands, both with straights
         Hand hand1 = new Hand(List.of("10Co", "VCa", "DTr", "RPi", "APi"));
         Hand hand2 = new Hand(List.of("2Ca", "3Tr", "4Co", "5Ca", "6Tr"));
 
@@ -220,6 +219,7 @@ class RefereeTest {
         // The hand with the lower straight should lose
         Victory result = referee.compareHands(hand1, hand2);
         assertNotNull(result);
+        assertEquals(hand1, result.getHand());
         assertEquals(Combinaison.STRAIGHT, result.getCombinaisonValue().getCombinaison());
     }
 
@@ -232,7 +232,6 @@ class RefereeTest {
      */
     @Test
     void testCompareHandsDraw() {
-        // Create two hands with the same ranks
         Hand hand1 = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
         Hand hand2 = new Hand(List.of("2Ca", "3Tr", "4Co", "5Ca", "6Tr"));
 
@@ -252,7 +251,6 @@ class RefereeTest {
      */
     @Test
     void testGetBestCombinaisonStraight() {
-        // Create a hand with a straight
         Hand hand = new Hand(List.of("10Co", "VCa", "DTr", "RPi", "9Pi"));
 
         Referee referee = new Referee();
@@ -271,7 +269,6 @@ class RefereeTest {
      */
     @Test
     void testGetBestCombinaisonNoStraight() {
-        // Create a hand with no straight
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "7Co"));
 
         Referee referee = new Referee();
@@ -290,7 +287,6 @@ class RefereeTest {
      */
     @Test
     void testIsStraightWithStraight() {
-        // Create a hand with a straight
         Hand hand = new Hand(List.of("10Co", "VCa", "DTr", "RPi", "9Pi"));
 
         Referee referee = new Referee();
@@ -308,7 +304,6 @@ class RefereeTest {
      */
     @Test
     void testIsStraightNoStraight() {
-        // Create a hand with no straight
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
 
         Referee referee = new Referee();
@@ -334,7 +329,7 @@ class RefereeTest {
         Victory victory = referee.compareHands(hand, hand2);
 
         assertNotNull(victory);
-        assertEquals(victory.getHand(), hand);
+        assertEquals(hand, victory.getHand());
         assertEquals(Combinaison.FLUSH, victory.getCombinaisonValue().getCombinaison());
     }
 
@@ -348,7 +343,6 @@ class RefereeTest {
      */
     @Test
     void testVictoryFlushAgainstStraightExpectFlushWinning() {
-        // Create a hand with a flush
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
         Hand hand2 = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
 
@@ -356,7 +350,7 @@ class RefereeTest {
         Victory victory = referee.compareHands(hand, hand2);
 
         assertNotNull(victory);
-        assertEquals(victory.getHand(), hand);
+        assertEquals(hand, victory.getHand());
         assertEquals(Combinaison.FLUSH, victory.getCombinaisonValue().getCombinaison());
     }
 
@@ -370,7 +364,6 @@ class RefereeTest {
      */
     @Test
     void testGetBestCombinaisonFlush() {
-        // Create a hand with a flush
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
 
         Referee referee = new Referee();
@@ -390,7 +383,6 @@ class RefereeTest {
      */
     @Test
     void testEqualFlushAgainstFlush() {
-        // Create a hand with a flush
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
         Hand hand2 = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
 
@@ -410,7 +402,6 @@ class RefereeTest {
      */
     @Test
     void testVictoryFlushAgainstFlushDifferentCards() {
-        // Create a hand with a flush
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
         Hand hand2 = new Hand(List.of("2Ca", "3Ca", "4Ca", "5Ca", "10Ca"));
 
@@ -418,6 +409,7 @@ class RefereeTest {
         Victory victory = referee.compareHands(hand, hand2);
 
         assertNotNull(victory);
+        assertEquals(hand, victory.getHand());
         assertEquals(Combinaison.FLUSH, victory.getCombinaisonValue().getCombinaison());
     }
 
@@ -431,7 +423,6 @@ class RefereeTest {
      */
     @Test
     void testEqualFlushWithDifferentSuits() {
-        // Create a hand with a flush
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
         Hand hand2 = new Hand(List.of("2Ca", "3Ca", "4Ca", "5Ca", "VCa"));
 
@@ -450,7 +441,6 @@ class RefereeTest {
      */
     @Test
     void testIsFlushWithFlush() {
-        // Create a hand with a flush
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
 
         Referee referee = new Referee();
@@ -468,7 +458,6 @@ class RefereeTest {
      */
     @Test
     void testIsFlushNoFlush() {
-        // Create a hand with no flush
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
 
         Referee referee = new Referee();
@@ -486,7 +475,6 @@ class RefereeTest {
      */
     @Test
     void testIsPairWithPair() {
-        // Create a hand with a pair
         Hand hand = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "VCo"));
 
         Referee referee = new Referee();
@@ -504,7 +492,6 @@ class RefereeTest {
      */
     @Test
     void testIsPairNoPair() {
-        // Create a hand with no pair
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
 
         Referee referee = new Referee();

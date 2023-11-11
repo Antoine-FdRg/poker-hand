@@ -261,7 +261,7 @@ class CombinaisonValueTest {
     @Test
     void testFlushToString() {
         // Test generating the string representation of a CombinaisonValue
-        Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "6Co"));
+        Hand hand = new Hand(List.of("2Co", "3Co", "7Co", "5Co", "6Co"));
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.FLUSH, hand.getCards());
 
         assertEquals("Couleur de Coeur", combinaisonValue.toString());
@@ -289,7 +289,6 @@ class CombinaisonValueTest {
 
         int result = combinaisonValue1.compareTo(combinaisonValue2);
 
-        // Assert the expected result
         assertEquals(-1, result);
 
         assertEquals(new Card(Rank.EIGHT, Suit.HEART), combinaisonValue2.getCardMakingTheDifference());
@@ -307,7 +306,6 @@ class CombinaisonValueTest {
 
         int result = combinaisonValue1.compareTo(combinaisonValue2);
 
-        // Assert the expected result
         assertEquals(-1, result);
     }
 
@@ -319,7 +317,6 @@ class CombinaisonValueTest {
      */
     @Test
     void testComparePairVsStraight() {
-        // Test comparing a Pair and a Straight
         Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "6Co"));
         Hand hand2 = new Hand(List.of("7Co", "8Ca", "9Tr", "10Pi", "VCo"));
 
