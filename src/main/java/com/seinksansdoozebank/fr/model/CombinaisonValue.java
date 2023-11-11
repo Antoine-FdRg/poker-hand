@@ -74,7 +74,7 @@ public class CombinaisonValue {
                 }
                 // Flush est géré dans default
                 default -> {
-                    // compare all kickers of the pair
+                    // compare all kickers of the combination
                     List<Card> kickers = new ArrayList<>(this.getCards());
                     List<Card> comparedKickers = new ArrayList<>(combinaison2.getCards());
                     return compareKickers(kickers, comparedKickers, combinaison2);
@@ -110,7 +110,12 @@ public class CombinaisonValue {
      * @return Map<Card, Integer> map
      */
     protected static Map<Card, Integer> createMapCountingOccurences(List<Card> cards) {
-        return cards.stream().distinct().collect(Collectors.toMap(Function.identity(), v -> frequency(cards, v)));
+        return cards.stream()
+                .distinct()
+                .collect(Collectors.toMap(
+                        Function.identity(),
+                        v -> frequency(cards, v))
+                );
     }
 
     protected static int frequency(List<Card> list, Card elem) {
@@ -132,7 +137,10 @@ public class CombinaisonValue {
      */
     public static List<Card> getCardsFilteredByOccurence(List<Card> cards, int occurence) {
         Map<Card, Integer> map = createMapCountingOccurences(cards);
-        return new ArrayList<>(map.entrySet().stream().filter(entry -> entry.getValue() == occurence).map(Map.Entry::getKey).toList());
+        return new ArrayList<>(map.entrySet().stream()
+                .filter(entry -> entry.getValue() == occurence)
+                .map(Map.Entry::getKey)
+                .toList());
     }
 
     /**

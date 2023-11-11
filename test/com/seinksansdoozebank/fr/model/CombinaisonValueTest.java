@@ -36,7 +36,7 @@ class CombinaisonValueTest {
      * @see CombinaisonValue#toString()
      */
     @Test
-    void testToString() {
+    void testHighestCardToString() {
         assertEquals("carte la plus élevée : " + testBestCardJack.getBestCard().toString(), testBestCardJack.toString());
         assertEquals("carte la plus élevée : " + testBestCardSix.getBestCard().toString(), testBestCardSix.toString());
     }

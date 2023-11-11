@@ -1,6 +1,10 @@
 package com.seinksansdoozebank.fr.controller;
 
-import com.seinksansdoozebank.fr.model.*;
+import com.seinksansdoozebank.fr.model.CombinaisonValue;
+import com.seinksansdoozebank.fr.model.Hand;
+import com.seinksansdoozebank.fr.model.Victory;
+import com.seinksansdoozebank.fr.model.Card;
+import com.seinksansdoozebank.fr.model.Combinaison;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -124,25 +128,25 @@ class RefereeTest {
 
     @Test
     void testStraightCombinationHand1DifferentOrder() {
-        hand1 = new Hand(new ArrayList<>(List.of("ACa", "2Co", "3Pi", "4Tr", "5Tr")));
+        hand1 = new Hand(new ArrayList<>(List.of("4Ca", "2Co", "3Pi", "ATr", "5Tr")));
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
     }
 
     @Test
     void testStraightCombinationHand2DifferentOrder() {
-        hand2 = new Hand(new ArrayList<>(List.of("3Ca", "4Tr", "5Pi", "6Co", "7Co")));
+        hand2 = new Hand(new ArrayList<>(List.of("5Ca", "4Tr", "3Pi", "6Co", "7Co")));
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
     }
 
     @Test
     void testStraightCombinationHand1HighCard() {
-        hand1 = new Hand(new ArrayList<>(List.of("9Ca", "10Co", "RPi", "DTr", "VTr")));
+        hand1 = new Hand(new ArrayList<>(List.of("9Ca", "10Co", "RPi", "VTr", "DTr")));
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
     }
 
     @Test
     void testStraightCombinationHand2HighCard() {
-        hand2 = new Hand(new ArrayList<>(List.of("10Ca", "RTr", "DPi", "VCo", "ACo")));
+        hand2 = new Hand(new ArrayList<>(List.of("10Ca", "ATr", "DPi", "VCo", "RCo")));
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
     }
 
@@ -314,7 +318,6 @@ class RefereeTest {
     }
 
     /**
-<<<<<<< HEAD
      * Test the compareHands method of the Referee class
      * Here the hand has a flush
      * and the hand2 has a double pair
@@ -324,7 +327,6 @@ class RefereeTest {
      */
     @Test
     void testVictoryFlushAgainstThreeOfAKind() {
-        // Create a hand with a full house
         Hand hand = new Hand(List.of("2Co", "3Co", "10Co", "VCo", "ACo"));
         Hand hand2 = new Hand(List.of("2Co", "2Ca", "2Tr", "3Pi", "4Co"));
 
@@ -332,6 +334,7 @@ class RefereeTest {
         Victory victory = referee.compareHands(hand, hand2);
 
         assertNotNull(victory);
+        assertEquals(victory.getHand(), hand);
         assertEquals(Combinaison.FLUSH, victory.getCombinaisonValue().getCombinaison());
     }
 
@@ -353,6 +356,7 @@ class RefereeTest {
         Victory victory = referee.compareHands(hand, hand2);
 
         assertNotNull(victory);
+        assertEquals(victory.getHand(), hand);
         assertEquals(Combinaison.FLUSH, victory.getCombinaisonValue().getCombinaison());
     }
 
