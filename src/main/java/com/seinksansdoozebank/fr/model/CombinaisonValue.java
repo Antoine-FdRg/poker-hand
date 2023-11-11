@@ -183,7 +183,7 @@ public class CombinaisonValue {
     private String toStringThreeOfAKind() {
         String result = "";
         if (cards.get(0).getRank().equals(Rank.ACE)) {
-            result = "d'" + cards.get(0).getRank().getName();
+            result = "d'" + Rank.ACE.getName();
         } else {
             result = "de " + cards.get(0).getRank().getName();
         }
