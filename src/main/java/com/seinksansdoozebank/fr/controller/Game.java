@@ -29,9 +29,9 @@ public class Game {
      */
     public void run() {
         for (int i = 0; i < this.nbrOfHands; i++) {
-            List<String> cardsHand = view.initializeHand(i+1);
+            List<String> cardsHand = view.initializeHand(i + 1);
             while (!checkInput(cardsHand)) {
-                cardsHand = view.initializeHand(i+1);
+                cardsHand = view.initializeHand(i + 1);
             }
             Hand hand = new Hand(cardsHand);
             hands.add(hand);
@@ -55,23 +55,25 @@ public class Game {
             view.displayAlertSize(this.nbrOfCards);
             return false;
         }
+        List<Card> temporaryDeck = new ArrayList<>(deck);
         for (String card : cards) {
             if (!card.matches("^(10|[2-9]|[VDRA])(Co|Ca|Tr|Pi)$")) {
                 view.displayAlertInvalidCard();
                 return false;
             }
             Card testCardPresence = new Card(Rank.getRankFromSymbol(card), Suit.getSuitFromSymbol(card));
-            if (deck.contains(testCardPresence)) {
+            if (temporaryDeck.contains(testCardPresence)) {
                 view.displayAlertCardAlreadyUsed(testCardPresence);
                 return false;
-            }else{
-                deck.add(testCardPresence);
+            } else {
+                temporaryDeck.add(testCardPresence);
             }
         }
+        deck = temporaryDeck;
         return true;
     }
 
-    public static void resetDeck(){
+    public static void resetDeck() {
         deck = new ArrayList<>();
     }
 }
