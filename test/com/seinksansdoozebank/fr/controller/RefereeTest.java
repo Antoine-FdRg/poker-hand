@@ -13,10 +13,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RefereeTest {
 
-    private Referee referee;
-    private Hand hand1;
-    private Hand hand2;
-    private Victory victory;
+    Referee referee;
+    Hand hand1;
+    Hand hand2;
+    Victory victory;
 
     @BeforeEach
     void setUp() {
@@ -53,7 +53,7 @@ class RefereeTest {
         hand1 = new Hand(new ArrayList<>(List.of("ACa", "2Ca", "4Ca", "5Ca", "6Ca")));
         hand2 = new Hand(new ArrayList<>(List.of("9Co", "2Co", "4Co", "5Co", "6Co")));
         victory = referee.compareHands(hand1, hand2);
-        assertEquals(victory.getHand(), hand1);
+        assertEquals(hand1, victory.getHand());
     }
 
     /**
@@ -64,31 +64,43 @@ class RefereeTest {
      * @see Referee#compareHands(Hand, Hand)
      */
     @Test
-    void straighVictoryTest() {
+    void testStraightVictoryNoWinner() {
         hand1 = new Hand(new ArrayList<>(List.of("2Ca", "3Co", "4Pi", "5Tr", "6Tr")));
         hand2 = new Hand(new ArrayList<>(List.of("2Ca", "3Tr", "4Pi", "5Co", "6Co")));
         victory = referee.compareHands(hand1, hand2);
         assertNull(victory);
+    }
 
+    @Test
+    void testStraightVictoryHand2Wins() {
         hand1 = new Hand(new ArrayList<>(List.of("2Ca", "3Co", "4Pi", "5Tr", "6Tr")));
         hand2 = new Hand(new ArrayList<>(List.of("3Ca", "4Tr", "5Pi", "6Co", "7Co")));
         victory = referee.compareHands(hand1, hand2);
-        assertEquals(victory.getHand(), hand2);
+        assertEquals(hand2, victory.getHand());
+    }
 
+    @Test
+    void testStraightVictoryHand2WinsDifferentOrder() {
         hand1 = new Hand(new ArrayList<>(List.of("ACa", "2Co", "3Pi", "4Tr", "5Tr")));
         hand2 = new Hand(new ArrayList<>(List.of("2Ca", "3Tr", "4Pi", "5Co", "6Co")));
         victory = referee.compareHands(hand1, hand2);
-        assertEquals(victory.getHand(), hand2);
+        assertEquals(hand2, victory.getHand());
+    }
 
+    @Test
+    void testStraightVictoryHand2WinsWithHighCard() {
         hand1 = new Hand(new ArrayList<>(List.of("9Ca", "10Co", "RPi", "DTr", "VTr")));
         hand2 = new Hand(new ArrayList<>(List.of("10Ca", "RTr", "DPi", "VCo", "ACo")));
         victory = referee.compareHands(hand1, hand2);
-        assertEquals(victory.getHand(), hand2);
+        assertEquals(hand2, victory.getHand());
+    }
 
+    @Test
+    void testStraightVictoryHand2WinsWithHighCardDifferentOrder() {
         hand1 = new Hand(new ArrayList<>(List.of("4Ca", "5Co", "3Pi", "2Tr", "ATr")));
         hand2 = new Hand(new ArrayList<>(List.of("10Ca", "RTr", "DPi", "VCo", "ACo")));
         victory = referee.compareHands(hand1, hand2);
-        assertEquals(victory.getHand(), hand2);
+        assertEquals(hand2, victory.getHand());
     }
 
     /**
@@ -99,31 +111,38 @@ class RefereeTest {
      * @see Referee#getBestCombinaison(Hand)
      */
     @Test
-    void straighCombinaisonTest() {
-        //TODO: Split this test into multiple tests
+    void testStraightCombinationHand1() {
         hand1 = new Hand(new ArrayList<>(List.of("2Ca", "3Co", "4Pi", "5Tr", "6Tr")));
+        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
+    }
+
+    @Test
+    void testStraightCombinationHand2() {
         hand2 = new Hand(new ArrayList<>(List.of("2Ca", "3Tr", "4Pi", "5Co", "6Co")));
-        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
+    }
 
-        hand1 = new Hand(new ArrayList<>(List.of("2Ca", "3Co", "4Pi", "5Tr", "6Tr")));
-        hand2 = new Hand(new ArrayList<>(List.of("3Ca", "4Tr", "5Pi", "6Co", "7Co")));
-        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
-        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
-
+    @Test
+    void testStraightCombinationHand1DifferentOrder() {
         hand1 = new Hand(new ArrayList<>(List.of("ACa", "2Co", "3Pi", "4Tr", "5Tr")));
-        hand2 = new Hand(new ArrayList<>(List.of("2Ca", "3Tr", "4Pi", "5Co", "6Co")));
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
-        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
+    }
 
+    @Test
+    void testStraightCombinationHand2DifferentOrder() {
+        hand2 = new Hand(new ArrayList<>(List.of("3Ca", "4Tr", "5Pi", "6Co", "7Co")));
+        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
+    }
+
+    @Test
+    void testStraightCombinationHand1HighCard() {
         hand1 = new Hand(new ArrayList<>(List.of("9Ca", "10Co", "RPi", "DTr", "VTr")));
-        hand2 = new Hand(new ArrayList<>(List.of("10Ca", "RTr", "DPi", "VCo", "ACo")));
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
-        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
+    }
 
-        hand1 = new Hand(new ArrayList<>(List.of("4Ca", "5Co", "3Pi", "2Tr", "ATr")));
+    @Test
+    void testStraightCombinationHand2HighCard() {
         hand2 = new Hand(new ArrayList<>(List.of("10Ca", "RTr", "DPi", "VCo", "ACo")));
-        assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand1).getCombinaison());
         assertEquals(Combinaison.STRAIGHT, referee.getBestCombinaison(hand2).getCombinaison());
     }
 
@@ -141,7 +160,7 @@ class RefereeTest {
         hand1 = new Hand(new ArrayList<>(List.of("9Ca", "2Ca", "4Ca", "5Ca", "6Ca")));
         hand2 = new Hand(new ArrayList<>(List.of("ACo", "2Co", "4Co", "5Co", "6Co")));
         victory = referee.compareHands(hand1, hand2);
-        assertEquals(victory.getHand(), hand2);
+        assertEquals(hand2, victory.getHand());
     }
 
     /**
@@ -295,6 +314,7 @@ class RefereeTest {
     }
 
     /**
+<<<<<<< HEAD
      * Test the compareHands method of the Referee class
      * Here the hand has a flush
      * and the hand2 has a double pair
@@ -453,4 +473,39 @@ class RefereeTest {
         assertFalse(isFlush.isPresent());
     }
 
+    /**
+     * Test the searchPair method of the Referee class
+     * Here the hand is a pair
+     * so the searchPair method should return a list of cards
+     *
+     * @see Referee#searchPair(Hand)
+     */
+    @Test
+    void testIsPairWithPair() {
+        // Create a hand with a pair
+        Hand hand = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "VCo"));
+
+        Referee referee = new Referee();
+        Optional<List<Card>> isPair = referee.searchPair(hand);
+
+        assertTrue(isPair.isPresent());
+    }
+
+    /**
+     * Test the searchPair method of the Referee class
+     * Here the hand is not a pair
+     * so the searchPair method should return an empty optional
+     *
+     * @see Referee#searchPair(Hand)
+     */
+    @Test
+    void testIsPairNoPair() {
+        // Create a hand with no pair
+        Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
+
+        Referee referee = new Referee();
+        Optional<List<Card>> isPair = referee.searchPair(hand);
+
+        assertFalse(isPair.isPresent());
+    }
 }

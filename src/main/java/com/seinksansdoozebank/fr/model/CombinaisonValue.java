@@ -1,6 +1,11 @@
 package com.seinksansdoozebank.fr.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class CombinaisonValue {
     private final Combinaison combinaison;
@@ -26,17 +31,56 @@ public class CombinaisonValue {
             return -1;
         } else {
             switch (this.combinaison) {
+                case PAIR -> {
+                    //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
+                    List<Card> cardsFilteredByOccurence = getCardsFilteredByOccurence(this.cards, 2); // 2 because the map count card with differents suits as different cards
+                    //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
+                    List<Card> comparedCardsFilteredByOccurence = getCardsFilteredByOccurence(combinaison2.getCards(), 2); // 2 because the map count card with differents suits as different cards
+                    if (cardsFilteredByOccurence.size() != 2 || comparedCardsFilteredByOccurence.size() != 2) {
+                        throw new IllegalStateException("There is not a pair in the hand");
+                    }
+                    // compare the pair of the combinaison
+                    result = cardsFilteredByOccurence.get(0).compareTo(comparedCardsFilteredByOccurence.get(0));
+                    if (result > 0) {
+                        return 1;
+                    } else if (result < 0) {
+                        return -1;
+                    }
+                    // compare all kickers of the pair
+                    List<Card> kickers = this.getKickers();
+                    List<Card> comparedKickers = combinaison2.getKickers();
+                    if (kickers.size() != comparedKickers.size()) {
+                        throw new IllegalStateException("There is not the same number of kickers");
+                    }
+                    for (int i = 0; i < kickers.size(); i++) {
+                        result = kickers.get(i).compareTo(comparedKickers.get(i));
+                        if (result > 0) {
+                            return 1;
+                        } else if (result < 0) {
+                            return -1;
+                        }
+                    }
+                    return 0;
+                }
                 case STRAIGHT -> {
-                    return this.getBestCard().compareTo(combinaison2.getBestCard());
+                    // compare the best card of the straight
+                    result = this.getBestCard().compareTo(combinaison2.getBestCard());
+                    if (result > 0) {
+                        return 1;
+                    } else if (result < 0) {
+                        return -1;
+                    }
+                    return 0;
                 }
                 // Flush est géré dans default
                 default -> {
                     // compare all kickers of the pair
-                    List<Card> kickers = this.getCards();
-                    List<Card> comparedKickers = combinaison2.getCards();
+                    List<Card> kickers = new ArrayList<>(this.getCards());
+                    List<Card> comparedKickers = new ArrayList<>(combinaison2.getCards());
                     return compareKickers(kickers, comparedKickers, combinaison2);
                 }
             }
+
         }
     }
 
@@ -57,6 +101,38 @@ public class CombinaisonValue {
             }
         }
         return 0;
+    }
+
+    /*
+     *  Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
+     *
+     * @param cards
+     * @return Map<Card, Integer> map
+     */
+    protected static Map<Card, Integer> createMapCountingOccurences(List<Card> cards) {
+        return cards.stream().distinct().collect(Collectors.toMap(Function.identity(), v -> frequency(cards, v)));
+    }
+
+    protected static int frequency(List<Card> list, Card elem) {
+        int count = 0;
+        for (Card e : list) {
+            if (elem.equalsIgnoringSuit(e)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Création d'une liste dans laquelle on ne garde que les cards qui apparaissent un certain nombre de fois dans la main
+     *
+     * @param cards     La liste de cartes
+     * @param occurence Le nombre de fois qu'une carte doit apparaitre dans la main
+     * @return List<Card> cards
+     */
+    public static List<Card> getCardsFilteredByOccurence(List<Card> cards, int occurence) {
+        Map<Card, Integer> map = createMapCountingOccurences(cards);
+        return new ArrayList<>(map.entrySet().stream().filter(entry -> entry.getValue() == occurence).map(Map.Entry::getKey).toList());
     }
 
     /**
@@ -99,11 +175,28 @@ public class CombinaisonValue {
                     victoryCondition.append("Quinte de ").append(this.cards.get(size - 1).getRank().getName());
                 }
                 break;
+            case PAIR:
+                victoryCondition.append("Paire de ").append(cards.get(0).getRank().getName());
+                break;
             default:
                 victoryCondition.append(this.combinaison.getName()).append(" : ").append(this.getBestCard().getRank().getName());
                 break;
         }
         return victoryCondition.toString();
+    }
+
+    /**
+     * Get the kicker of the combinaison, usefull when two combinaison are equals
+     *
+     * @return the kicker of the combinaison
+     */
+    protected List<Card> getKickers() {
+        switch (this.combinaison) {
+            case PAIR -> {
+                return getCardsFilteredByOccurence(this.cards, 1).stream().sorted(Collections.reverseOrder()).toList();
+            }
+            default -> throw new IllegalStateException("There is no kicker for this combinaison");
+        }
     }
 
     /**

@@ -1,14 +1,10 @@
 package com.seinksansdoozebank.fr.controller;
 
 
-import com.seinksansdoozebank.fr.model.Rank;
-import com.seinksansdoozebank.fr.model.CombinaisonValue;
-import com.seinksansdoozebank.fr.model.Card;
-import com.seinksansdoozebank.fr.model.Combinaison;
-import com.seinksansdoozebank.fr.model.Hand;
-import com.seinksansdoozebank.fr.model.Victory;
+import com.seinksansdoozebank.fr.model.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +46,11 @@ public class Referee {
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.STRAIGHT, response.get());
         }
-        return new CombinaisonValue(Combinaison.HIGHEST_CARD, hand.getCards());
+        response = this.searchPair(hand);
+        if (response.isPresent()) {
+            return new CombinaisonValue(Combinaison.PAIR, response.get());
+        }
+        return new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand.getBestCard()));
     }
 
     /**
@@ -79,7 +79,7 @@ public class Referee {
             previousCard = cards.get(index);
             index++;
         }
-        // if the index is equal to the cards size so the hand is a straight
+        // if the index is equal to the cards size then the hand is a straight
         if (index == cardsSize) {
             return Optional.of(cards);
         }
@@ -98,6 +98,26 @@ public class Referee {
         if (index == cardsSize) {
             return Optional.of(cards);
         }
+        return Optional.empty();
+    }
+
+    /**
+     * Search if the hand is a pair
+     *
+     * @param hand the hand
+     * @return the list of cards if the hand is a pair, empty optional otherwise
+     */
+    protected Optional<List<Card>> searchPair(Hand hand) {
+        List<Card> cardsFilteredByOccurence = CombinaisonValue.getCardsFilteredByOccurence(hand.getCards(), 2);
+
+        if (cardsFilteredByOccurence.size() == 2) { // 2 because the map count card with differents suits as different cards
+            // remove the card who's in the pair and sort the other card descending
+            List<Card> list = new ArrayList<>(hand.getCards().stream().filter(card -> !card.equals(cardsFilteredByOccurence.get(0))).sorted(Collections.reverseOrder()).toList());
+            // add the card who's in the pair at the beginning of the list
+            list.add(0, cardsFilteredByOccurence.get(0));
+            return Optional.of(list);
+        }
+
         return Optional.empty();
     }
 }
