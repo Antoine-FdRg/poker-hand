@@ -36,4 +36,9 @@ public enum Suit implements Comparable<Suit> {
     public String getSymbol() {
         return this.symbol;
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }
