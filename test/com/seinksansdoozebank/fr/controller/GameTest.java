@@ -55,4 +55,15 @@ class GameTest {
         cards.add("2Pi");
         assertTrue(game.checkInput(cards));
     }
+
+        @Test
+    void checkInputDuplicates2(){
+        Game game = new Game(2, 5);
+        List<String> stringCardList1 = new ArrayList<>(List.of("ACa", "2Ca", "3Tr", "4Pi", "5Co"));
+        List<String> stringCardList2 = new ArrayList<>(List.of("10Ca", "2Ca", "3Tr", "4Pi", "ACo"));
+        assertTrue(game.checkInput(stringCardList1));
+        assertFalse(game.checkInput(stringCardList2));
+        stringCardList2 = new ArrayList<>(List.of("10Ca", "2Co", "3Pi", "4Tr", "ACo"));
+        assertTrue(game.checkInput(stringCardList2));
+    }
 }
