@@ -1,6 +1,11 @@
 package com.seinksansdoozebank.fr.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class CombinaisonValue {
     private final Combinaison combinaison;
@@ -24,8 +29,88 @@ public class CombinaisonValue {
         } else if (result < 0) {
             return -1;
         } else {
-            return this.getBestCard().compareTo(combinaison2.getBestCard());
+            switch (this.combinaison) {
+                case PAIR -> {
+                    //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
+                    List<Card> cardsFilteredByOccurence = getCardsFilteredByOccurence(this.cards, 2); // 2 because the map count card with differents suits as different cards
+                    //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
+                    List<Card> comparedCardsFilteredByOccurence = getCardsFilteredByOccurence(combinaison2.getCards(), 2); // 2 because the map count card with differents suits as different cards
+                    if (cardsFilteredByOccurence.size() != 2 || comparedCardsFilteredByOccurence.size() != 2) {
+                        throw new IllegalStateException("There is not a pair in the hand");
+                    }
+                    // compare the pair of the combinaison
+                    result = cardsFilteredByOccurence.get(0).compareTo(comparedCardsFilteredByOccurence.get(0));
+                    if (result > 0) {
+                        return 1;
+                    } else if (result < 0) {
+                        return -1;
+                    }
+                    // compare all kickers of the pair
+                    List<Card> kickers = this.getKickers();
+                    List<Card> comparedKickers = combinaison2.getKickers();
+                    if (kickers.size() != comparedKickers.size()) {
+                        throw new IllegalStateException("There is not the same number of kickers");
+                    }
+                    for (int i = 0; i < kickers.size(); i++) {
+                        result = kickers.get(i).compareTo(comparedKickers.get(i));
+                        if (result > 0) {
+                            return 1;
+                        } else if (result < 0) {
+                            return -1;
+                        }
+                    }
+                    return 0;
+                }
+                //We compare two hands with a four of a kind combination, the rank of the card will determine
+                //the victory Hand
+                case FOUR_OF_A_KIND -> {
+                    if (cards.get(0).compareTo(combinaison2.cards.get(0)) > 0) {
+                        return 1;
+                    } else if (cards.get(0).compareTo(combinaison2.cards.get(0)) < 0) {
+                        return -1;
+                    } else {
+                        //In our situation it is impossible to have two same four of a kind
+                        throw new IllegalStateException("Il est impossible d'avoir deux carrés identiques");
+                    }
+                }
+                default -> {
+                    return this.getBestCard().compareTo(combinaison2.getBestCard());
+                }
+            }
+
         }
+    }
+
+    /*
+     *  Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
+     *
+     * @param cards
+     * @return Map<Card, Integer> map
+     */
+    protected static Map<Card, Integer> createMapCountingOccurences(List<Card> cards) {
+        return cards.stream().distinct().collect(Collectors.toMap(Function.identity(), v -> frequency(cards, v)));
+    }
+
+    protected static int frequency(List<Card> list, Card elem) {
+        int count = 0;
+        for (Card e : list) {
+            if (elem.equalsIgnoringSuit(e)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Création d'une liste dans laquelle on ne garde que les cards qui apparaissent un certain nombre de fois dans la main
+     *
+     * @param cards     La liste de cartes
+     * @param occurence Le nombre de fois qu'une carte doit apparaitre dans la main
+     * @return List<Card> cards
+     */
+    public static List<Card> getCardsFilteredByOccurence(List<Card> cards, int occurence) {
+        Map<Card, Integer> map = createMapCountingOccurences(cards);
+        return new ArrayList<>(map.entrySet().stream().filter(entry -> entry.getValue() == occurence).map(Map.Entry::getKey).toList());
     }
 
     /**
@@ -61,8 +146,12 @@ public class CombinaisonValue {
                     victoryCondition.append("Quinte de ").append(this.cards.get(size - 1).getRank().getName());
                 }
                 break;
+            case PAIR:
+                victoryCondition.append("Paire de ").append(cards.get(0).getRank().getName());
+                break;
             case FOUR_OF_A_KIND:
-                victoryCondition.append("Carré ").append(isFourOfAKindString());
+                String followedCondition = toStringFourOfAKind();
+                victoryCondition.append("Carré ").append(followedCondition);
                 break;
             default:
                 victoryCondition.append(this.combinaison.getName()).append(" : ").append(this.getBestCard().getRank().getName());
@@ -71,15 +160,35 @@ public class CombinaisonValue {
         return victoryCondition.toString();
     }
 
-    private String isFourOfAKindString(){
-        String result="";
-        if(cards.get(0).getRank().equals(Rank.ACE)){
-           result="d'";
-           return result;
+    /**
+     * Get the kicker of the combinaison, usefull when two combinaison are equals
+     *
+     * @return the kicker of the combinaison
+     */
+    protected List<Card> getKickers() {
+        switch (this.combinaison) {
+            case PAIR -> {
+                return getCardsFilteredByOccurence(this.cards, 1).stream().sorted(Collections.reverseOrder()).toList();
+            }
+            default -> throw new IllegalStateException("There is no kicker for this combinaison");
         }
-        result="de";
-        return result  ;
     }
+
+    /**
+     * We make the difference between an Ace and the other card for the toString method
+     *
+     * @return the string result of a four of a kind
+     */
+    private String toStringFourOfAKind() {
+        String result = "";
+        if (cards.get(0).getRank().equals(Rank.ACE)) {
+            result = "d'" + Rank.ACE.getName();
+            return result;
+        }
+        result = "de " + cards.get(0).getRank().getName();
+        return result;
+    }
+
 
     /**
      * Get the best card of the combinaison
@@ -111,6 +220,4 @@ public class CombinaisonValue {
     public Combinaison getCombinaison() {
         return this.combinaison;
     }
-
-
 }

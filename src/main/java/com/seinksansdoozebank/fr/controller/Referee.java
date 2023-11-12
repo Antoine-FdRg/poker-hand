@@ -4,12 +4,16 @@ package com.seinksansdoozebank.fr.controller;
 import com.seinksansdoozebank.fr.model.Card;
 import com.seinksansdoozebank.fr.model.CombinaisonValue;
 import com.seinksansdoozebank.fr.model.Hand;
+import com.seinksansdoozebank.fr.model.Suit;
 import com.seinksansdoozebank.fr.model.Victory;
 import com.seinksansdoozebank.fr.model.Combinaison;
 import com.seinksansdoozebank.fr.model.Rank;
 
+import java.util.Collections;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class Referee {
@@ -42,12 +46,17 @@ public class Referee {
      * @return the best combinaison
      */
     protected CombinaisonValue getBestCombinaison(Hand hand) {
-        Optional<List<Card>> response = this.searchStraight(hand);
-        if(searchFourOfAKind()){
-            return new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, hand.getCards());
+        Optional<List<Card>> response = this.searchFourOfAKind(hand);
+        if (response.isPresent()) {
+            return new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, response.get());
         }
+        response = this.searchStraight(hand);
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.STRAIGHT, response.get());
+        }
+        response = this.searchPair(hand);
+        if (response.isPresent()) {
+            return new CombinaisonValue(Combinaison.PAIR, response.get());
         }
         return new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand.getBestCard()));
     }
@@ -77,14 +86,60 @@ public class Referee {
             previousCard = cards.get(index);
             index++;
         }
-        // if the index is equal to the cards size so the hand is a straight
+        // if the index is equal to the cards size then the hand is a straight
         if (index == cardsSize) {
             return Optional.of(cards);
         }
         return Optional.empty();
     }
 
-    public boolean searchFourOfAKind(){
-        return true;
+    /**
+     * Search if the hand is a pair
+     *
+     * @param hand the hand
+     * @return the list of cards if the hand is a pair, empty optional otherwise
+     */
+    protected Optional<List<Card>> searchPair(Hand hand) {
+        List<Card> cardsFilteredByOccurence = CombinaisonValue.getCardsFilteredByOccurence(hand.getCards(), 2);
+
+        if (cardsFilteredByOccurence.size() == 2) { // 2 because the map count card with differents suits as different cards
+            // remove the card who's in the pair and sort the other card descending
+            List<Card> list = new ArrayList<>(hand.getCards().stream()
+                    .filter(card -> !card.equals(cardsFilteredByOccurence.get(0)))
+                    .sorted(Collections.reverseOrder())
+                    .toList());
+            // add the card wich is in the pair at the beginning of the list
+            list.add(0, cardsFilteredByOccurence.get(0));
+            return Optional.of(list);
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * Search if the hand gots a four of a kind combination
+     *
+     * @param hand the hand
+     * @return an optional list with the card marked by the rank of a four of a kind combination
+     */
+    public Optional<List<Card>> searchFourOfAKind(Hand hand) {
+        Map<Rank, Integer> cardsCounter = new HashMap<>();
+        List<Card> cards = hand.getCards();
+        for (Card card : cards) {
+            if (cardsCounter.containsKey(card.getRank())) {
+                cardsCounter.replace(card.getRank(), cardsCounter.get(card.getRank()) + 1);
+            } else {
+                cardsCounter.put(card.getRank(), 1);
+            }
+        }
+        for (Map.Entry<Rank, Integer> entry : cardsCounter.entrySet()) {
+            //If one key has as value 4 , we return the rank of the four cards
+            if (entry.getValue() == 4) {
+                Card cardFourOfAKind = new Card(entry.getKey(), Suit.HEART);
+                return Optional.of(List.of(cardFourOfAKind));
+            }
+        }
+        return Optional.empty();
+
     }
 }
