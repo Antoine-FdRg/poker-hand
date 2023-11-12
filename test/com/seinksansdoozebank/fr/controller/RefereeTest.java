@@ -330,7 +330,7 @@ class RefereeTest {
     }
 
     @Test
-    void threeOfAKindCombinaisonTest() {
+    void getBestCombinaisonThreeOfAKind() {
 
         /* we check if the method searchThreeOfAKind works */
         Hand threeOfAKindOfTwo = new Hand(new ArrayList<>(List.of("2Ca", "2Tr", "3Tr", "4Tr", "2Co")));
