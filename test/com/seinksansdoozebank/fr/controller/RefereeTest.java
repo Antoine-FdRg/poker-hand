@@ -308,11 +308,11 @@ class RefereeTest {
      * @see Referee#searchThreeOfAKind(Hand)
      */
     @Test
-    void searchmissedThreeOfAKindTest(){
+    void searchMissedThreeOfAKindTest(){
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
         Referee referee = new Referee();
-        Optional<List<Card>> isStraight = referee.searchThreeOfAKind(hand);
-        assertFalse(isStraight.isPresent());
+        Optional<List<Card>> isThreeOfAKind = referee.searchThreeOfAKind(hand);
+        assertFalse(isThreeOfAKind.isPresent());
     }
     /**
      * Test the searchThreeOfAKind method of the Referee class
@@ -325,8 +325,8 @@ class RefereeTest {
     void searchThreeOfAKindTest(){
         Hand hand = new Hand(List.of("2Co", "3Ca", "2Tr", "2Pi", "VCo"));
         Referee referee = new Referee();
-        Optional<List<Card>> isStraight = referee.searchThreeOfAKind(hand);
-        assertTrue(isStraight.isPresent());
+        Optional<List<Card>> isThreeOfAKind = referee.searchThreeOfAKind(hand);
+        assertTrue(isThreeOfAKind.isPresent());
     }
 
     @Test
