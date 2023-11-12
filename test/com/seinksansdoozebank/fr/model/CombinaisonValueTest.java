@@ -70,9 +70,9 @@ class CombinaisonValueTest {
      * @see CombinaisonValue#toString()
      */
     @Test
-    void testToString() {
-        assertEquals("carte la plus élevée : " + testBestCardJack.getBestCard().getRank().getName(), testBestCardJack.toString());
-        assertEquals("carte la plus élevée : " + testBestCardSix.getBestCard().getRank().getName(), testBestCardSix.toString());
+    void testHighestCardToString() {
+        assertEquals("carte la plus élevée : " + testBestCardJack.getBestCard().toString(), testBestCardJack.toString());
+        assertEquals("carte la plus élevée : " + testBestCardSix.getBestCard().toString(), testBestCardSix.toString());
     }
 
     /**
@@ -134,7 +134,7 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.SIX,Suit.HEART), bestCard);
+        assertEquals(new Card(Rank.SIX, Suit.HEART), bestCard);
     }
 
     /**
@@ -153,7 +153,7 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.FIVE,Suit.HEART), bestCard);
+        assertEquals(new Card(Rank.FIVE, Suit.HEART), bestCard);
 
         hand = new Hand(List.of("10Co", "RCo", "DCo", "VCo", "ACo"));
         combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
@@ -201,6 +201,12 @@ class CombinaisonValueTest {
         assertEquals("Quinte Broadway", combinaisonValue.toString());
     }
 
+    /**
+     * Test comparing two CombinaisonValue objects with the same combinaison.
+     * Here the hand2 is the winner because the best card is a JACK
+     *
+     * @see CombinaisonValue#compareTo(CombinaisonValue)
+     */
     @Test
     void testCompareToSameCombinaison() {
         // Test comparing two CombinaisonValue objects with the same combinaison
@@ -214,6 +220,12 @@ class CombinaisonValueTest {
         assertTrue(result < 0);
     }
 
+    /**
+     * Test comparing two CombinaisonValue objects with different combinaisons.
+     * Here the hand1 is the winner because the combinaison is a Straight
+     *
+     * @see CombinaisonValue#compareTo(CombinaisonValue)
+     */
     @Test
     void testCompareToDifferentCombinaison() {
         // Test comparing two CombinaisonValue objects with different combinaisons
@@ -224,9 +236,15 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand2.getCards());
 
         int result = combinaisonValue1.compareTo(combinaisonValue2);
-        assertTrue(result > 0); // Straight is lower than Highest Card
+        assertTrue(result > 0);
     }
 
+    /**
+     * Test getting the best card from a CombinaisonValue.
+     * Here the best card is a JACK
+     *
+     * @see CombinaisonValue#getBestCard()
+     */
     @Test
     void testGetBestCard() {
         // Test getting the best card from a CombinaisonValue
@@ -237,6 +255,12 @@ class CombinaisonValueTest {
         assertEquals(new Card(Rank.SIX, Suit.HEART), bestCard);
     }
 
+    /**
+     * Test getting the combinaison from a CombinaisonValue.
+     * Here the combinaison is a Straight
+     *
+     * @see CombinaisonValue#getCombinaison()
+     */
     @Test
     void testGetCombinaison() {
         // Test getting the combinaison from a CombinaisonValue
@@ -247,14 +271,76 @@ class CombinaisonValueTest {
         assertEquals(Combinaison.STRAIGHT, combinaison);
     }
 
+    /**
+     * Test generating the string representation of a CombinaisonValue for a STRAIGHT.
+     * Here the combinaison is a Straight of 6
+     *
+     * @see CombinaisonValue#toString()
+     */
     @Test
     void testStraightToString() {
         // Test generating the string representation of a CombinaisonValue
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
-        String stringValue = combinaisonValue.toString();
-        assertEquals("Quinte de 6", stringValue); //TODO: check if this is the best way to print it
+        assertEquals("Quinte de 6", combinaisonValue.toString()); //TODO: check if this is the best way to print it
+    }
+
+    /**
+     * Test generating the string representation of a CombinaisonValue for a FLUSH.
+     * Here the combinaison is a Flush of Heart
+     *
+     * @see CombinaisonValue#toString()
+     */
+    @Test
+    void testFlushToString() {
+        // Test generating the string representation of a CombinaisonValue
+        Hand hand = new Hand(List.of("2Co", "3Co", "7Co", "5Co", "6Co"));
+        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.FLUSH, hand.getCards());
+
+        assertEquals("Couleur de Coeur", combinaisonValue.toString());
+    }
+
+    /**
+     * Test generating the string representation of a CombinaisonValue for a HIGHEST_CARD.
+     * Here the combination is the Highest Card with the best Card of JACK and the worst Card of SEVEN
+     * The second combination is the same but with the best Card of Jack and the worst Card of 8
+     * <p>
+     * So the combination Two is winning
+     *
+     * @see CombinaisonValue#compareTo(CombinaisonValue)
+     * @see CombinaisonValue#getCardMakingTheDifference()
+     */
+    @Test
+    void testCompareKickers() {
+        //7Co VPi 10Ca RCo DPi
+        Hand hand1 = new Hand(List.of("7Co", "VPi", "10Ca", "RCo", "DPi"));
+        //RCo VPi 10Ca 8Co DTr
+        Hand hand2 = new Hand(List.of("RCo", "VPi", "10Ca", "8Co", "DTr"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+
+        assertEquals(-1, result);
+
+        assertEquals(new Card(Rank.EIGHT, Suit.HEART), combinaisonValue2.getCardMakingTheDifference());
+    }
+
+    @Test
+    void testCompareTOBetweenTwoDifferentHighCard() {
+        //7Co VPi 10Ca RCo DPi
+        Hand hand1 = new Hand(List.of("7Co", "VPi", "10Ca", "RCo", "DPi"));
+        //RCo VPi 10Ca 8Co DTr
+        Hand hand2 = new Hand(List.of("ACo", "VPi", "10Ca", "8Co", "DTr"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+
+        assertEquals(-1, result);
     }
 
     /**
@@ -265,7 +351,6 @@ class CombinaisonValueTest {
      */
     @Test
     void testComparePairVsStraight() {
-        // Test comparing a Pair and a Straight
         Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "6Co"));
         Hand hand2 = new Hand(List.of("7Co", "8Ca", "9Tr", "10Pi", "VCo"));
 

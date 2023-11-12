@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class CombinaisonValue {
     private final Combinaison combinaison;
     private final List<Card> cards;
+    private Card cardMakingTheDifference;
 
     public CombinaisonValue(Combinaison combinaison, List<Card> cards) {
         this.combinaison = combinaison;
@@ -61,6 +62,16 @@ public class CombinaisonValue {
                     }
                     return 0;
                 }
+                case STRAIGHT -> {
+                    // compare the best card of the straight
+                    result = this.getBestCard().compareTo(combinaison2.getBestCard());
+                    if (result > 0) {
+                        return 1;
+                    } else if (result < 0) {
+                        return -1;
+                    }
+                    return 0;
+                }
                 /* we compare two different threeOfAKind, there is no null case for this combination so we throw an exception */
                 case THREE_OF_A_KIND -> {
                     if (cards.get(0).compareTo(combinaison2.cards.get(0)) > 0) {
@@ -71,12 +82,35 @@ public class CombinaisonValue {
                         throw new IllegalStateException("Il est impossible d'avoir deux brelans identiques");
                     }
                 }
+                // Flush est géré dans default
                 default -> {
-                    return this.getBestCard().compareTo(combinaison2.getBestCard());
+                    // compare all kickers of the combination
+                    List<Card> kickers = new ArrayList<>(this.getCards());
+                    List<Card> comparedKickers = new ArrayList<>(combinaison2.getCards());
+                    return compareKickers(kickers, comparedKickers, combinaison2);
                 }
             }
 
         }
+    }
+
+    protected int compareKickers(List<Card> kickers, List<Card> comparedKickers, CombinaisonValue combinaisonValue2) {
+        if (kickers.size() != comparedKickers.size()) {
+            throw new IllegalStateException("There is not the same number of kickers");
+        }
+        kickers.sort(Card::compareTo);
+        comparedKickers.sort(Card::compareTo);
+        for (int i = 0; i < kickers.size(); i++) {
+            int result = kickers.get(i).compareTo(comparedKickers.get(i));
+            if (result > 0) {
+                this.cardMakingTheDifference = kickers.get(i);
+                return 1;
+            } else if (result < 0) {
+                combinaisonValue2.setCardMakingTheDifference(comparedKickers.get(i));
+                return -1;
+            }
+        }
+        return 0;
     }
 
     /*
@@ -106,9 +140,10 @@ public class CombinaisonValue {
 
     /**
      * Création d'une liste dans laquelle on ne garde que les cards qui apparaissent un certain nombre de fois dans la main
-     * @param cards La liste de cartes
+     *
+     * @param cards     La liste de cartes
      * @param occurence Le nombre de fois qu'une carte doit apparaitre dans la main
-     * @return  List<Card> cards
+     * @return List<Card> cards
      */
     public static List<Card> getCardsFilteredByOccurence(List<Card> cards, int occurence) {
         Map<Card, Integer> map = createMapCountingOccurences(cards);
@@ -137,7 +172,14 @@ public class CombinaisonValue {
         StringBuilder victoryCondition = new StringBuilder();
         switch (this.combinaison) {
             case HIGHEST_CARD:
-                victoryCondition.append("carte la plus élevée : ").append(this.getBestCard().getRank().getName());
+                if (this.cardMakingTheDifference == null) {
+                    victoryCondition.append("carte la plus élevée : ").append(this.getBestCard().toString());
+                } else {
+                    victoryCondition.append("carte la plus élevée : ").append(this.cardMakingTheDifference.toString());
+                }
+                break;
+            case FLUSH:
+                victoryCondition.append("Couleur de ").append(this.getBestCard().getSuit().getName());
                 break;
             case STRAIGHT:
                 int size = this.cards.size();
@@ -221,4 +263,11 @@ public class CombinaisonValue {
         return this.combinaison;
     }
 
+    public void setCardMakingTheDifference(Card cardMakingTheDifference) {
+        this.cardMakingTheDifference = cardMakingTheDifference;
+    }
+
+    public Card getCardMakingTheDifference() {
+        return this.cardMakingTheDifference;
+    }
 }
