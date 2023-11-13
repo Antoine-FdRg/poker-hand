@@ -6,7 +6,7 @@ Le projet Dojo Poker vise à créer un jeu de poker en Java, avec une interface 
 Chaque main possède cinq cartes. Celle qui possède la meilleure combinaison de carte dans sa main gagne. 
 
 Pour déterminer la meilleure combinaison voici la liste des combinaisons détaillées, elles sont triées de la moins bonne à la meilleure combinaison :
-* Main sans paire : `4Pi 7Tr DCo VPi 2Ca` 
+* Main sans combinaison (meilleurs carte) : `4Pi 7Tr DCo VPi 2Ca` 
     
     C'est une main qui ne contient aucune combinaison, cette main est classée par la valeur de la carte la plus haute.
 
