@@ -194,10 +194,8 @@ class RefereeTest {
         Hand hand1 = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
         Hand hand2 = new Hand(List.of("7Co", "8Ca", "9Tr", "10Pi", "VCo"));
 
-        Referee referee = new Referee();
-
         // The hand with the straight should win
-        Victory result = referee.compareHands(hand1, hand2);
+        Victory result = this.referee.compareHands(hand1, hand2);
         assertNotNull(result);
         assertEquals(hand2, result.getHand());
         assertEquals(Combinaison.STRAIGHT, result.getCombinaisonValue().getCombinaison());
@@ -216,10 +214,8 @@ class RefereeTest {
         Hand hand1 = new Hand(List.of("10Co", "VCa", "DTr", "RPi", "APi"));
         Hand hand2 = new Hand(List.of("2Ca", "3Tr", "4Co", "5Ca", "6Tr"));
 
-        Referee referee = new Referee();
-
         // The hand with the lower straight should lose
-        Victory result = referee.compareHands(hand1, hand2);
+        Victory result = this.referee.compareHands(hand1, hand2);
         assertNotNull(result);
         assertEquals(hand1, result.getHand());
         assertEquals(Combinaison.STRAIGHT, result.getCombinaisonValue().getCombinaison());
@@ -237,10 +233,8 @@ class RefereeTest {
         Hand hand1 = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
         Hand hand2 = new Hand(List.of("2Ca", "3Tr", "4Co", "5Ca", "6Tr"));
 
-        Referee referee = new Referee();
-
         // The hands should result in a draw
-        Victory result = referee.compareHands(hand1, hand2);
+        Victory result = this.referee.compareHands(hand1, hand2);
         assertNull(result);
     }
 
@@ -254,9 +248,7 @@ class RefereeTest {
     @Test
     void testGetBestCombinaisonStraight() {
         Hand hand = new Hand(List.of("10Co", "VCa", "DTr", "RPi", "9Pi"));
-
-        Referee referee = new Referee();
-        CombinaisonValue combinaisonValue = referee.getBestCombinaison(hand);
+        CombinaisonValue combinaisonValue = this.referee.getBestCombinaison(hand);
 
         assertNotNull(combinaisonValue);
         assertEquals(Combinaison.STRAIGHT, combinaisonValue.getCombinaison());
@@ -272,9 +264,7 @@ class RefereeTest {
     @Test
     void testGetBestCombinaisonNoStraight() {
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "7Co"));
-
-        Referee referee = new Referee();
-        CombinaisonValue combinaisonValue = referee.getBestCombinaison(hand);
+        CombinaisonValue combinaisonValue = this.referee.getBestCombinaison(hand);
 
         assertNotNull(combinaisonValue);
         assertEquals(Combinaison.HIGHEST_CARD, combinaisonValue.getCombinaison());
@@ -291,9 +281,7 @@ class RefereeTest {
     @Test
     void testIsStraightWithStraight() {
         Hand hand = new Hand(List.of("10Co", "VCa", "DTr", "RPi", "9Pi"));
-
-        Referee referee = new Referee();
-        Optional<List<Card>> isStraight = referee.searchStraight(hand);
+        Optional<List<Card>> isStraight = this.referee.searchStraight(hand);
 
         assertTrue(isStraight.isPresent());
     }
@@ -308,12 +296,11 @@ class RefereeTest {
     @Test
     void testIsStraightNoStraight() {
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
-
-        Referee referee = new Referee();
-        Optional<List<Card>> isStraight = referee.searchStraight(hand);
+        Optional<List<Card>> isStraight = this.referee.searchStraight(hand);
 
         assertFalse(isStraight.isPresent());
     }
+
     /**
      * Test the searchThreeOfAKind method of the Referee class
      * Here the hand is not a threeOfAKind hand
@@ -322,12 +309,12 @@ class RefereeTest {
      * @see Referee#searchThreeOfAKind(Hand)
      */
     @Test
-    void searchMissedThreeOfAKindTest(){
+    void searchMissedThreeOfAKindTest() {
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
-        Referee referee = new Referee();
-        Optional<List<Card>> isThreeOfAKind = referee.searchThreeOfAKind(hand);
+        Optional<List<Card>> isThreeOfAKind = this.referee.searchThreeOfAKind(hand);
         assertFalse(isThreeOfAKind.isPresent());
     }
+
     /**
      * Test the searchThreeOfAKind method of the Referee class
      * Here the hand has a three of a kind
@@ -336,10 +323,9 @@ class RefereeTest {
      * @see Referee#searchThreeOfAKind(Hand)
      */
     @Test
-    void searchThreeOfAKindTest(){
+    void searchThreeOfAKindTest() {
         Hand hand = new Hand(List.of("2Co", "3Ca", "2Tr", "2Pi", "VCo"));
-        Referee referee = new Referee();
-        Optional<List<Card>> isThreeOfAKind = referee.searchThreeOfAKind(hand);
+        Optional<List<Card>> isThreeOfAKind = this.referee.searchThreeOfAKind(hand);
         assertTrue(isThreeOfAKind.isPresent());
     }
 
@@ -349,8 +335,8 @@ class RefereeTest {
         /* we check if the method searchThreeOfAKind works */
         Hand threeOfAKindOfTwo = new Hand(new ArrayList<>(List.of("2Ca", "2Tr", "3Tr", "4Tr", "2Co")));
         Hand pairCombination = new Hand(new ArrayList<>(List.of("2Ca", "ATr", "3Tr", "4Tr", "2Tr")));
-        assertEquals(Combinaison.THREE_OF_A_KIND, referee.getBestCombinaison(threeOfAKindOfTwo).getCombinaison());
-        assertNotEquals(Combinaison.THREE_OF_A_KIND, referee.getBestCombinaison(pairCombination).getCombinaison());
+        assertEquals(Combinaison.THREE_OF_A_KIND, this.referee.getBestCombinaison(threeOfAKindOfTwo).getCombinaison());
+        assertNotEquals(Combinaison.THREE_OF_A_KIND, this.referee.getBestCombinaison(pairCombination).getCombinaison());
     }
 
     @Test
@@ -358,7 +344,7 @@ class RefereeTest {
 
         /* case with threeOfAKind combination and highest card combination*/
         Hand nonSpecificHand = new Hand(new ArrayList<>(List.of("3Co", "2Tr", "5Tr", "8Tr", "7Tr")));
-        victory = referee.compareHands(threeOfAKindHandOfEight, nonSpecificHand);
+        victory = this.referee.compareHands(threeOfAKindHandOfEight, nonSpecificHand);
         assertEquals(victory.getHand(), threeOfAKindHandOfEight);
     }
 
@@ -366,7 +352,7 @@ class RefereeTest {
     void threeOfAKindVictoryTestWithTwoDifferentsThreeOfAKind() {
         /* case with two different threeOfAKind  */
         Hand threeOfAKindHandOfAce = new Hand(new ArrayList<>(List.of("ACa", "3Tr", "ATr", "5Tr", "ACo")));
-        victory = referee.compareHands(threeOfAKindHandOfEight, threeOfAKindHandOfAce);
+        victory = this.referee.compareHands(threeOfAKindHandOfEight, threeOfAKindHandOfAce);
         assertEquals(victory.getHand(), threeOfAKindHandOfAce);
     }
 
@@ -375,7 +361,7 @@ class RefereeTest {
         /* We test if the straight is stronger than the threeOfAKind*/
         Hand straigthHand = new Hand(new ArrayList<>(List.of("2Co", "3Tr", "4Tr", "5Tr", "6Tr")));
         Hand threeOfAKindHandOfthree = new Hand(new ArrayList<>(List.of("2Pi", "3Pi", "4Ca", "3Tr", "3Ca")));
-        victory = referee.compareHands(straigthHand, threeOfAKindHandOfthree);
+        victory = this.referee.compareHands(straigthHand, threeOfAKindHandOfthree);
         assertEquals(victory.getHand(), straigthHand);
     }
 
@@ -392,8 +378,7 @@ class RefereeTest {
         Hand hand = new Hand(List.of("2Co", "3Co", "10Co", "VCo", "ACo"));
         Hand hand2 = new Hand(List.of("2Co", "2Ca", "2Tr", "3Pi", "4Co"));
 
-        Referee referee = new Referee();
-        Victory victory = referee.compareHands(hand, hand2);
+        Victory victory = this.referee.compareHands(hand, hand2);
 
         assertNotNull(victory);
         assertEquals(hand, victory.getHand());
@@ -413,8 +398,7 @@ class RefereeTest {
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
         Hand hand2 = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
 
-        Referee referee = new Referee();
-        Victory victory = referee.compareHands(hand, hand2);
+        Victory victory = this.referee.compareHands(hand, hand2);
 
         assertNotNull(victory);
         assertEquals(hand, victory.getHand());
@@ -433,8 +417,7 @@ class RefereeTest {
     void testGetBestCombinaisonFlush() {
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
 
-        Referee referee = new Referee();
-        CombinaisonValue combinaisonValue = referee.getBestCombinaison(hand);
+        CombinaisonValue combinaisonValue = this.referee.getBestCombinaison(hand);
 
         assertNotNull(combinaisonValue);
         assertEquals(Combinaison.FLUSH, combinaisonValue.getCombinaison());
@@ -453,8 +436,7 @@ class RefereeTest {
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
         Hand hand2 = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
 
-        Referee referee = new Referee();
-        Victory victory = referee.compareHands(hand, hand2);
+        Victory victory = this.referee.compareHands(hand, hand2);
 
         assertNull(victory);
     }
@@ -472,8 +454,7 @@ class RefereeTest {
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
         Hand hand2 = new Hand(List.of("2Ca", "3Ca", "4Ca", "5Ca", "10Ca"));
 
-        Referee referee = new Referee();
-        Victory victory = referee.compareHands(hand, hand2);
+        Victory victory = this.referee.compareHands(hand, hand2);
 
         assertNotNull(victory);
         assertEquals(hand, victory.getHand());
@@ -493,8 +474,7 @@ class RefereeTest {
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
         Hand hand2 = new Hand(List.of("2Ca", "3Ca", "4Ca", "5Ca", "VCa"));
 
-        Referee referee = new Referee();
-        Victory victory = referee.compareHands(hand, hand2);
+        Victory victory = this.referee.compareHands(hand, hand2);
 
         assertNull(victory);
     }
@@ -510,8 +490,7 @@ class RefereeTest {
     void testIsFlushWithFlush() {
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "VCo"));
 
-        Referee referee = new Referee();
-        Optional<List<Card>> isFlush = referee.searchFlush(hand);
+        Optional<List<Card>> isFlush = this.referee.searchFlush(hand);
 
         assertTrue(isFlush.isPresent());
     }
@@ -527,8 +506,7 @@ class RefereeTest {
     void testIsFlushNoFlush() {
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
 
-        Referee referee = new Referee();
-        Optional<List<Card>> isFlush = referee.searchFlush(hand);
+        Optional<List<Card>> isFlush = this.referee.searchFlush(hand);
 
         assertFalse(isFlush.isPresent());
     }
@@ -544,8 +522,7 @@ class RefereeTest {
     void testIsPairWithPair() {
         Hand hand = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "VCo"));
 
-        Referee referee = new Referee();
-        Optional<List<Card>> isPair = referee.searchPair(hand);
+        Optional<List<Card>> isPair = this.referee.searchPair(hand);
 
         assertTrue(isPair.isPresent());
     }
@@ -561,8 +538,7 @@ class RefereeTest {
     void testIsPairNoPair() {
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
 
-        Referee referee = new Referee();
-        Optional<List<Card>> isPair = referee.searchPair(hand);
+        Optional<List<Card>> isPair = this.referee.searchPair(hand);
 
         assertFalse(isPair.isPresent());
     }

@@ -7,9 +7,7 @@ import com.seinksansdoozebank.fr.model.CombinaisonValue;
 import com.seinksansdoozebank.fr.model.Hand;
 import com.seinksansdoozebank.fr.model.Suit;
 import com.seinksansdoozebank.fr.model.Victory;
-import com.seinksansdoozebank.fr.model.Combinaison;
 import com.seinksansdoozebank.fr.model.Rank;
-import com.seinksansdoozebank.fr.model.Victory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,12 +46,9 @@ public class Referee {
      * @return the best combinaison
      */
     protected CombinaisonValue getBestCombinaison(Hand hand) {
-        Optional<List<Card>> response = this.searchFlush(hand);
+        Optional<List<Card>> response = this.searchStraightFlush(hand);
         if (response.isPresent()) {
-            response = this.searchStraight(hand);
-            if (response.isPresent()) {
-                return new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, response.get());
-            }
+            return new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, response.get());
         }
         response = this.searchFlush(hand);
         if (response.isPresent()) {
@@ -68,7 +63,27 @@ public class Referee {
             return new CombinaisonValue(Combinaison.THREE_OF_A_KIND, response.get());
         }
         response = this.searchPair(hand);
-        return response.map(cards -> new CombinaisonValue(Combinaison.PAIR, cards)).orElseGet(() -> new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand.getBestCard())));
+        if (response.isPresent()) {
+            return new CombinaisonValue(Combinaison.PAIR, response.get());
+        }
+        return new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand.getBestCard()));
+    }
+
+    /**
+     * Search if the hand is a straight flush
+     *
+     * @param hand the hand
+     * @return the list of cards if the hand is a straight flush, empty optional otherwise
+     */
+    protected Optional<List<Card>> searchStraightFlush(Hand hand) {
+        Optional<List<Card>> response = this.searchFlush(hand);
+        if (response.isPresent()) {
+            response = this.searchStraight(hand);
+            if (response.isPresent()) {
+                return response;
+            }
+        }
+        return Optional.empty();
     }
 
     /**
@@ -104,6 +119,12 @@ public class Referee {
         return Optional.empty();
     }
 
+    /**
+     * Search if the hand is a flush
+     *
+     * @param hand the hand
+     * @return the list of cards if the hand is a flush, empty optional otherwise
+     */
     public Optional<List<Card>> searchFlush(Hand hand) {
         List<Card> cards = hand.getCards();
         int cardsSize = cards.size();
@@ -128,7 +149,7 @@ public class Referee {
     protected Optional<List<Card>> searchPair(Hand hand) {
         List<Card> cardsFilteredByOccurence = CombinaisonValue.getCardsFilteredByOccurence(hand.getCards(), 2);
 
-        if (cardsFilteredByOccurence.size() == 2){ // 2 because the map count card with differents suits as different cards
+        if (cardsFilteredByOccurence.size() == 2) { // 2 because the map count card with differents suits as different cards
             // remove the card who's in the pair and sort the other card descending
             List<Card> list = new ArrayList<>(hand.getCards().stream()
                     .filter(card -> !card.equals(cardsFilteredByOccurence.get(0)))
