@@ -9,7 +9,12 @@ import com.seinksansdoozebank.fr.model.Suit;
 import com.seinksansdoozebank.fr.model.Victory;
 import com.seinksansdoozebank.fr.model.Rank;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class Referee {
 
