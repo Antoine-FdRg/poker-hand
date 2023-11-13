@@ -38,7 +38,7 @@ Pour déterminer la meilleure combinaison voici la liste des combinaisons détai
 
 * Full : `4Pi 8Tr 8Co 8Pi 4Ca`
     
-    La main contient 3 cartes de la m^me valeur avec les 2 autres cartes formant une paire, le classement se fait par la valeur des 3 cartes. 
+    La main contient 3 cartes de la même valeur avec les 2 autres cartes formant une paire, le classement se fait par la valeur des 3 cartes. 
 
 
 * Carré : `4Pi 8Tr 8Co 8Pi 8Ca`

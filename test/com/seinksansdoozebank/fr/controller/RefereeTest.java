@@ -321,17 +321,17 @@ class RefereeTest {
         assertFalse(isStraight.isPresent());
     }
     /**
-     * Test the searchThreeOfAKind method of the Referee class
+     * Test the searchNOfAKind method of the Referee class
      * Here the hand is not a threeOfAKind hand
-     * So the searchThreeOfAKind method will return false
+     * So the searchNOfAKind method will return false
      *
-     * @see Referee#searchThreeOfAKind(Hand)
+     * @see Referee#searchNOfAKind(Hand, int)
      */
     @Test
     void searchMissedThreeOfAKindTest(){
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "VCo"));
         Referee referee = new Referee();
-        Optional<List<Card>> isThreeOfAKind = referee.searchThreeOfAKind(hand);
+        Optional<List<Card>> isThreeOfAKind = referee.searchNOfAKind(hand,3);
         assertFalse(isThreeOfAKind.isPresent());
     }
     /**
@@ -339,13 +339,13 @@ class RefereeTest {
      * Here the hand has a three of a kind
      * So the searchThreeOfAKind method will return an optional list with one card
      *
-     * @see Referee#searchThreeOfAKind(Hand)
+     * @see Referee#searchNOfAKind(Hand, int)
      */
     @Test
     void searchThreeOfAKindTest(){
         Hand hand = new Hand(List.of("2Co", "3Ca", "2Tr", "2Pi", "VCo"));
         Referee referee = new Referee();
-        Optional<List<Card>> isThreeOfAKind = referee.searchThreeOfAKind(hand);
+        Optional<List<Card>> isThreeOfAKind = referee.searchNOfAKind(hand,3);
         assertTrue(isThreeOfAKind.isPresent());
     }
 
@@ -594,7 +594,7 @@ class RefereeTest {
     }
 
     @Test
-    void testGetBestCombinaisonTwoPairAndVerifOrder(){
+    void testGetBestCombinaisonTwoPairAndVerifyOrder(){
         Hand hand = new Hand(List.of("2Co", "3Ca", "VCo", "3Pi", "2Tr"));
         Combinaison combiTwoPair = referee.getBestCombinaison(hand).getCombinaison();
         assertNotEquals(Combinaison.THREE_OF_A_KIND, combiTwoPair);
@@ -611,30 +611,30 @@ class RefereeTest {
     }
 
     /**
-     * Test the searchFourOfAKind method of the Referee class
+     * Test the searchNOfAKind method of the Referee class
      * Here the hand does not contain a four of a kind combination
-     * So the searchFourOfAKind method will return false
+     * So the searchNOfAKind method will return false
      *
-     * @see Referee#searchFourOfAKind(Hand)
+     * @see Referee#searchNOfAKind(Hand, int)
      */
     @Test
     void searchMissedFourOfAKindTest() {
         Hand nonSpecificHand = new Hand(List.of("2Co", "10Ca", "4Tr", "3Pi", "VCo"));
-        Optional<List<Card>> isFourOfAKind = referee.searchFourOfAKind(nonSpecificHand);
+        Optional<List<Card>> isFourOfAKind = referee.searchNOfAKind(nonSpecificHand,4);
         assertFalse(isFourOfAKind.isPresent());
     }
 
     /**
-     * Test the searchFourOfAKind method of the Referee class
+     * Test the searchNOfAKind method of the Referee class
      * Here the hand has a four of a kind
-     * So the searchFourOfAKind method will return an optional list with one card
+     * So the searchNOfAKind method will return an optional list with one card
      *
-     * @see Referee#searchFourOfAKind(Hand)
+     * @see Referee#searchNOfAKind(Hand, int)
      */
     @Test
     void searchFourOfAKindTest() {
         Hand fourOfAKindHand = new Hand(List.of("2Co", "2Ca", "2Tr", "2Pi", "VCo"));
-        Optional<List<Card>> isFourOfAKind = referee.searchFourOfAKind(fourOfAKindHand);
+        Optional<List<Card>> isFourOfAKind = referee.searchNOfAKind(fourOfAKindHand,4);
         assertTrue(isFourOfAKind.isPresent());
     }
 
@@ -676,6 +676,35 @@ class RefereeTest {
         Hand pairHand = new Hand(new ArrayList<>(List.of("4Co", "3Tr", "4Tr", "5Tr", "6Tr")));
         victory = referee.compareHands(pairHand, fourOfAKindHandOfThree);
         assertEquals(victory.getHand(), fourOfAKindHandOfThree);
+    }
+    /**
+     * Test the compareHands method of the Referee class with a twoPairsHand and a fourOfAKindHand
+     * the victory should be for the hand with the four of a kind
+     *
+     * @see Referee#compareHands(Hand, Hand)
+     */
+    @Test
+    void fourOfAKindVictoryTestWIthTwoPair(){
+        /* We test if the pair is stronger than the fourOfAKind*/
+        Hand twopairHand = new Hand(new ArrayList<>(List.of("4Co", "3Tr", "4Tr", "5Tr", "3Pi")));
+        victory = referee.compareHands(twopairHand, fourOfAKindHandOfThree);
+        assertEquals(victory.getHand(), fourOfAKindHandOfThree);
+    }
+
+    /**
+     * Test the compareHands method of the Referee class
+     * the victory should be for the hand with the four of a kind
+     *
+     * @see Referee#compareHands(Hand, Hand)
+     */
+    @Test
+    void testVictoryFlushAgainstFourOfAKind() {
+        Hand flushHand = new Hand(List.of("2Co", "3Co", "10Co", "VCo", "ACo"));
+        Hand fourOfAKindHand = new Hand(List.of("2Co", "2Ca", "2Tr", "2Pi", "4Co"));
+
+        Victory victory = referee.compareHands(flushHand, fourOfAKindHand);
+        assertEquals(victory.getHand(), fourOfAKindHand);
+
     }
 
 }

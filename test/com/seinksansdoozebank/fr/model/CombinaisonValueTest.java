@@ -548,6 +548,21 @@ class CombinaisonValueTest {
         int result= testFourOfAKindEight.compareTo(straightCombinationValue);
         assertTrue(result>0);
     }
+    @Test
+    void testFourOfAKindVSThreeOfAKind(){
+        assertEquals(1,testFourOfAKindEight .compareTo(testThreeOfAKindSix));
+    }
+
+    @Test
+    void testFourOfAKindVSTwoPairs(){
+        assertEquals(-1, testTwoPairOfEightAndSixWithFive.compareTo(testFourOfAKindEight));
+    }
+
+    @Test
+    void testFourOfAKindVSFlush(){
+        assertEquals(-1, testFlushOfHeart.compareTo(testFourOfAKindEight));
+    }
+
 
     @Test
     void testCompareToTwoPairVSHighestCardExpectTwoPairWins(){
