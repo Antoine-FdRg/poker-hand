@@ -87,26 +87,14 @@ public class CombinaisonValue {
                     }
                     return 0;
                 }
-                /* we compare two different threeOfAKind, there is no null case for this combination so we throw an exception */
-                case THREE_OF_A_KIND -> {
+                /* we compare two different NOfAKind, there is no null case for this combination so we throw an exception */
+                case THREE_OF_A_KIND, FOUR_OF_A_KIND-> {
                     if (cards.get(0).compareTo(combinaison2.cards.get(0)) > 0) {
                         return 1;
                     } else if (cards.get(0).compareTo(combinaison2.cards.get(0)) < 0) {
                         return -1;
                     } else {
-                        throw new IllegalStateException("Il est impossible d'avoir deux brelans identiques");
-                    }
-                }
-                //We compare two hands with a four of a kind combination, the rank of the card will determine
-                //the victory Hand
-                case FOUR_OF_A_KIND -> {
-                    if (cards.get(0).compareTo(combinaison2.cards.get(0)) > 0) {
-                        return 1;
-                    } else if (cards.get(0).compareTo(combinaison2.cards.get(0)) < 0) {
-                        return -1;
-                    } else {
-                        //In our situation it is impossible to have two same four of a kind
-                        throw new IllegalStateException("Il est impossible d'avoir deux carrés identiques");
+                        throw new IllegalStateException("Il est impossible d'avoir deux brelans ou deux carrés identiques");
                     }
                 }
                 // Flush est géré dans default

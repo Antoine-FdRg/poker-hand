@@ -70,7 +70,7 @@ class CombinaisonValueTest {
     @Test
     void compareTowithThreeOfAKindEquality() {
         /*We test if the method compareto in a threeOfAKind case when there are equals works*/
-        assertThrows(IllegalStateException.class, () -> testThreeOfAKindEight.compareTo(testThreeOfAKindEight), "Il est impossible d'avoir deux brelans identiques");
+        assertThrows(IllegalStateException.class, () -> testThreeOfAKindEight.compareTo(testThreeOfAKindEight), "Il est impossible d'avoir deux brelans ou deux carrés identiques");
     }
 
     /**
@@ -512,7 +512,7 @@ class CombinaisonValueTest {
     @Test
     void compareToWithFourOfAKindEquality() {
         /*We test if the method compareto in a fourOfAKind case when there are equals works*/
-        assertThrows(IllegalStateException.class, () -> testFourOfAKindEight.compareTo(testFourOfAKindEight), "Il est impossible d'avoir deux carrés identiques");
+        assertThrows(IllegalStateException.class, () -> testFourOfAKindEight.compareTo(testFourOfAKindEight), "Il est impossible d'avoir deux brelans ou deux carrés identiques");
     }
     @Test
     void testToStringFourOfAKindBasicCard() {
