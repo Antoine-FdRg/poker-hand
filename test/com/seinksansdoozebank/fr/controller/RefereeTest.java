@@ -597,4 +597,34 @@ class RefereeTest {
         assertEquals(Combinaison.TWO_PAIR,combiTwoPair);
         assertNotEquals(Combinaison.PAIR, combiTwoPair);
     }
+
+
+
+    @Test
+    void testSearchFullWithFull(){
+        Hand handWithFull = new Hand(List.of("2Co", "3Ca", "2Tr", "3Pi", "3Co"));
+        Optional<List<Card>> optListCardOfFull = referee.searchFull(handWithFull);
+        assertTrue(optListCardOfFull.isPresent());
+
+        List<Card> listCardOfFull = optListCardOfFull.get();
+        assertEquals(2, listCardOfFull.size());
+        assertEquals(Rank.THREE,listCardOfFull.get(0).getRank());
+        assertEquals(Rank.TWO,listCardOfFull.get(1).getRank());
+    }
+
+    @Test
+    void testSearchFullwithNoFull(){
+        Hand handWithTwoPair = new Hand(List.of("2Co", "3Ca", "2Tr", "3Pi", "VCo"));
+        Optional<List<Card>> optListCardOfFull = referee.searchFull(handWithTwoPair);
+        assertFalse(optListCardOfFull.isPresent());
+    }
+
+    @Test
+    void testGetBestCombinaisonFulAndVerifOrder(){
+        Hand handWithFull = new Hand(List.of("2Co", "3Ca", "2Tr", "3Pi", "3Co"));
+        Combinaison combiFull = referee.getBestCombinaison(handWithFull).getCombinaison();
+        assertEquals(Combinaison.FULL_HOUSE,combiFull);
+        assertNotEquals(Combinaison.THREE_OF_A_KIND, combiFull);
+        assertNotEquals(Combinaison.PAIR, combiFull);
+    }
 }

@@ -46,7 +46,11 @@ public class Referee {
      * @return the best combinaison
      */
     protected CombinaisonValue getBestCombinaison(Hand hand) {
-        Optional<List<Card>> response = this.searchFlush(hand);
+        Optional<List<Card>> response = this.searchFull(hand);
+        if (response.isPresent()) {
+            return new CombinaisonValue(Combinaison.FULL_HOUSE, response.get());
+        }
+        response = this.searchFlush(hand);
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.FLUSH, response.get());
         }
@@ -185,4 +189,19 @@ public class Referee {
         return Optional.empty();
     }
 
+    public Optional<List<Card>> searchFull(Hand hand) {
+        //Look for a three of a kind and a pair
+        Optional<List<Card>> optCardListOfThreeOfAKind = this.searchThreeOfAKind(hand);
+        Optional<List<Card>> optCardListOfPair = this.searchPair(hand);
+        if(optCardListOfThreeOfAKind.isPresent() && optCardListOfPair.isPresent()){
+            Card cardFromThreeOfAKind = optCardListOfThreeOfAKind.get().get(0);
+            Card cardFromPair = optCardListOfPair.get().get(0);
+            //Verify if the three of a kind and the pair are not the same card
+            if(!cardFromThreeOfAKind.equals(cardFromPair)){
+                //Return the list of cards
+                return Optional.of(List.of(cardFromThreeOfAKind, cardFromPair));
+            }
+        }
+        return Optional.empty();
+    }
 }
