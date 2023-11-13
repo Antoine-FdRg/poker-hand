@@ -62,6 +62,21 @@ public class CombinaisonValue {
                     }
                     return 0;
                 }
+                case TWO_PAIR -> {
+                    if (this.cards.size() != 3 || combinaison2.getCards().size() != 3) { //3 is because there one card for the fisrt, one for the second and one for the kicker
+                        throw new IllegalStateException("There is not two pair in the hand");
+                    }
+                    //Compare the best pair of each combinaison
+                    int cmpBestPairOfEachCV = this.cards.get(0).compareTo(combinaison2.cards.get(0));
+                    if (cmpBestPairOfEachCV != 0) {
+                        // if the best pair of each combinaison are different, we return the result
+                        return cmpBestPairOfEachCV;
+                    }
+                    // if the best pair of each combinaison are equals, we compare the second pair of each combinaison
+                    int cmpSecondPairOfEachCV = this.cards.get(1).compareTo(combinaison2.cards.get(1));
+                    // if the second pair of each combinaison are equals, we compare the kicker
+                    return cmpSecondPairOfEachCV == 0 ? this.cards.get(2).compareTo(combinaison2.cards.get(2)) : cmpSecondPairOfEachCV;
+                }
                 case STRAIGHT -> {
                     // compare the best card of the straight
                     result = this.getBestCard().compareTo(combinaison2.getBestCard());
@@ -175,7 +190,7 @@ public class CombinaisonValue {
                 if (this.cardMakingTheDifference == null) {
                     victoryCondition.append("carte la plus élevée : ").append(this.getBestCard().toString());
                 } else {
-                    victoryCondition.append("carte la plus élevée : ").append(this.cardMakingTheDifference.toString());
+                    victoryCondition.append("carte la plus élevée : ").append(this.cardMakingTheDifference);
                 }
                 break;
             case FLUSH:
