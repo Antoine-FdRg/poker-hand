@@ -187,6 +187,7 @@ class CombinaisonValueTest {
         // Test generating the string representation of a straight with an Ace
         Hand hand = new Hand(List.of("ACo", "2Co", "3Co", "4Co", "5Co"));
         Referee referee = new Referee();
+        assertTrue(referee.searchStraight(hand).isPresent());
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, referee.searchStraight(hand).get());
 
         assertEquals("Quinte à l'As", combinaisonValue.toString());
@@ -541,6 +542,11 @@ class CombinaisonValueTest {
     @Test
     void testCompareToTwoPairVSTwoPairDraw(){
         assertEquals(0, testTwoPairOfEightAndSixWithFive.compareTo(testTwoPairOfEightAndSixWithFive));
+    }
+
+    @Test
+    void testToStringTwoPair(){
+        assertEquals("Double paire de 8 et de 6", testTwoPairOfEightAndSixWithFive.toString());
     }
 
 }

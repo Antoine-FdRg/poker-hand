@@ -211,6 +211,9 @@ public class CombinaisonValue {
             case PAIR:
                 victoryCondition.append("Paire de ").append(cards.get(0).getRank().getName());
                 break;
+            case TWO_PAIR:
+                victoryCondition.append("Double paire de ").append(cards.get(0).getRank().getName()).append(" et de ").append(cards.get(1).getRank().getName());
+                break;
             case THREE_OF_A_KIND:
                 String followedCondition = toStringThreeOfAKind();
                 victoryCondition.append("Brelan ").append(followedCondition);
