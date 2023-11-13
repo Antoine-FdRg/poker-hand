@@ -5,6 +5,8 @@ import com.seinksansdoozebank.fr.model.Hand;
 import com.seinksansdoozebank.fr.model.Victory;
 import com.seinksansdoozebank.fr.model.Card;
 import com.seinksansdoozebank.fr.model.Combinaison;
+import com.seinksansdoozebank.fr.model.Rank;
+import com.seinksansdoozebank.fr.model.Suit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -572,6 +574,35 @@ class RefereeTest {
     }
 
     @Test
+    void testSearchTwoPairWithTwoPair(){
+        Hand handWithTwoPair = new Hand(List.of("2Co", "3Ca", "2Tr", "3Pi", "VCo"));
+        Optional<List<Card>> optListCardOfTwoPair = referee.searchTwoPair(handWithTwoPair);
+        assertTrue(optListCardOfTwoPair.isPresent());
+
+        List<Card> listCardOfTwoPair = optListCardOfTwoPair.get();
+        assertEquals(3, listCardOfTwoPair.size());
+        assertEquals(Rank.THREE,listCardOfTwoPair.get(0).getRank());
+        assertEquals(Rank.TWO,listCardOfTwoPair.get(1).getRank());
+        assertEquals(new Card(Rank.JACK, Suit.HEART),listCardOfTwoPair.get(2));
+    }
+
+    @Test
+    void testSearchTwoPairWithNoTwoPair(){
+        Hand handWithPair = new Hand(List.of("2Co", "3Ca", "4Tr", "3Pi", "VCo"));
+        Optional<List<Card>> optListCardOfTwoPair = referee.searchTwoPair(handWithPair);
+        assertFalse(optListCardOfTwoPair.isPresent());
+    }
+
+    @Test
+    void testGetBestCombinaisonTwoPairAndVerifOrder(){
+        Hand hand = new Hand(List.of("2Co", "3Ca", "VCo", "3Pi", "2Tr"));
+        Combinaison combiTwoPair = referee.getBestCombinaison(hand).getCombinaison();
+        assertNotEquals(Combinaison.THREE_OF_A_KIND, combiTwoPair);
+        assertEquals(Combinaison.TWO_PAIR,combiTwoPair);
+        assertNotEquals(Combinaison.PAIR, combiTwoPair);
+    }
+
+    @Test
     void fourOfAKindCombinaisonTest() {
         Hand fourOfAKindHand = new Hand(new ArrayList<>(List.of("2Ca", "2Co", "2Pi", "2Tr", "6Tr")));
         Hand threeOfAKindHand = new Hand(new ArrayList<>(List.of("2Ca", "2Tr", "4Pi", "6Co", "2Co")));
@@ -648,3 +679,4 @@ class RefereeTest {
     }
 
 }
+

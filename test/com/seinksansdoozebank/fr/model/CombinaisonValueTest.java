@@ -16,6 +16,10 @@ class CombinaisonValueTest {
     private CombinaisonValue testThreeOfAKindSix;
     private CombinaisonValue testThreeOfAKindEight;
     private CombinaisonValue testBestCardSix;
+    private CombinaisonValue testTwoPairOfEightAndSixWithFive;
+    private CombinaisonValue testPairOfTen;
+    private CombinaisonValue testStraightToSix;
+    private CombinaisonValue testFlushOfHeart;
     private CombinaisonValue testFourOfAKindEight;
     private CombinaisonValue testFourOfAKindSix;
     private Referee referee;
@@ -23,17 +27,28 @@ class CombinaisonValueTest {
     @BeforeEach
     void setUp() {
         Hand handHighestCardJack = new Hand(List.of("VCa", "2Ca", "3Ca", "4Ca", "5Ca"));
-        Hand handHighestCardSix = new Hand(List.of("5Co", "2Ca", "3Ca", "4Ca", "6Ca"));
         Hand threeOfAKindSix = new Hand(List.of("5Co", "6Ca", "6Tr", "ATr", "6Co"));
         Hand threeOfAKindEight = new Hand(List.of("5Co", "8Ca", "8Co", "ATr", "8Tr"));
         Hand threeOfAKindKing = new Hand(List.of("5Co", "RCa", "RCo", "ATr", "RTr"));
         referee = new Referee();
-        testBestCardJack = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(handHighestCardJack.getBestCard()));
-        testBestCardSix = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(threeOfAKindSix.getBestCard()));
-        testThreeOfAKindEight = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.EIGHT,Suit.CLUB)));
-        testThreeOfAKindSix = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.SIX,Suit.CLUB)));
+        testBestCardJack = new CombinaisonValue(Combinaison.HIGHEST_CARD, handHighestCardJack.getCards());
+        testBestCardSix = new CombinaisonValue(Combinaison.HIGHEST_CARD, threeOfAKindSix.getCards());
+        testThreeOfAKindEight = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.EIGHT, Suit.CLUB)));
+        testThreeOfAKindSix = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.SIX, Suit.CLUB)));
         testFourOfAKindEight = new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, List.of(new Card(Rank.EIGHT,Suit.HEART)));
         testFourOfAKindSix = new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, List.of(new Card(Rank.SIX,Suit.HEART)));
+        testTwoPairOfEightAndSixWithFive = new CombinaisonValue(Combinaison.TWO_PAIR, List.of(new Card(Rank.EIGHT, Suit.CLUB), new Card(Rank.SIX, Suit.CLUB), new Card(Rank.FIVE, Suit.DIAMOND)));
+        testPairOfTen = new CombinaisonValue(Combinaison.PAIR,
+                List.of(new Card(Rank.TEN, Suit.CLUB),
+                        new Card(Rank.EIGHT, Suit.CLUB),
+                        new Card(Rank.FIVE, Suit.DIAMOND),
+                        new Card(Rank.TWO, Suit.SPADE)));
+        Hand handStraightToSix = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
+        testStraightToSix = new CombinaisonValue(Combinaison.STRAIGHT, handStraightToSix.getCards());
+        Hand handFlushOfHeart = new Hand(List.of("2Co", "3Co", "7Co", "5Co", "6Co"));
+        testFlushOfHeart = new CombinaisonValue(Combinaison.FLUSH, handFlushOfHeart.getCards());
+
+
     }
 
 
@@ -180,6 +195,7 @@ class CombinaisonValueTest {
         // Test generating the string representation of a straight with an Ace
         Hand hand = new Hand(List.of("ACo", "2Co", "3Co", "4Co", "5Co"));
         Referee referee = new Referee();
+        assertTrue(referee.searchStraight(hand).isPresent());
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, referee.searchStraight(hand).get());
 
         assertEquals("Quinte à l'As", combinaisonValue.toString());
@@ -531,6 +547,61 @@ class CombinaisonValueTest {
         CombinaisonValue straightCombinationValue = new CombinaisonValue(Combinaison.STRAIGHT, straightHand.getCards());
         int result= testFourOfAKindEight.compareTo(straightCombinationValue);
         assertTrue(result>0);
+    }
+
+    @Test
+    void testCompareToTwoPairVSHighestCardExpectTwoPairWins(){
+        assertEquals(1, testTwoPairOfEightAndSixWithFive.compareTo(testBestCardJack));
+    }
+
+    @Test
+    void testCompareToTwoPairVSPairExpectTwoPairWins(){
+        assertEquals(1, testTwoPairOfEightAndSixWithFive.compareTo(testPairOfTen));
+
+    }
+
+    @Test
+    void testCompareToTwoPairVSThreeOfAKindExpectTwoPairLoses(){
+        assertEquals(-1, testTwoPairOfEightAndSixWithFive.compareTo(testThreeOfAKindSix));
+
+    }
+
+    @Test
+    void testCompareToTwoPairVSStraightExpectTwoPairLoses(){
+        assertEquals(-1, testTwoPairOfEightAndSixWithFive.compareTo(testStraightToSix));
+    }
+
+    @Test
+    void testCompareToTwoPairVSFlushExpectTwoPairLoses(){
+        assertEquals(-1, testTwoPairOfEightAndSixWithFive.compareTo(testFlushOfHeart));
+    }
+
+    @Test
+    void testCompareToTwoPairVSTwoPairDiffOnFirstPair(){
+        CombinaisonValue testTwoPairOfSevenAndSix = new CombinaisonValue(Combinaison.TWO_PAIR, List.of(new Card(Rank.SEVEN, Suit.CLUB), new Card(Rank.SIX, Suit.CLUB), new Card(Rank.FIVE, Suit.DIAMOND)));
+        assertEquals(1, testTwoPairOfEightAndSixWithFive.compareTo(testTwoPairOfSevenAndSix));
+    }
+
+    @Test
+    void testCompareToTwoPairVSTwoPairDiffOnSecondPair(){
+        CombinaisonValue testTwoPairOfHeightAndFive = new CombinaisonValue(Combinaison.TWO_PAIR, List.of(new Card(Rank.EIGHT, Suit.CLUB), new Card(Rank.FIVE, Suit.CLUB), new Card(Rank.FIVE, Suit.DIAMOND)));
+        assertEquals(1, testTwoPairOfEightAndSixWithFive.compareTo(testTwoPairOfHeightAndFive));
+    }
+
+    @Test
+    void testCompareToTwoPairVSTwoPairDiffOnKicker(){
+        CombinaisonValue testTwoPairOfHeightAndSixWithFour = new CombinaisonValue(Combinaison.TWO_PAIR, List.of(new Card(Rank.EIGHT, Suit.CLUB), new Card(Rank.SIX, Suit.CLUB), new Card(Rank.FOUR, Suit.DIAMOND)));
+        assertEquals(1, testTwoPairOfEightAndSixWithFive.compareTo(testTwoPairOfHeightAndSixWithFour));
+    }
+
+    @Test
+    void testCompareToTwoPairVSTwoPairDraw(){
+        assertEquals(0, testTwoPairOfEightAndSixWithFive.compareTo(testTwoPairOfEightAndSixWithFive));
+    }
+
+    @Test
+    void testToStringTwoPair(){
+        assertEquals("Double paire de 8 et de 6", testTwoPairOfEightAndSixWithFive.toString());
     }
 
 }
