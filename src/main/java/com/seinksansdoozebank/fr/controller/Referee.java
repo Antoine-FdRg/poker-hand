@@ -50,6 +50,13 @@ public class Referee {
     protected CombinaisonValue getBestCombinaison(Hand hand) {
         Optional<List<Card>> response = this.searchFlush(hand);
         if (response.isPresent()) {
+            response = this.searchStraight(hand);
+            if (response.isPresent()) {
+                return new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, response.get());
+            }
+        }
+        response = this.searchFlush(hand);
+        if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.FLUSH, response.get());
         }
         response = this.searchStraight(hand);
@@ -61,10 +68,7 @@ public class Referee {
             return new CombinaisonValue(Combinaison.THREE_OF_A_KIND, response.get());
         }
         response = this.searchPair(hand);
-        if (response.isPresent()) {
-            return new CombinaisonValue(Combinaison.PAIR, response.get());
-        }
-        return new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand.getBestCard()));
+        return response.map(cards -> new CombinaisonValue(Combinaison.PAIR, cards)).orElseGet(() -> new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand.getBestCard())));
     }
 
     /**

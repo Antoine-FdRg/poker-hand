@@ -483,4 +483,71 @@ class CombinaisonValueTest {
         assertTrue(result >0);
     }
 
+    @Test
+    void testStraightFlushToString() {
+        Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "6Co"));
+        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, hand.getCards());
+
+        assertEquals("Quinte Flush de Coeur", combinaisonValue.toString());
+    }
+
+    @Test
+    void testStraightFlushWinnerVSStraight() {
+        Hand hand1 = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "6Co"));
+        Hand hand2 = new Hand(List.of("7Co", "8Ca", "9Tr", "10Pi", "VCo"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.STRAIGHT, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result > 0);
+    }
+
+    @Test
+    void testStraightFlushWinnerVSFlush() {
+        Hand hand1 = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "6Co"));
+        Hand hand2 = new Hand(List.of("7Co", "8Co", "9Co", "10Co", "DCo"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.FLUSH, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result > 0);
+    }
+
+    @Test
+    void testStraightFlushWinnerVSFlushWithAce() {
+        Hand hand1 = new Hand(List.of("ACo", "2Co", "3Co", "4Co", "5Co"));
+        Hand hand2 = new Hand(List.of("7Co", "8Co", "9Co", "10Co", "DCo"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.FLUSH, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result > 0);
+    }
+
+    @Test
+    void testStraightFlushASWinnerVSStraightFlushKing() {
+        Hand hand1 = new Hand(List.of("RCo", "VCo", "ACo", "DCo", "10Co"));
+        Hand hand2 = new Hand(List.of("RCa", "DCa", "VCa", "10Ca", "9Ca"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result > 0);
+    }
+    @Test
+    void testStraightFlushEquality() {
+        Hand hand1 = new Hand(List.of("RCo", "VCo", "ACo", "DCo", "10Co"));
+        Hand hand2 = new Hand(List.of("RCo", "VCo", "ACo", "DCo", "10Co"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertEquals(0, result);
+    }
+
 }
