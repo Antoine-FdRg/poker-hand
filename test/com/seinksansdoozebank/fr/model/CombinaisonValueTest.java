@@ -6,33 +6,56 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 class CombinaisonValueTest {
     private CombinaisonValue testBestCardJack;
+    private CombinaisonValue testThreeOfAKindSix;
+    private CombinaisonValue testThreeOfAKindEight;
     private CombinaisonValue testBestCardSix;
     private CombinaisonValue testFourOfAKindEight;
     private CombinaisonValue testFourOfAKindSix;
+    private Referee referee;
 
     @BeforeEach
     void setUp() {
-        Hand hand1 = new Hand(List.of("VCa", "2Ca", "3Ca", "4Ca", "5Ca"));
-        Hand hand2 = new Hand(List.of("5Co", "2Ca", "3Ca", "4Ca", "6Ca"));
-        testBestCardJack = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand1.getBestCard()));
-        testBestCardSix = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand2.getBestCard()));
+        Hand handHighestCardJack = new Hand(List.of("VCa", "2Ca", "3Ca", "4Ca", "5Ca"));
+        Hand handHighestCardSix = new Hand(List.of("5Co", "2Ca", "3Ca", "4Ca", "6Ca"));
+        Hand threeOfAKindSix = new Hand(List.of("5Co", "6Ca", "6Tr", "ATr", "6Co"));
+        Hand threeOfAKindEight = new Hand(List.of("5Co", "8Ca", "8Co", "ATr", "8Tr"));
+        Hand threeOfAKindKing = new Hand(List.of("5Co", "RCa", "RCo", "ATr", "RTr"));
+        referee = new Referee();
+        testBestCardJack = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(handHighestCardJack.getBestCard()));
+        testBestCardSix = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(threeOfAKindSix.getBestCard()));
+        testThreeOfAKindEight = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.EIGHT,Suit.CLUB)));
+        testThreeOfAKindSix = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.SIX,Suit.CLUB)));
         testFourOfAKindEight = new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, List.of(new Card(Rank.EIGHT,Suit.HEART)));
         testFourOfAKindSix = new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, List.of(new Card(Rank.SIX,Suit.HEART)));
-
     }
+
 
     /**
      * Test the compareTo method of the CombinaisonValue class
      */
     @Test
     void compareTo() {
-        assertTrue(testBestCardJack.compareTo(testBestCardSix) > 0);
-        assertTrue(testBestCardSix.compareTo(testBestCardJack) < 0);
-        assertEquals(0, testBestCardJack.compareTo(testBestCardJack));
+        assertTrue(testBestCardJack.compareTo(testBestCardSix) < 0);
+        assertTrue(testBestCardSix.compareTo(testBestCardJack) > 0);
+    }
+
+    @Test
+    void compareTowithThreeOfAKindDifferent() {
+        /*We test if the method compareto in a threeOfAKind case when there are different works*/
+        assertTrue(testThreeOfAKindEight.compareTo(testThreeOfAKindSix) > 0);
+    }
+
+    @Test
+    void compareTowithThreeOfAKindEquality() {
+        /*We test if the method compareto in a threeOfAKind case when there are equals works*/
+        assertThrows(IllegalStateException.class, () -> testThreeOfAKindEight.compareTo(testThreeOfAKindEight), "Il est impossible d'avoir deux brelans identiques");
     }
 
     /**
@@ -50,9 +73,9 @@ class CombinaisonValueTest {
      * @see CombinaisonValue#toString()
      */
     @Test
-    void testToString() {
-        assertEquals("carte la plus élevée : " + testBestCardJack.getBestCard().getRank().getName(), testBestCardJack.toString());
-        assertEquals("carte la plus élevée : " + testBestCardSix.getBestCard().getRank().getName(), testBestCardSix.toString());
+    void testHighestCardToString() {
+        assertEquals("carte la plus élevée : " + testBestCardJack.getBestCard().toString(), testBestCardJack.toString());
+        assertEquals("carte la plus élevée : " + testBestCardSix.getBestCard().toString(), testBestCardSix.toString());
     }
 
     /**
@@ -108,13 +131,13 @@ class CombinaisonValueTest {
      * @see CombinaisonValue#getBestCard()
      */
     @Test
-    void testGetBestCardInStraight () {
+    void testGetBestCardInStraight() {
         // Test getting the best card from a CombinaisonValue
         Hand hand = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "6Co"));
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.SIX,Suit.HEART), bestCard);
+        assertEquals(new Card(Rank.SIX, Suit.HEART), bestCard);
     }
 
     /**
@@ -133,13 +156,13 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         Card bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.FIVE,Suit.HEART), bestCard);
+        assertEquals(new Card(Rank.FIVE, Suit.HEART), bestCard);
 
         hand = new Hand(List.of("10Co", "RCo", "DCo", "VCo", "ACo"));
         combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
         bestCard = combinaisonValue.getBestCard();
-        assertEquals(new Card(Rank.ACE,Suit.HEART), bestCard);
+        assertEquals(new Card(Rank.ACE, Suit.HEART), bestCard);
     }
 
     /**
@@ -181,6 +204,12 @@ class CombinaisonValueTest {
         assertEquals("Quinte Broadway", combinaisonValue.toString());
     }
 
+    /**
+     * Test comparing two CombinaisonValue objects with the same combinaison.
+     * Here the hand2 is the winner because the best card is a JACK
+     *
+     * @see CombinaisonValue#compareTo(CombinaisonValue)
+     */
     @Test
     void testCompareToSameCombinaison() {
         // Test comparing two CombinaisonValue objects with the same combinaison
@@ -194,6 +223,12 @@ class CombinaisonValueTest {
         assertTrue(result < 0);
     }
 
+    /**
+     * Test comparing two CombinaisonValue objects with different combinaisons.
+     * Here the hand1 is the winner because the combinaison is a Straight
+     *
+     * @see CombinaisonValue#compareTo(CombinaisonValue)
+     */
     @Test
     void testCompareToDifferentCombinaison() {
         // Test comparing two CombinaisonValue objects with different combinaisons
@@ -204,9 +239,15 @@ class CombinaisonValueTest {
         CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand2.getCards());
 
         int result = combinaisonValue1.compareTo(combinaisonValue2);
-        assertTrue(result > 0); // Straight is lower than Highest Card
+        assertTrue(result > 0);
     }
 
+    /**
+     * Test getting the best card from a CombinaisonValue.
+     * Here the best card is a JACK
+     *
+     * @see CombinaisonValue#getBestCard()
+     */
     @Test
     void testGetBestCard() {
         // Test getting the best card from a CombinaisonValue
@@ -217,6 +258,12 @@ class CombinaisonValueTest {
         assertEquals(new Card(Rank.SIX, Suit.HEART), bestCard);
     }
 
+    /**
+     * Test getting the combinaison from a CombinaisonValue.
+     * Here the combinaison is a Straight
+     *
+     * @see CombinaisonValue#getCombinaison()
+     */
     @Test
     void testGetCombinaison() {
         // Test getting the combinaison from a CombinaisonValue
@@ -227,14 +274,76 @@ class CombinaisonValueTest {
         assertEquals(Combinaison.STRAIGHT, combinaison);
     }
 
+    /**
+     * Test generating the string representation of a CombinaisonValue for a STRAIGHT.
+     * Here the combinaison is a Straight of 6
+     *
+     * @see CombinaisonValue#toString()
+     */
     @Test
     void testStraightToString() {
         // Test generating the string representation of a CombinaisonValue
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
-        String stringValue = combinaisonValue.toString();
-        assertEquals("Quinte de 6", stringValue); //TODO: check if this is the best way to print it
+        assertEquals("Quinte de 6", combinaisonValue.toString()); //TODO: check if this is the best way to print it
+    }
+
+    /**
+     * Test generating the string representation of a CombinaisonValue for a FLUSH.
+     * Here the combinaison is a Flush of Heart
+     *
+     * @see CombinaisonValue#toString()
+     */
+    @Test
+    void testFlushToString() {
+        // Test generating the string representation of a CombinaisonValue
+        Hand hand = new Hand(List.of("2Co", "3Co", "7Co", "5Co", "6Co"));
+        CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.FLUSH, hand.getCards());
+
+        assertEquals("Couleur de Coeur", combinaisonValue.toString());
+    }
+
+    /**
+     * Test generating the string representation of a CombinaisonValue for a HIGHEST_CARD.
+     * Here the combination is the Highest Card with the best Card of JACK and the worst Card of SEVEN
+     * The second combination is the same but with the best Card of Jack and the worst Card of 8
+     * <p>
+     * So the combination Two is winning
+     *
+     * @see CombinaisonValue#compareTo(CombinaisonValue)
+     * @see CombinaisonValue#getCardMakingTheDifference()
+     */
+    @Test
+    void testCompareKickers() {
+        //7Co VPi 10Ca RCo DPi
+        Hand hand1 = new Hand(List.of("7Co", "VPi", "10Ca", "RCo", "DPi"));
+        //RCo VPi 10Ca 8Co DTr
+        Hand hand2 = new Hand(List.of("RCo", "VPi", "10Ca", "8Co", "DTr"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+
+        assertEquals(-1, result);
+
+        assertEquals(new Card(Rank.EIGHT, Suit.HEART), combinaisonValue2.getCardMakingTheDifference());
+    }
+
+    @Test
+    void testCompareTOBetweenTwoDifferentHighCard() {
+        //7Co VPi 10Ca RCo DPi
+        Hand hand1 = new Hand(List.of("7Co", "VPi", "10Ca", "RCo", "DPi"));
+        //RCo VPi 10Ca 8Co DTr
+        Hand hand2 = new Hand(List.of("ACo", "VPi", "10Ca", "8Co", "DTr"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.HIGHEST_CARD, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+
+        assertEquals(-1, result);
     }
 
     /**
@@ -245,7 +354,6 @@ class CombinaisonValueTest {
      */
     @Test
     void testComparePairVsStraight() {
-        // Test comparing a Pair and a Straight
         Hand hand1 = new Hand(List.of("2Co", "2Ca", "4Tr", "5Pi", "6Co"));
         Hand hand2 = new Hand(List.of("7Co", "8Ca", "9Tr", "10Pi", "VCo"));
 
@@ -351,6 +459,33 @@ class CombinaisonValueTest {
 
 
     }
+    @Test
+    void testToStringThreeOfAKindBasicCard() {
+        CombinaisonValue threeOfAKindOfTenCombinaison = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.TEN,Suit.CLUB)));
+        assertEquals("Brelan de 10", threeOfAKindOfTenCombinaison.toString());
+    }
+
+    @Test
+    void testToStringThreeOfAKindAceCard() {
+        CombinaisonValue threeOfAKindOfAceCombinaison = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.ACE,Suit.CLUB)));
+        assertEquals("Brelan d'As", threeOfAKindOfAceCombinaison.toString());
+    }
+
+    /**
+     * Test Pair vs three of a kind comparison
+     */
+    @Test
+    void testThreeOAKindVSPair() {
+
+        Hand pairHand = new Hand(List.of("2Co", "2Ca", "5Pi", "4Tr", "6Co"));
+
+        CombinaisonValue threeOfAKindCombination = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.TWO,Suit.HEART)));
+        CombinaisonValue pairCombination = new CombinaisonValue(Combinaison.PAIR, pairHand.getCards());
+
+        int result = threeOfAKindCombination.compareTo(pairCombination);
+        assertTrue(result >0);
+    }
+
 
     @Test
     void compareToWithFourOfAKindDifferent() {

@@ -3,7 +3,6 @@ package com.seinksansdoozebank.fr.model;
 public class Card implements Comparable<Card> {
     private final Rank rank;
 
-
     private final Suit suit;
 
     public Card(Rank rank, Suit suit) {
@@ -45,6 +44,6 @@ public class Card implements Comparable<Card> {
 
     @Override
     public String toString() {
-        return rank.getName() + " de " + suit.getName();
+        return this.rank + " de " + this.suit;
     }
 }
