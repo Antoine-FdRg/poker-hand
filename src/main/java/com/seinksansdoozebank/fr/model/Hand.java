@@ -1,7 +1,6 @@
 package com.seinksansdoozebank.fr.model;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class Hand {
@@ -14,7 +13,12 @@ public class Hand {
         this.id = idCounter++;
         this.cards = new ArrayList<>();
         for (String card : cards) {
-            this.cards.add(new Card(Rank.getRankFromSymbol(card)));
+            Card newCard = new Card(Rank.getRankFromSymbol(card), Suit.getSuitFromSymbol(card));
+            if (!this.cards.contains(newCard)) {
+                this.cards.add(newCard);
+            } else {
+                throw new IllegalArgumentException("The card " + newCard + " is already in the hand");
+            }
         }
     }
 
@@ -27,16 +31,16 @@ public class Hand {
     }
 
     public Card getBestCard() {
-        return this.getSortedCards().get(cards.size() - 1);
+        Card bestCard = cards.get(0);
+        for (Card card : cards) {
+            if (card.compareTo(bestCard) > 0) {
+                bestCard = card;
+            }
+        }
+        return bestCard;
     }
 
-    public List<Card> getSortedCards() {
-        List<Card> sortedCards = new ArrayList<>(cards);
-        sortedCards.sort(Comparator.comparing(Card::getRank));
-        return sortedCards;
-    }
-
-    public static void resetIdCounter(){
+    public static void resetIdCounter() {
         idCounter = 1;
     }
 

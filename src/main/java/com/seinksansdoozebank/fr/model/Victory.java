@@ -19,9 +19,7 @@ public class Victory {
 
     @Override
     public String toString() {
-        return "Victory{" +
-                "hand=" + hand +
-                ", combinaisonValue=" + combinaisonValue +
-                '}';
+        return "Victory with hand:" + hand +
+                ", combinaisonValue=" + combinaisonValue;
     }
 }

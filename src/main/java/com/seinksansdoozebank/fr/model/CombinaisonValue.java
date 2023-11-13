@@ -9,11 +9,12 @@ import java.util.stream.Collectors;
 
 public class CombinaisonValue {
     private final Combinaison combinaison;
-    private final Hand hand;
+    private final List<Card> cards;
+    private Card cardMakingTheDifference;
 
-    public CombinaisonValue(Combinaison combinaison, Hand hand) {
+    public CombinaisonValue(Combinaison combinaison, List<Card> cards) {
         this.combinaison = combinaison;
-        this.hand = hand;
+        this.cards = cards;
     }
 
     /**
@@ -30,79 +31,126 @@ public class CombinaisonValue {
             return -1;
         } else {
             switch (this.combinaison) {
-                case TWO_PAIR -> {
-                    //Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
-                    Map<Card, Integer> map1 = hand.getCards().stream()
-                            .distinct()
-                            .collect(Collectors.toMap(
-                                    Function.identity(),
-                                    v -> Collections.frequency(hand.getCards(), v))
-                            );
+                case PAIR -> {
                     //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
-                    List<Card> cards1 = new ArrayList<>(map1.entrySet().stream()
-                            .filter(entry -> entry.getValue() == 2)
-                            .map(Map.Entry::getKey)
-                            .toList());
-                    //Tri pour afficheri la carte la plus élevée en premier
-                    Collections.sort(cards1);
-                    cards1.sort(Collections.reverseOrder());
-                    //Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
-                    Map<Card, Integer> map2 = combinaison2.getHand().getCards().stream()
-                            .distinct()
-                            .collect(Collectors.toMap(
-                                    Function.identity(),
-                                    v -> Collections.frequency(combinaison2.getHand().getCards(), v))
-                            );
+                    List<Card> cardsFilteredByOccurence = getCardsFilteredByOccurence(this.cards, 2); // 2 because the map count card with differents suits as different cards
                     //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
-                    List<Card> cards2 = new ArrayList<>(map2.entrySet().stream()
-                            .filter(entry -> entry.getValue() == 2)
-                            .map(Map.Entry::getKey)
-                            .toList());
-                    //Tri pour afficher la carte la plus élevée en premier
-                    Collections.sort(cards2);
-                    cards2.sort(Collections.reverseOrder());
-                    if (cards1.size() != 2 || cards2.size() != 2) {
-                        throw new IllegalStateException("There is not two pair in the hand");
+                    List<Card> comparedCardsFilteredByOccurence = getCardsFilteredByOccurence(combinaison2.getCards(), 2); // 2 because the map count card with differents suits as different cards
+                    if (cardsFilteredByOccurence.size() != 2 || comparedCardsFilteredByOccurence.size() != 2) {
+                        throw new IllegalStateException("There is not a pair in the hand");
                     }
-                    if (cards1.get(0).compareTo(cards2.get(0)) != 0) {
-                        return cards1.get(0).compareTo(cards2.get(0));
-                    } else if (cards1.get(1).compareTo(cards2.get(1)) != 0) {
-                        return cards1.get(1).compareTo(cards2.get(1));
+                    // compare the pair of the combinaison
+                    result = cardsFilteredByOccurence.get(0).compareTo(comparedCardsFilteredByOccurence.get(0));
+                    if (result > 0) {
+                        return 1;
+                    } else if (result < 0) {
+                        return -1;
+                    }
+                    // compare all kickers of the pair
+                    List<Card> kickers = this.getKickers();
+                    List<Card> comparedKickers = combinaison2.getKickers();
+                    if (kickers.size() != comparedKickers.size()) {
+                        throw new IllegalStateException("There is not the same number of kickers");
+                    }
+                    for (int i = 0; i < kickers.size(); i++) {
+                        result = kickers.get(i).compareTo(comparedKickers.get(i));
+                        if (result > 0) {
+                            return 1;
+                        } else if (result < 0) {
+                            return -1;
+                        }
+                    }
+                    return 0;
+                }
+                case STRAIGHT -> {
+                    // compare the best card of the straight
+                    result = this.getBestCard().compareTo(combinaison2.getBestCard());
+                    if (result > 0) {
+                        return 1;
+                    } else if (result < 0) {
+                        return -1;
+                    }
+                    return 0;
+                }
+                /* we compare two different threeOfAKind, there is no null case for this combination so we throw an exception */
+                case THREE_OF_A_KIND -> {
+                    if (cards.get(0).compareTo(combinaison2.cards.get(0)) > 0) {
+                        return 1;
+                    } else if (cards.get(0).compareTo(combinaison2.cards.get(0)) < 0) {
+                        return -1;
                     } else {
-                        return this.getKicker().compareTo(combinaison2.getKicker());
+                        throw new IllegalStateException("Il est impossible d'avoir deux brelans identiques");
                     }
                 }
+                // Flush est géré dans default
                 default -> {
-                    return this.getBestCard().compareTo(combinaison2.getBestCard());
+                    // compare all kickers of the combination
+                    List<Card> kickers = new ArrayList<>(this.getCards());
+                    List<Card> comparedKickers = new ArrayList<>(combinaison2.getCards());
+                    return compareKickers(kickers, comparedKickers, combinaison2);
                 }
             }
+
         }
     }
 
-    /**
-     * Get the kicker of the combinaison, usefull when two combinaison are equals
-     *
-     * @return the kicker of the combinaison
-     */
-    protected Card getKicker() {
-        switch (this.combinaison) {
-            case TWO_PAIR -> {
-                //Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
-                Map<Card, Integer> map = this.getHand().getCards().stream()
-                        .distinct()
-                        .collect(Collectors.toMap(
-                                Function.identity(),
-                                v -> Collections.frequency(this.getHand().getCards(), v))
-                        );
-                //Création d'une liste dans laquelle on ne garde que ls cards qui apparaissent une seule fois dans la main
-                List<Card> cards = new ArrayList<>(map.entrySet().stream()
-                        .filter(entry -> entry.getValue() == 1)
-                        .map(Map.Entry::getKey)
-                        .toList());
-                return cards.get(0);
-            }
-            default -> throw new IllegalStateException("There is no kicker for this combinaison");
+    protected int compareKickers(List<Card> kickers, List<Card> comparedKickers, CombinaisonValue combinaisonValue2) {
+        if (kickers.size() != comparedKickers.size()) {
+            throw new IllegalStateException("There is not the same number of kickers");
         }
+        kickers.sort(Card::compareTo);
+        comparedKickers.sort(Card::compareTo);
+        for (int i = 0; i < kickers.size(); i++) {
+            int result = kickers.get(i).compareTo(comparedKickers.get(i));
+            if (result > 0) {
+                this.cardMakingTheDifference = kickers.get(i);
+                return 1;
+            } else if (result < 0) {
+                combinaisonValue2.setCardMakingTheDifference(comparedKickers.get(i));
+                return -1;
+            }
+        }
+        return 0;
+    }
+
+    /*
+     *  Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
+     *
+     * @param cards
+     * @return Map<Card, Integer> map
+     */
+    protected static Map<Card, Integer> createMapCountingOccurences(List<Card> cards) {
+        return cards.stream()
+                .distinct()
+                .collect(Collectors.toMap(
+                        Function.identity(),
+                        v -> frequency(cards, v))
+                );
+    }
+
+    protected static int frequency(List<Card> list, Card elem) {
+        int count = 0;
+        for (Card e : list) {
+            if (elem.equalsIgnoringSuit(e)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Création d'une liste dans laquelle on ne garde que les cards qui apparaissent un certain nombre de fois dans la main
+     *
+     * @param cards     La liste de cartes
+     * @param occurence Le nombre de fois qu'une carte doit apparaitre dans la main
+     * @return List<Card> cards
+     */
+    public static List<Card> getCardsFilteredByOccurence(List<Card> cards, int occurence) {
+        Map<Card, Integer> map = createMapCountingOccurences(cards);
+        return new ArrayList<>(map.entrySet().stream()
+                .filter(entry -> entry.getValue() == occurence)
+                .map(Map.Entry::getKey)
+                .toList());
     }
 
     /**
@@ -121,54 +169,67 @@ public class CombinaisonValue {
      */
     @Override
     public String toString() {
-        StringBuilder victoryCondition = new StringBuilder(this.combinaison + " : ");
+        StringBuilder victoryCondition = new StringBuilder();
         switch (this.combinaison) {
             case HIGHEST_CARD:
-                victoryCondition.append(this.getBestCard().getRank().getName());
+                if (this.cardMakingTheDifference == null) {
+                    victoryCondition.append("carte la plus élevée : ").append(this.getBestCard().toString());
+                } else {
+                    victoryCondition.append("carte la plus élevée : ").append(this.cardMakingTheDifference.toString());
+                }
                 break;
-            case TWO_PAIR:
-                //Création d'une map ayant comme clé la card et comme valeur le nombre de fois qu'elle apparait dans la main
-                Map<Card, Integer> map = hand.getCards().stream()
-                        .distinct()
-                        .collect(Collectors.toMap(
-                                Function.identity(),
-                                v -> Collections.frequency(hand.getCards(), v))
-                        );
-                //Création d'une liste dans laquelle on ne garde que les cards qui apparaissent deux fois dans la main
-                List<Card> cards = new ArrayList<>(map.entrySet().stream()
-                        .filter(entry -> entry.getValue() == 2)
-                        .map(Map.Entry::getKey)
-                        .toList());
-                //Tri pour afficher la carte la plus élevée en premier
-                Collections.sort(cards);
-                if (cards.size() != 2)
-                    throw new IllegalStateException("There is not two pair in the hand");
-                victoryCondition.append(cards.get(0)).append(" et ").append(cards.get(1));
+            case FLUSH:
+                victoryCondition.append("Couleur de ").append(this.getBestCard().getSuit().getName());
                 break;
             case STRAIGHT:
-                victoryCondition.append(this.toStringStraight());
+                int size = this.cards.size();
+                if (this.cards.get(size - 1).getRank().equals(Rank.ACE)) {
+                    victoryCondition.append("Quinte Broadway");
+                } else if (this.cards.get(0).getRank().equals(Rank.ACE)) {
+                    victoryCondition.append("Quinte à l'As");
+                } else if (this.cards.get(size - 1).getRank().equals(Rank.FIVE)) {
+                    victoryCondition.append("Quinte à 5");
+                } else {
+                    victoryCondition.append("Quinte de ").append(this.cards.get(size - 1).getRank().getName());
+                }
+                break;
+            case PAIR:
+                victoryCondition.append("Paire de ").append(cards.get(0).getRank().getName());
+                break;
+            case THREE_OF_A_KIND:
+                String followedCondition = toStringThreeOfAKind();
+                victoryCondition.append("Brelan ").append(followedCondition);
                 break;
             default:
-                victoryCondition.append(" : ").append(this.getBestCard().getRank().getName());
+                victoryCondition.append(this.combinaison.getName()).append(" : ").append(this.getBestCard().getRank().getName());
                 break;
         }
         return victoryCondition.toString();
     }
 
-    private String toStringStraight() {
-        List<Card> cards = this.hand.getSortedCards();
-        StringBuilder stringBuilder = new StringBuilder();
-        if (cards.contains(new Card(Rank.ACE))) {
-            stringBuilder.append("A ");
-        }
-        // if there is a ACE in the hand, the ACE is set to the first card
-        for (Card card : cards) {
-            if (card.getRank().equals(Rank.ACE)) {
-                continue;
+    /**
+     * Get the kicker of the combinaison, usefull when two combinaison are equals
+     *
+     * @return the kicker of the combinaison
+     */
+    protected List<Card> getKickers() {
+        switch (this.combinaison) {
+            case PAIR -> {
+                return getCardsFilteredByOccurence(this.cards, 1).stream().sorted(Collections.reverseOrder()).toList();
             }
-            stringBuilder.append(card.getRank().getSymbol()).append(" ");
+            default -> throw new IllegalStateException("There is no kicker for this combinaison");
         }
-        return stringBuilder.toString();
+    }
+
+    /* We change the string result if it's an Ace or other cards*/
+    private String toStringThreeOfAKind() {
+        String result = "";
+        if (cards.get(0).getRank().equals(Rank.ACE)) {
+            result = "d'" + Rank.ACE.getName();
+        } else {
+            result = "de " + cards.get(0).getRank().getName();
+        }
+        return result;
     }
 
     /**
@@ -177,12 +238,20 @@ public class CombinaisonValue {
      * @return the best card of the combinaison
      */
     public Card getBestCard() {
-        // if the combinaison is a straight then the best card is the last card of the hand.
-        // And if there is an ACE in the hand, the ACE is NOT the best card.
-        if (this.combinaison.equals(Combinaison.STRAIGHT)) {
-            return this.hand.getCards().get(this.hand.getCards().size() - 1);
+        // if the combinaison is a straight
+        if (this.combinaison.equals(Combinaison.STRAIGHT) && (this.cards.get(0).getRank().equals(Rank.TWO) && this.cards.get(this.cards.size() - 1).getRank().equals(Rank.ACE))) {
+            return this.cards.get(this.cards.size() - 2);
         }
-        return this.hand.getBestCard();
+        return this.cards.get(this.cards.size() - 1);
+    }
+
+    /**
+     * Get the cards of the combinaison
+     *
+     * @return the cards of the combinaison
+     */
+    public List<Card> getCards() {
+        return this.cards;
     }
 
     /**
@@ -194,7 +263,11 @@ public class CombinaisonValue {
         return this.combinaison;
     }
 
-    public Hand getHand() {
-        return hand;
+    public void setCardMakingTheDifference(Card cardMakingTheDifference) {
+        this.cardMakingTheDifference = cardMakingTheDifference;
+    }
+
+    public Card getCardMakingTheDifference() {
+        return this.cardMakingTheDifference;
     }
 }

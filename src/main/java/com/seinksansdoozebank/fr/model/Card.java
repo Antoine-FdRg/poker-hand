@@ -2,13 +2,22 @@ package com.seinksansdoozebank.fr.model;
 
 public class Card implements Comparable<Card> {
     private final Rank rank;
-    public Card(Rank rank) {
+
+    private final Suit suit;
+
+    public Card(Rank rank, Suit suit) {
         this.rank = rank;
+        this.suit = suit;
     }
 
     public Rank getRank() {
         return rank;
     }
+
+    public Suit getSuit() {
+        return suit;
+    }
+
     @Override
     public int compareTo(Card o) {
         return this.rank.compareTo(o.rank);
@@ -16,6 +25,13 @@ public class Card implements Comparable<Card> {
 
     @Override
     public boolean equals(Object obj) {
+        if (obj instanceof Card card) {
+            return this.rank.equals(card.rank) && this.suit.equals(card.suit);
+        }
+        return false;
+    }
+
+    public boolean equalsIgnoringSuit(Object obj) {
         if (obj instanceof Card card) {
             return this.rank.equals(card.rank);
         }
@@ -28,6 +44,6 @@ public class Card implements Comparable<Card> {
 
     @Override
     public String toString() {
-        return rank.getName();
+        return this.rank + " de " + this.suit;
     }
 }

@@ -30,8 +30,11 @@ public enum Rank implements Comparable<Rank> {
      * @return the rank
      */
     public static Rank getRankFromSymbol(String symbol) {
+        if (!symbol.matches("^(10|[2-9]|[VDRA])(Co|Ca|Tr|Pi)$")) {
+            return null;
+        }
         for (Rank rank : Rank.values()) {
-            if (rank.getSymbol().equals(symbol)) {
+            if (symbol.contains(rank.getSymbol())) {
                 return rank;
             }
         }
@@ -45,4 +48,10 @@ public enum Rank implements Comparable<Rank> {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
 }

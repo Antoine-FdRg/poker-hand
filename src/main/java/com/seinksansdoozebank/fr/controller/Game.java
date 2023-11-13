@@ -1,7 +1,10 @@
 package com.seinksansdoozebank.fr.controller;
 
 
+import com.seinksansdoozebank.fr.model.Card;
 import com.seinksansdoozebank.fr.model.Hand;
+import com.seinksansdoozebank.fr.model.Rank;
+import com.seinksansdoozebank.fr.model.Suit;
 import com.seinksansdoozebank.fr.model.Victory;
 import com.seinksansdoozebank.fr.view.Cli;
 
@@ -14,6 +17,7 @@ public class Game {
     private final List<Hand> hands = new ArrayList<>();
     private final int nbrOfHands;
     private final int nbrOfCards;
+    private static List<Card> deck = new ArrayList<>();
 
     public Game(int nbrOfHands, int nbrOfCards) {
         this.nbrOfCards = nbrOfCards;
@@ -25,9 +29,9 @@ public class Game {
      */
     public void run() {
         for (int i = 0; i < this.nbrOfHands; i++) {
-            List<String> cardsHand = view.initializeHand(i+1);
+            List<String> cardsHand = view.initializeHand(i + 1);
             while (!checkInput(cardsHand)) {
-                cardsHand = view.initializeHand(i+1);
+                cardsHand = view.initializeHand(i + 1);
             }
             Hand hand = new Hand(cardsHand);
             hands.add(hand);
@@ -51,12 +55,25 @@ public class Game {
             view.displayAlertSize(this.nbrOfCards);
             return false;
         }
+        List<Card> temporaryDeck = new ArrayList<>(deck);
         for (String card : cards) {
-            if (!card.matches("^10|[2-9]|[VDRA]$")) {
+            if (!card.matches("^(10|[2-9]|[VDRA])(Co|Ca|Tr|Pi)$")) {
                 view.displayAlertInvalidCard();
                 return false;
             }
+            Card testCardPresence = new Card(Rank.getRankFromSymbol(card), Suit.getSuitFromSymbol(card));
+            if (temporaryDeck.contains(testCardPresence)) {
+                view.displayAlertCardAlreadyUsed(testCardPresence);
+                return false;
+            } else {
+                temporaryDeck.add(testCardPresence);
+            }
         }
+        deck = temporaryDeck;
         return true;
+    }
+
+    public static void resetDeck() {
+        deck = new ArrayList<>();
     }
 }
