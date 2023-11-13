@@ -7,21 +7,45 @@ Chaque main possède cinq cartes. Celle qui possède la meilleure combinaison de
 
 Pour déterminer la meilleure combinaison voici la liste des combinaisons détaillées, elles sont triées de la moins bonne à la meilleure combinaison :
 * Main sans paire : `4Pi 7Tr DCo VPi 2Ca` 
+    
     C'est une main qui ne contient aucune combinaison, cette main est classée par la valeur de la carte la plus haute.
+
+
 * Paire : `4Pi 7Tr 7Co VPi 2Ca`
+
     2 des 5 cartes ont la même valeur. Deux mains qui contiennent une paire sont classées par la valeur des cartes formant la paire.
+
+
 * Deux paires : `4Pi 7Tr 7Co VPi 4Ca`
+    
     La main contient deux paires différentes. Les mains qui contiennent deux paires sont classées par la valeur de la paire la plus élevée.
+
+
 * Brelan: `4Pi 8Tr 8Co VPi 8Ca`
+    
     3 cartes dans la main ont la même valeur. Deux mains avec un brelan sont classées par la valeur des 3 cartes
+
+
 * Suite : `4Pi 5Tr 6Co 7Pi 8Ca`
+    
     5 cartes de valeurs consécutives. Deux suites sont classées par la valeur de leur carte la plus élevée. 
+
+
 * Couleur : `4Pi DPi 6Pi 7Pi 8Pi`
+    
     La main contient 5 cartes de la même couleur. Deux mains couleurs sont classées par les règles de la carte la plus élevée. 
+
+
 * Full : `4Pi 8Tr 8Co 8Pi 4Ca`
+    
     La main contient 3 cartes de la m^me valeur avec les 2 autres cartes formant une paire, le classement se fait par la valeur des 3 cartes. 
+
+
 * Carré : `4Pi 8Tr 8Co 8Pi 8Ca`
+    
     4 cartes de la même valeur, le classement se fait par la valeur des 4 cartes. 
+
+
 * Quinte Flush : `4Pi 5Pi 6Pi 7Pi 8Pi`
     5 cartes de la même couleur avec des valeurs consécutives, le classement se fait par la carte la plus élevée dans la main. 
 ### Fonctionnalités 
