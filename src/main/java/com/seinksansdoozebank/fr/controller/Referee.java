@@ -46,19 +46,19 @@ public class Referee {
      * @return the best combinaison
      */
     protected CombinaisonValue getBestCombinaison(Hand hand) {
-        Optional<List<Card>> response = this.searchFlush(hand);
-        if (response.isPresent()) {
-            return new CombinaisonValue(Combinaison.FLUSH, response.get());
-        }
-        response = this.searchFourOfAKind(hand);
+        Optional<List<Card>> response = this.searchNOfAKind(hand,4);
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, response.get());
+        }
+        response = this.searchFlush(hand);
+        if (response.isPresent()) {
+            return new CombinaisonValue(Combinaison.FLUSH, response.get());
         }
         response = this.searchStraight(hand);
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.STRAIGHT, response.get());
         }
-        response = this.searchThreeOfAKind(hand);
+        response = this.searchNOfAKind(hand, 3);
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.THREE_OF_A_KIND, response.get());
         }
@@ -164,12 +164,13 @@ public class Referee {
     }
 
     /**
-     * Search if the hand gots a four of a kind combination
+     * Search if the hand gots a N of a kind combination
      *
      * @param hand the hand
+     * @param numberOfIdentiticalCards the number of identical cards that we search
      * @return an optional list with the card marked by the rank of a four of a kind combination
      */
-    public Optional<List<Card>> searchFourOfAKind(Hand hand) {
+    public Optional<List<Card>> searchNOfAKind(Hand hand,int numberOfIdentiticalCards) {
         Map<Rank, Integer> cardsCounter = new HashMap<>();
         List<Card> cards = hand.getCards();
         for (Card card : cards) {
@@ -180,40 +181,13 @@ public class Referee {
             }
         }
         for (Map.Entry<Rank, Integer> entry : cardsCounter.entrySet()) {
-            //If one key has as value 4 , we return the rank of the four cards
-            if (entry.getValue() == 4) {
-                Card cardFourOfAKind = new Card(entry.getKey(), Suit.HEART);
-                return Optional.of(List.of(cardFourOfAKind));
+            //If one key has as value numberOfIdenticalCards , we return the rank of the identical cards
+            if (entry.getValue() == numberOfIdentiticalCards) {
+                Card cardNOfAKind = new Card(entry.getKey(), Suit.HEART);
+                return Optional.of(List.of(cardNOfAKind));
             }
         }
         return Optional.empty();
 
     }
-
-    /**
-     * Search if the hand is a threeOfAKind
-     *
-     * @return the list of cards if the hand is a threeOfAKind, empty optional otherwise
-     */
-    public Optional<List<Card>> searchThreeOfAKind(Hand hand) {
-
-        Map<Rank, Integer> cardsCounter = new HashMap<>();
-        List<Card> cards = hand.getCards();
-        for (Card card : cards) {
-            if (cardsCounter.containsKey(card.getRank())) {
-                cardsCounter.replace(card.getRank(), cardsCounter.get(card.getRank()) + 1);
-            } else {
-                cardsCounter.put(card.getRank(), 1);
-            }
-
-        }
-        for (Map.Entry<Rank, Integer> entry : cardsCounter.entrySet()) {
-            if (entry.getValue() == 3) {
-                Card cardThreeOfAKind = new Card(entry.getKey(), Suit.CLUB);
-                return Optional.of(List.of(cardThreeOfAKind));
-            }
-        }
-        return Optional.empty();
-    }
-
 }

@@ -147,7 +147,12 @@ public class CombinaisonValue {
      * @return Map<Card, Integer> map
      */
     protected static Map<Card, Integer> createMapCountingOccurences(List<Card> cards) {
-        return cards.stream().distinct().collect(Collectors.toMap(Function.identity(), v -> frequency(cards, v)));
+        return cards.stream()
+                .distinct()
+                .collect(Collectors.toMap(
+                        Function.identity(),
+                        v -> frequency(cards, v))
+                );
     }
 
     protected static int frequency(List<Card> list, Card elem) {
@@ -169,7 +174,11 @@ public class CombinaisonValue {
      */
     public static List<Card> getCardsFilteredByOccurence(List<Card> cards, int occurence) {
         Map<Card, Integer> map = createMapCountingOccurences(cards);
-        return new ArrayList<>(map.entrySet().stream().filter(entry -> entry.getValue() == occurence).map(Map.Entry::getKey).toList());
+        return new ArrayList<>(map.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue() == occurence)
+                .map(Map.Entry::getKey)
+                .toList());
     }
 
     /**
@@ -219,11 +228,11 @@ public class CombinaisonValue {
                 victoryCondition.append("Double paire de ").append(cards.get(0).getRank().getName()).append(" et de ").append(cards.get(1).getRank().getName());
                 break;
             case THREE_OF_A_KIND:
-                String followedCondition = toStringThreeOfAKind();
+                String followedCondition = toStringNOfAKind();
                 victoryCondition.append("Brelan ").append(followedCondition);
                 break;
             case FOUR_OF_A_KIND:
-                String followedConditionFourOfAKind = toStringFourOfAKind();
+                String followedConditionFourOfAKind = toStringNOfAKind();
                 victoryCondition.append("Carré ").append(followedConditionFourOfAKind);
                 break;
             default:
@@ -241,14 +250,21 @@ public class CombinaisonValue {
     protected List<Card> getKickers() {
         switch (this.combinaison) {
             case PAIR -> {
-                return getCardsFilteredByOccurence(this.cards, 1).stream().sorted(Collections.reverseOrder()).toList();
+                return getCardsFilteredByOccurence(this.cards, 1)
+                        .stream()
+                        .sorted(Collections.reverseOrder())
+                        .toList();
             }
             default -> throw new IllegalStateException("There is no kicker for this combinaison");
         }
     }
 
-    /* We change the string result if it's an Ace or other cards*/
-    private String toStringThreeOfAKind() {
+    /**
+     * We make the difference between an Ace and the other card for the toString method
+     *
+     * @return the string result of a N of a kind
+     */
+    private String toStringNOfAKind() {
         String result = "";
         if (cards.get(0).getRank().equals(Rank.ACE)) {
             result = "d'" + Rank.ACE.getName();
@@ -257,22 +273,6 @@ public class CombinaisonValue {
         }
         return result;
     }
-
-    /**
-     * We make the difference between an Ace and the other card for the toString method
-     *
-     * @return the string result of a four of a kind
-     */
-    private String toStringFourOfAKind() {
-        String result = "";
-        if (cards.get(0).getRank().equals(Rank.ACE)) {
-            result = "d'" + Rank.ACE.getName();
-            return result;
-        }
-        result = "de " + cards.get(0).getRank().getName();
-        return result;
-    }
-
 
     /**
      * Get the best card of the combinaison
