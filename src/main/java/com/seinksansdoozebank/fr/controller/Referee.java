@@ -62,6 +62,10 @@ public class Referee {
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.THREE_OF_A_KIND, response.get());
         }
+        response = this.searchTwoPair(hand);
+        if (response.isPresent()) {
+            return new CombinaisonValue(Combinaison.TWO_PAIR, response.get());
+        }
         response = this.searchPair(hand);
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.PAIR, response.get());
@@ -160,6 +164,25 @@ public class Referee {
             return Optional.of(list);
         }
 
+        return Optional.empty();
+    }
+
+    protected Optional<List<Card>> searchTwoPair(Hand hand) {
+        List<Card> cardsFilteredByOccurence = CombinaisonValue.getCardsFilteredByOccurence(hand.getCards(), 2)
+                .stream()
+                .sorted(Collections.reverseOrder())
+                .toList();
+        if (cardsFilteredByOccurence.size() == 4) { // 2 because the map count card with differents suits as different cards
+            // remove the cards in the pairs and sort the other card descending
+            List<Card> list = new ArrayList<>(hand.getCards().stream()
+                    .filter(card -> !cardsFilteredByOccurence.contains(card))
+                    .sorted(Collections.reverseOrder())
+                    .toList());
+            // add the card wich is in the pair at the beginning of the list
+            list.add(0, cardsFilteredByOccurence.get(0));
+            list.add(1, cardsFilteredByOccurence.get(2));
+            return Optional.of(list);
+        }
         return Optional.empty();
     }
 
