@@ -72,6 +72,16 @@ public class CombinaisonValue {
                     }
                     return 0;
                 }
+                /* we compare two different threeOfAKind, there is no null case for this combination so we throw an exception */
+                case THREE_OF_A_KIND -> {
+                    if (cards.get(0).compareTo(combinaison2.cards.get(0)) > 0) {
+                        return 1;
+                    } else if (cards.get(0).compareTo(combinaison2.cards.get(0)) < 0) {
+                        return -1;
+                    } else {
+                        throw new IllegalStateException("Il est impossible d'avoir deux brelans identiques");
+                    }
+                }
                 // Flush est géré dans default
                 default -> {
                     // compare all kickers of the combination
@@ -186,6 +196,10 @@ public class CombinaisonValue {
             case PAIR:
                 victoryCondition.append("Paire de ").append(cards.get(0).getRank().getName());
                 break;
+            case THREE_OF_A_KIND:
+                String followedCondition = toStringThreeOfAKind();
+                victoryCondition.append("Brelan ").append(followedCondition);
+                break;
             default:
                 victoryCondition.append(this.combinaison.getName()).append(" : ").append(this.getBestCard().getRank().getName());
                 break;
@@ -205,6 +219,17 @@ public class CombinaisonValue {
             }
             default -> throw new IllegalStateException("There is no kicker for this combinaison");
         }
+    }
+
+    /* We change the string result if it's an Ace or other cards*/
+    private String toStringThreeOfAKind() {
+        String result = "";
+        if (cards.get(0).getRank().equals(Rank.ACE)) {
+            result = "d'" + Rank.ACE.getName();
+        } else {
+            result = "de " + cards.get(0).getRank().getName();
+        }
+        return result;
     }
 
     /**

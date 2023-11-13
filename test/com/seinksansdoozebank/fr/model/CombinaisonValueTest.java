@@ -7,18 +7,52 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 class CombinaisonValueTest {
     private CombinaisonValue testBestCardJack;
+    private CombinaisonValue testThreeOfAKindSix;
+    private CombinaisonValue testThreeOfAKindEight;
     private CombinaisonValue testBestCardSix;
+    private Referee referee;
 
     @BeforeEach
     void setUp() {
-        Hand hand1 = new Hand(List.of("VCa", "2Ca", "3Ca", "4Ca", "5Ca"));
-        Hand hand2 = new Hand(List.of("5Co", "2Ca", "3Ca", "4Ca", "6Ca"));
-        testBestCardJack = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand1.getBestCard()));
-        testBestCardSix = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(hand2.getBestCard()));
+        Hand handHighestCardJack = new Hand(List.of("VCa", "2Ca", "3Ca", "4Ca", "5Ca"));
+        Hand handHighestCardSix = new Hand(List.of("5Co", "2Ca", "3Ca", "4Ca", "6Ca"));
+        Hand threeOfAKindSix = new Hand(List.of("5Co", "6Ca", "6Tr", "ATr", "6Co"));
+        Hand threeOfAKindEight = new Hand(List.of("5Co", "8Ca", "8Co", "ATr", "8Tr"));
+        Hand threeOfAKindKing = new Hand(List.of("5Co", "RCa", "RCo", "ATr", "RTr"));
+        referee = new Referee();
+        testBestCardJack = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(handHighestCardJack.getBestCard()));
+        testBestCardSix = new CombinaisonValue(Combinaison.HIGHEST_CARD, List.of(threeOfAKindSix.getBestCard()));
+        testThreeOfAKindEight = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.EIGHT,Suit.CLUB)));
+        testThreeOfAKindSix = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.SIX,Suit.CLUB)));
+
+    }
+
+
+    /**
+     * Test the compareTo method of the CombinaisonValue class
+     */
+    @Test
+    void compareTo() {
+        assertTrue(testBestCardJack.compareTo(testBestCardSix) < 0);
+        assertTrue(testBestCardSix.compareTo(testBestCardJack) > 0);
+    }
+
+    @Test
+    void compareTowithThreeOfAKindDifferent() {
+        /*We test if the method compareto in a threeOfAKind case when there are different works*/
+        assertTrue(testThreeOfAKindEight.compareTo(testThreeOfAKindSix) > 0);
+    }
+
+    @Test
+    void compareTowithThreeOfAKindEquality() {
+        /*We test if the method compareto in a threeOfAKind case when there are equals works*/
+        assertThrows(IllegalStateException.class, () -> testThreeOfAKindEight.compareTo(testThreeOfAKindEight), "Il est impossible d'avoir deux brelans identiques");
     }
 
     /**
@@ -422,4 +456,31 @@ class CombinaisonValueTest {
 
 
     }
+    @Test
+    void testToStringThreeOfAKindBasicCard() {
+        CombinaisonValue threeOfAKindOfTenCombinaison = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.TEN,Suit.CLUB)));
+        assertEquals("Brelan de 10", threeOfAKindOfTenCombinaison.toString());
+    }
+
+    @Test
+    void testToStringThreeOfAKindAceCard() {
+        CombinaisonValue threeOfAKindOfAceCombinaison = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.ACE,Suit.CLUB)));
+        assertEquals("Brelan d'As", threeOfAKindOfAceCombinaison.toString());
+    }
+
+    /**
+     * Test Pair vs three of a kind comparison
+     */
+    @Test
+    void testThreeOAKindVSPair() {
+
+        Hand pairHand = new Hand(List.of("2Co", "2Ca", "5Pi", "4Tr", "6Co"));
+
+        CombinaisonValue threeOfAKindCombination = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.TWO,Suit.HEART)));
+        CombinaisonValue pairCombination = new CombinaisonValue(Combinaison.PAIR, pairHand.getCards());
+
+        int result = threeOfAKindCombination.compareTo(pairCombination);
+        assertTrue(result >0);
+    }
+
 }
