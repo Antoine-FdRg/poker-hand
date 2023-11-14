@@ -97,6 +97,16 @@ public class CombinaisonValue {
                         throw new IllegalStateException("Il est impossible d'avoir deux brelans ou deux carrés identiques");
                     }
                 }
+                case FULL_HOUSE -> {
+                    // compare the three of a kind of the full
+                    int cmpThreeOfAKindOfEachCV = this.cards.get(0).compareTo(combinaison2.cards.get(0));
+                    if (cmpThreeOfAKindOfEachCV != 0) {
+                        // if the three of a kind of each combinaison are different, we return the result
+                        return cmpThreeOfAKindOfEachCV;
+                    }
+                    // it is impossible to have two equals three of a kind
+                    throw new IllegalStateException("Il est impossible d'avoir deux brelans identiques");
+                }
                 // Flush est géré dans default
                 default -> {
                     // compare all kickers of the combination
@@ -187,39 +197,48 @@ public class CombinaisonValue {
     public String toString() {
         StringBuilder victoryCondition = new StringBuilder();
         switch (this.combinaison) {
-            case HIGHEST_CARD:
+            case HIGHEST_CARD -> {
                 if (this.cardMakingTheDifference == null) {
                     victoryCondition.append("carte la plus élevée : ").append(this.getBestCard().toString());
                 } else {
                     victoryCondition.append("carte la plus élevée : ").append(this.cardMakingTheDifference);
                 }
-                break;
-            case FLUSH:
+            }
+            case FLUSH -> {
                 victoryCondition.append("Couleur de ").append(this.getBestCard().getSuit().getName());
-                break;
-            case STRAIGHT:
+            }
+            case STRAIGHT -> {
                 victoryCondition.append(toStringStraight());
-                break;
-            case STRAIGHT_FLUSH:
-                victoryCondition.append("Quinte Flush de ").append(this.getBestCard().getSuit().getName());
-                break;
-            case PAIR:
+            }
+            case STRAIGHT_FLUSH -> {
+                victoryCondition.append("Quinte Flush de ")
+                        .append(this.getBestCard().getSuit().getName());
+            }
+            case PAIR -> {
                 victoryCondition.append("Paire de ").append(cards.get(0).getRank().getName());
-                break;
-            case TWO_PAIR:
-                victoryCondition.append("Double paire de ").append(cards.get(0).getRank().getName()).append(" et de ").append(cards.get(1).getRank().getName());
-                break;
-            case THREE_OF_A_KIND:
+            }
+            case TWO_PAIR -> {
+                victoryCondition.append("Double paire de ")
+                        .append(cards.get(0).getRank().getName())
+                        .append(" et de ")
+                        .append(cards.get(1).getRank().getName());
+            }
+            case THREE_OF_A_KIND -> {
                 String followedCondition = toStringNOfAKind();
                 victoryCondition.append("Brelan ").append(followedCondition);
-                break;
-            case FOUR_OF_A_KIND:
-                String followedConditionFourOfAKind = toStringNOfAKind();
-                victoryCondition.append("Carré ").append(followedConditionFourOfAKind);
-                break;
-            default:
+            }
+            case FULL_HOUSE -> {
+                victoryCondition.append("Full au ")
+                        .append(this.cards.get(0).getRank().getName())
+                        .append(" par les ")
+                        .append(this.cards.get(1).getRank().getName());
+            }
+            case FOUR_OF_A_KIND -> {
+                victoryCondition.append("Carré ").append(toStringNOfAKind());
+            }
+            default -> {
                 victoryCondition.append(this.combinaison.getName()).append(" : ").append(this.getBestCard().getRank().getName());
-                break;
+            }
         }
         return victoryCondition.toString();
     }

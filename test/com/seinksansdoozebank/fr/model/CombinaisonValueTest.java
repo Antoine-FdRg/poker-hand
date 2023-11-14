@@ -22,6 +22,7 @@ class CombinaisonValueTest {
     private CombinaisonValue testPairOfTen;
     private CombinaisonValue testStraightToSix;
     private CombinaisonValue testFlushOfHeart;
+    private CombinaisonValue testFullOfKingByThree;
     private CombinaisonValue testFourOfAKindEight;
     private CombinaisonValue testFourOfAKindSix;
 
@@ -47,6 +48,7 @@ class CombinaisonValueTest {
         testStraightToSix = new CombinaisonValue(Combinaison.STRAIGHT, handStraightToSix.getCards());
         Hand handFlushOfHeart = new Hand(List.of("2Co", "3Co", "7Co", "5Co", "6Co"));
         testFlushOfHeart = new CombinaisonValue(Combinaison.FLUSH, handFlushOfHeart.getCards());
+        testFullOfKingByThree = new CombinaisonValue(Combinaison.FULL_HOUSE, List.of(new Card(Rank.KING, Suit.CLUB), new Card(Rank.THREE, Suit.SPADE)));
         Hand straightFlushSixHeart = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "6Co"));
         testStraightFlushSixHeart = new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, straightFlushSixHeart.getCards());
         referee = new Referee();
@@ -673,6 +675,54 @@ class CombinaisonValueTest {
     @Test
     void testToStringTwoPair(){
         assertEquals("Double paire de 8 et de 6", testTwoPairOfEightAndSixWithFive.toString());
+    }
+
+    @Test
+    void testCompareToFullVSHighestCardExpectFullWins(){
+        assertEquals(1, testFullOfKingByThree.compareTo(testBestCardJack));
+    }
+
+    @Test
+    void testCompareToFullVSPairExpectFullWins(){
+        assertEquals(1, testFullOfKingByThree.compareTo(testPairOfTen));
+    }
+
+    @Test
+    void testCompareToFullVSTwoPairExpectFullWins(){
+        assertEquals(1, testFullOfKingByThree.compareTo(testTwoPairOfEightAndSixWithFive));
+    }
+
+    @Test
+    void testCompareToFullVSThreeOfAKindExpectFullWins(){
+        assertEquals(1, testFullOfKingByThree.compareTo(testThreeOfAKindSix));
+    }
+
+    @Test
+    void testCompareToFullVSStraightExpectFullWins(){
+        assertEquals(1, testFullOfKingByThree.compareTo(testStraightToSix));
+    }
+
+    @Test
+    void testCompareToFullVSFlushExpectFullWins(){
+        assertEquals(1, testFullOfKingByThree.compareTo(testFlushOfHeart));
+    }
+
+    @Test
+    void testCompareToFullVSFullDiffOnThreeOfAKind(){
+        CombinaisonValue testFullOfQueenByThree = new CombinaisonValue(Combinaison.FULL_HOUSE, List.of(new Card(Rank.QUEEN, Suit.CLUB), new Card(Rank.THREE, Suit.SPADE)));
+        assertEquals(1, testFullOfKingByThree.compareTo(testFullOfQueenByThree));
+        CombinaisonValue testFullOfAceByThree = new CombinaisonValue(Combinaison.FULL_HOUSE, List.of(new Card(Rank.ACE, Suit.SPADE), new Card(Rank.THREE, Suit.SPADE)));
+        assertEquals(-1, testFullOfKingByThree.compareTo(testFullOfAceByThree));
+    }
+
+    @Test
+    void testCompareToFullVSFullDrawExpectException(){
+        assertThrows(IllegalStateException.class, () -> testFullOfKingByThree.compareTo(testFullOfKingByThree));
+    }
+
+    @Test
+    void testToStringFull(){
+        assertEquals("Full au Roi par les 3", testFullOfKingByThree.toString());
     }
 
 }
