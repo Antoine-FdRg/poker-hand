@@ -16,13 +16,14 @@ class CombinaisonValueTest {
     private CombinaisonValue testThreeOfAKindSix;
     private CombinaisonValue testThreeOfAKindEight;
     private CombinaisonValue testBestCardSix;
+    private CombinaisonValue testStraightFlushSixHeart;
+    private Referee referee;
     private CombinaisonValue testTwoPairOfEightAndSixWithFive;
     private CombinaisonValue testPairOfTen;
     private CombinaisonValue testStraightToSix;
     private CombinaisonValue testFlushOfHeart;
     private CombinaisonValue testFourOfAKindEight;
     private CombinaisonValue testFourOfAKindSix;
-    private Referee referee;
 
     @BeforeEach
     void setUp() {
@@ -30,7 +31,6 @@ class CombinaisonValueTest {
         Hand threeOfAKindSix = new Hand(List.of("5Co", "6Ca", "6Tr", "ATr", "6Co"));
         Hand threeOfAKindEight = new Hand(List.of("5Co", "8Ca", "8Co", "ATr", "8Tr"));
         Hand threeOfAKindKing = new Hand(List.of("5Co", "RCa", "RCo", "ATr", "RTr"));
-        referee = new Referee();
         testBestCardJack = new CombinaisonValue(Combinaison.HIGHEST_CARD, handHighestCardJack.getCards());
         testBestCardSix = new CombinaisonValue(Combinaison.HIGHEST_CARD, threeOfAKindSix.getCards());
         testThreeOfAKindEight = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.EIGHT, Suit.CLUB)));
@@ -47,8 +47,9 @@ class CombinaisonValueTest {
         testStraightToSix = new CombinaisonValue(Combinaison.STRAIGHT, handStraightToSix.getCards());
         Hand handFlushOfHeart = new Hand(List.of("2Co", "3Co", "7Co", "5Co", "6Co"));
         testFlushOfHeart = new CombinaisonValue(Combinaison.FLUSH, handFlushOfHeart.getCards());
-
-
+        Hand straightFlushSixHeart = new Hand(List.of("2Co", "3Co", "4Co", "5Co", "6Co"));
+        testStraightFlushSixHeart = new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, straightFlushSixHeart.getCards());
+        referee = new Referee();
     }
 
 
@@ -194,10 +195,8 @@ class CombinaisonValueTest {
     void testToStringStraightWithLowAce() {
         // Test generating the string representation of a straight with an Ace
         Hand hand = new Hand(List.of("ACo", "2Co", "3Co", "4Co", "5Co"));
-        Referee referee = new Referee();
         assertTrue(referee.searchStraight(hand).isPresent());
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, referee.searchStraight(hand).get());
-
         assertEquals("Quinte à l'As", combinaisonValue.toString());
     }
 
@@ -302,7 +301,7 @@ class CombinaisonValueTest {
         Hand hand = new Hand(List.of("2Co", "3Ca", "4Tr", "5Pi", "6Co"));
         CombinaisonValue combinaisonValue = new CombinaisonValue(Combinaison.STRAIGHT, hand.getCards());
 
-        assertEquals("Quinte de 6", combinaisonValue.toString()); //TODO: check if this is the best way to print it
+        assertEquals("Quinte de 6", combinaisonValue.toString());
     }
 
     /**
@@ -492,7 +491,6 @@ class CombinaisonValueTest {
      */
     @Test
     void testThreeOAKindVSPair() {
-
         Hand pairHand = new Hand(List.of("2Co", "2Ca", "5Pi", "4Tr", "6Co"));
 
         CombinaisonValue threeOfAKindCombination = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.TWO,Suit.HEART)));
@@ -565,6 +563,64 @@ class CombinaisonValueTest {
 
 
     @Test
+    void testStraightFlushToString() {
+        assertEquals("Quinte Flush de Coeur", testStraightFlushSixHeart.toString());
+    }
+
+    @Test
+    void testStraightFlushWinnerVSStraight() {
+        Hand hand2 = new Hand(List.of("7Co", "8Ca", "9Tr", "10Pi", "VCo"));
+
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.STRAIGHT, hand2.getCards());
+
+        int result = testStraightFlushSixHeart.compareTo(combinaisonValue2);
+        assertTrue(result > 0);
+    }
+
+    @Test
+    void testStraightFlushWinnerVSFlush() {
+        Hand hand2 = new Hand(List.of("7Co", "8Co", "9Co", "10Co", "DCo"));
+
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.FLUSH, hand2.getCards());
+
+        int result = testStraightFlushSixHeart.compareTo(combinaisonValue2);
+        assertTrue(result > 0);
+    }
+
+    @Test
+    void testStraightFlushWinnerVSFlushWithAce() {
+        Hand hand1 = new Hand(List.of("ACo", "2Co", "3Co", "4Co", "5Co"));
+        Hand hand2 = new Hand(List.of("7Co", "8Co", "9Co", "10Co", "DCo"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.FLUSH, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result > 0);
+    }
+
+    @Test
+    void testStraightFlushASWinnerVSStraightFlushKing() {
+        Hand hand1 = new Hand(List.of("RCo", "VCo", "ACo", "DCo", "10Co"));
+        Hand hand2 = new Hand(List.of("RCa", "DCa", "VCa", "10Ca", "9Ca"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertTrue(result > 0);
+    }
+    @Test
+    void testStraightFlushEquality() {
+        Hand hand1 = new Hand(List.of("RCo", "VCo", "ACo", "DCo", "10Co"));
+        Hand hand2 = new Hand(List.of("RCo", "VCo", "ACo", "DCo", "10Co"));
+
+        CombinaisonValue combinaisonValue1 = new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, hand1.getCards());
+        CombinaisonValue combinaisonValue2 = new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, hand2.getCards());
+
+        int result = combinaisonValue1.compareTo(combinaisonValue2);
+        assertEquals(0, result);
+    }
     void testCompareToTwoPairVSHighestCardExpectTwoPairWins(){
         assertEquals(1, testTwoPairOfEightAndSixWithFive.compareTo(testBestCardJack));
     }

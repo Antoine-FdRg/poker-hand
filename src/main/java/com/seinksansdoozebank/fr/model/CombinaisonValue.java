@@ -77,7 +77,7 @@ public class CombinaisonValue {
                     // if the second pair of each combinaison are equals, we compare the kicker
                     return cmpSecondPairOfEachCV == 0 ? this.cards.get(2).compareTo(combinaison2.cards.get(2)) : cmpSecondPairOfEachCV;
                 }
-                case STRAIGHT -> {
+                case STRAIGHT, STRAIGHT_FLUSH -> {
                     // compare the best card of the straight
                     result = this.getBestCard().compareTo(combinaison2.getBestCard());
                     if (result > 0) {
@@ -198,16 +198,10 @@ public class CombinaisonValue {
                 victoryCondition.append("Couleur de ").append(this.getBestCard().getSuit().getName());
                 break;
             case STRAIGHT:
-                int size = this.cards.size();
-                if (this.cards.get(size - 1).getRank().equals(Rank.ACE)) {
-                    victoryCondition.append("Quinte Broadway");
-                } else if (this.cards.get(0).getRank().equals(Rank.ACE)) {
-                    victoryCondition.append("Quinte à l'As");
-                } else if (this.cards.get(size - 1).getRank().equals(Rank.FIVE)) {
-                    victoryCondition.append("Quinte à 5");
-                } else {
-                    victoryCondition.append("Quinte de ").append(this.cards.get(size - 1).getRank().getName());
-                }
+                victoryCondition.append(toStringStraight());
+                break;
+            case STRAIGHT_FLUSH:
+                victoryCondition.append("Quinte Flush de ").append(this.getBestCard().getSuit().getName());
                 break;
             case PAIR:
                 victoryCondition.append("Paire de ").append(cards.get(0).getRank().getName());
@@ -228,6 +222,19 @@ public class CombinaisonValue {
                 break;
         }
         return victoryCondition.toString();
+    }
+
+    private String toStringStraight() {
+        int size = this.cards.size();
+        if (this.cards.get(size - 1).getRank().equals(Rank.ACE)) {
+            return "Quinte Broadway";
+        } else if (this.cards.get(0).getRank().equals(Rank.ACE)) {
+            return "Quinte à l'As";
+        } else if (this.cards.get(size - 1).getRank().equals(Rank.FIVE)) {
+            return "Quinte à 5";
+        } else {
+            return "Quinte de " + this.cards.get(size - 1).getRank().getName();
+        }
     }
 
     /**
