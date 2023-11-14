@@ -43,6 +43,10 @@ public class Referee {
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, response.get());
         }
+        response = this.searchFull(hand);
+        if (response.isPresent()) {
+            return new CombinaisonValue(Combinaison.FULL_HOUSE, response.get());
+        }
         response = this.searchFlush(hand);
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.FLUSH, response.get());
@@ -180,7 +184,7 @@ public class Referee {
     }
 
     /**
-     * Search if the hand gots a N of a kind combination
+     * Search if the hand contains a N of a kind combination
      *
      * @param hand                     the hand
      * @param numberOfIdentiticalCards the number of identical cards that we search
@@ -204,6 +208,21 @@ public class Referee {
             }
         }
         return Optional.empty();
+    }
 
+    public Optional<List<Card>> searchFull(Hand hand) {
+        //Look for a three of a kind and a pair
+        Optional<List<Card>> optCardListOfThreeOfAKind = this.searchNOfAKind(hand,3);
+        Optional<List<Card>> optCardListOfPair = this.searchPair(hand);
+        if(optCardListOfThreeOfAKind.isPresent() && optCardListOfPair.isPresent()){
+            Card cardFromThreeOfAKind = optCardListOfThreeOfAKind.get().get(0);
+            Card cardFromPair = optCardListOfPair.get().get(0);
+            //Verify if the three of a kind and the pair are not the same card
+            if(!cardFromThreeOfAKind.equals(cardFromPair)){
+                //Return the list of cards
+                return Optional.of(List.of(cardFromThreeOfAKind, cardFromPair));
+            }
+        }
+        return Optional.empty();
     }
 }
