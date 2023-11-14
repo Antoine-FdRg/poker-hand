@@ -9,8 +9,8 @@ public enum Combinaison {
 
     STRAIGHT("suite"),                     // cinq cartes qui se suivent
     FLUSH("couleur"),                      // cinq cartes de la même couleur
-     FULL_HOUSE("full");                     // un brelan et une paire
-    // FOUR_OF_A_KIND("carré"),                // quatre cartes de même valeur
+    FULL_HOUSE("full"),                     // un brelan et une paire
+    FOUR_OF_A_KIND("carré");                // quatre cartes de même valeur
     // STRAIGHT_FLUSH("quinte flush");         // cinq cartes qui se suivent et de la même couleur
 
     private final String name;

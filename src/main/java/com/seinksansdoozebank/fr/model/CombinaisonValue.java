@@ -63,7 +63,7 @@ public class CombinaisonValue {
                     return 0;
                 }
                 case TWO_PAIR -> {
-                    if (this.cards.size() != 3 || combinaison2.getCards().size() != 3) { //3 is because there one card for the fisrt, one for the second and one for the kicker
+                    if (this.cards.size() != 3 || combinaison2.getCards().size() != 3) { //3 is because there one card for the first, one for the second and one for the kicker
                         throw new IllegalStateException("There is not two pair in the hand");
                     }
                     //Compare the best pair of each combinaison
@@ -87,14 +87,14 @@ public class CombinaisonValue {
                     }
                     return 0;
                 }
-                /* we compare two different threeOfAKind, there is no null case for this combination so we throw an exception */
-                case THREE_OF_A_KIND -> {
+                /* we compare two different NOfAKind, there is no null case for this combination so we throw an exception */
+                case THREE_OF_A_KIND, FOUR_OF_A_KIND-> {
                     if (cards.get(0).compareTo(combinaison2.cards.get(0)) > 0) {
                         return 1;
                     } else if (cards.get(0).compareTo(combinaison2.cards.get(0)) < 0) {
                         return -1;
                     } else {
-                        throw new IllegalStateException("Il est impossible d'avoir deux brelans identiques");
+                        throw new IllegalStateException("Il est impossible d'avoir deux brelans ou deux carrés identiques");
                     }
                 }
                 case FULL_HOUSE -> {
@@ -172,7 +172,8 @@ public class CombinaisonValue {
      */
     public static List<Card> getCardsFilteredByOccurence(List<Card> cards, int occurence) {
         Map<Card, Integer> map = createMapCountingOccurences(cards);
-        return new ArrayList<>(map.entrySet().stream()
+        return new ArrayList<>(map.entrySet()
+                .stream()
                 .filter(entry -> entry.getValue() == occurence)
                 .map(Map.Entry::getKey)
                 .toList());
@@ -222,13 +223,14 @@ public class CombinaisonValue {
                     .append(" et de ")
                     .append(cards.get(1).getRank().getName());
             case THREE_OF_A_KIND -> {
-                String followedCondition = toStringThreeOfAKind();
+                String followedCondition = toStringNOfAKind();
                 victoryCondition.append("Brelan ").append(followedCondition);
             }
             case FULL_HOUSE -> victoryCondition.append("Full au ")
                     .append(this.cards.get(0).getRank().getName())
                     .append(" par les ")
                     .append(this.cards.get(1).getRank().getName());
+            case FOUR_OF_A_KIND -> victoryCondition.append("Carré ").append(toStringNOfAKind());
             default ->
                     victoryCondition.append(this.combinaison.getName()).append(" : ").append(this.getBestCard().getRank().getName());
         }
@@ -243,14 +245,21 @@ public class CombinaisonValue {
     protected List<Card> getKickers() {
         switch (this.combinaison) {
             case PAIR -> {
-                return getCardsFilteredByOccurence(this.cards, 1).stream().sorted(Collections.reverseOrder()).toList();
+                return getCardsFilteredByOccurence(this.cards, 1)
+                        .stream()
+                        .sorted(Collections.reverseOrder())
+                        .toList();
             }
             default -> throw new IllegalStateException("There is no kicker for this combinaison");
         }
     }
 
-    /* We change the string result if it's an Ace or other cards*/
-    private String toStringThreeOfAKind() {
+    /**
+     * We make the difference between an Ace and the other card for the toString method
+     *
+     * @return the string result of a N of a kind
+     */
+    private String toStringNOfAKind() {
         String result = "";
         if (cards.get(0).getRank().equals(Rank.ACE)) {
             result = "d'" + Rank.ACE.getName();

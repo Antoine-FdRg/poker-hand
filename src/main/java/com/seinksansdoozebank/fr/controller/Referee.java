@@ -11,7 +11,7 @@ import com.seinksansdoozebank.fr.model.Rank;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,7 +46,11 @@ public class Referee {
      * @return the best combinaison
      */
     protected CombinaisonValue getBestCombinaison(Hand hand) {
-        Optional<List<Card>> response = this.searchFull(hand);
+        Optional<List<Card>> response = this.searchNOfAKind(hand,4);
+        if (response.isPresent()) {
+            return new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, response.get());
+        }
+        response = this.searchFull(hand);
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.FULL_HOUSE, response.get());
         }
@@ -58,7 +62,7 @@ public class Referee {
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.STRAIGHT, response.get());
         }
-        response = this.searchThreeOfAKind(hand);
+        response = this.searchNOfAKind(hand, 3);
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.THREE_OF_A_KIND, response.get());
         }
@@ -155,7 +159,7 @@ public class Referee {
                     .filter(card -> !cardsFilteredByOccurence.contains(card))
                     .sorted(Collections.reverseOrder())
                     .toList());
-            // add the card wich is in the pair at the beginning of the list
+            // add the card which is in the pair at the beginning of the list
             list.add(0, cardsFilteredByOccurence.get(0));
             list.add(1, cardsFilteredByOccurence.get(2));
             return Optional.of(list);
@@ -164,13 +168,14 @@ public class Referee {
     }
 
     /**
-     * Search if the hand is a threeOfAKind
+     * Search if the hand contains a N of a kind combination
      *
-     * @return the list of cards if the hand is a threeOfAKind, empty optional otherwise
+     * @param hand the hand
+     * @param numberOfIdentiticalCards the number of identical cards that we search
+     * @return an optional list with the card marked by the rank of a four of a kind combination
      */
-    public Optional<List<Card>> searchThreeOfAKind(Hand hand) {
-
-        Map<Rank, Integer> cardsCounter = new HashMap<>();
+    public Optional<List<Card>> searchNOfAKind(Hand hand,int numberOfIdentiticalCards) {
+        Map<Rank, Integer> cardsCounter = new EnumMap<>(Rank.class);
         List<Card> cards = hand.getCards();
         for (Card card : cards) {
             if (cardsCounter.containsKey(card.getRank())) {
@@ -178,12 +183,12 @@ public class Referee {
             } else {
                 cardsCounter.put(card.getRank(), 1);
             }
-
         }
         for (Map.Entry<Rank, Integer> entry : cardsCounter.entrySet()) {
-            if (entry.getValue() == 3) {
-                Card cardThreeOfAKind = new Card(entry.getKey(), Suit.CLUB);
-                return Optional.of(List.of(cardThreeOfAKind));
+            //If one key has as value numberOfIdenticalCards , we return the rank of the identical cards
+            if (entry.getValue() == numberOfIdentiticalCards) {
+                Card cardNOfAKind = new Card(entry.getKey(), Suit.HEART);
+                return Optional.of(List.of(cardNOfAKind));
             }
         }
         return Optional.empty();
@@ -191,7 +196,7 @@ public class Referee {
 
     public Optional<List<Card>> searchFull(Hand hand) {
         //Look for a three of a kind and a pair
-        Optional<List<Card>> optCardListOfThreeOfAKind = this.searchThreeOfAKind(hand);
+        Optional<List<Card>> optCardListOfThreeOfAKind = this.searchNOfAKind(hand,3);
         Optional<List<Card>> optCardListOfPair = this.searchPair(hand);
         if(optCardListOfThreeOfAKind.isPresent() && optCardListOfPair.isPresent()){
             Card cardFromThreeOfAKind = optCardListOfThreeOfAKind.get().get(0);
