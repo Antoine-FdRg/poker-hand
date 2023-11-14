@@ -11,7 +11,7 @@ import com.seinksansdoozebank.fr.model.Rank;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -171,7 +171,7 @@ public class Referee {
      * @return an optional list with the card marked by the rank of a four of a kind combination
      */
     public Optional<List<Card>> searchNOfAKind(Hand hand,int numberOfIdentiticalCards) {
-        Map<Rank, Integer> cardsCounter = new HashMap<>();
+        Map<Rank, Integer> cardsCounter = new EnumMap<>(Rank.class);
         List<Card> cards = hand.getCards();
         for (Card card : cards) {
             if (cardsCounter.containsKey(card.getRank())) {
