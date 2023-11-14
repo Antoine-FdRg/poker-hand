@@ -22,15 +22,21 @@ class CombinaisonValueTest {
     private CombinaisonValue testPairOfTen;
     private CombinaisonValue testStraightToSix;
     private CombinaisonValue testFlushOfHeart;
+    private CombinaisonValue testFourOfAKindEight;
+    private CombinaisonValue testFourOfAKindSix;
 
     @BeforeEach
     void setUp() {
         Hand handHighestCardJack = new Hand(List.of("VCa", "2Ca", "3Ca", "4Ca", "5Ca"));
         Hand threeOfAKindSix = new Hand(List.of("5Co", "6Ca", "6Tr", "ATr", "6Co"));
+        Hand threeOfAKindEight = new Hand(List.of("5Co", "8Ca", "8Co", "ATr", "8Tr"));
+        Hand threeOfAKindKing = new Hand(List.of("5Co", "RCa", "RCo", "ATr", "RTr"));
         testBestCardJack = new CombinaisonValue(Combinaison.HIGHEST_CARD, handHighestCardJack.getCards());
         testBestCardSix = new CombinaisonValue(Combinaison.HIGHEST_CARD, threeOfAKindSix.getCards());
         testThreeOfAKindEight = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.EIGHT, Suit.CLUB)));
         testThreeOfAKindSix = new CombinaisonValue(Combinaison.THREE_OF_A_KIND, List.of(new Card(Rank.SIX, Suit.CLUB)));
+        testFourOfAKindEight = new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, List.of(new Card(Rank.EIGHT,Suit.HEART)));
+        testFourOfAKindSix = new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, List.of(new Card(Rank.SIX,Suit.HEART)));
         testTwoPairOfEightAndSixWithFive = new CombinaisonValue(Combinaison.TWO_PAIR, List.of(new Card(Rank.EIGHT, Suit.CLUB), new Card(Rank.SIX, Suit.CLUB), new Card(Rank.FIVE, Suit.DIAMOND)));
         testPairOfTen = new CombinaisonValue(Combinaison.PAIR,
                 List.of(new Card(Rank.TEN, Suit.CLUB),
@@ -65,7 +71,7 @@ class CombinaisonValueTest {
     @Test
     void compareTowithThreeOfAKindEquality() {
         /*We test if the method compareto in a threeOfAKind case when there are equals works*/
-        assertThrows(IllegalStateException.class, () -> testThreeOfAKindEight.compareTo(testThreeOfAKindEight), "Il est impossible d'avoir deux brelans identiques");
+        assertThrows(IllegalStateException.class, () -> testThreeOfAKindEight.compareTo(testThreeOfAKindEight), "Il est impossible d'avoir deux brelans ou deux carrés identiques");
     }
 
     /**
@@ -493,6 +499,68 @@ class CombinaisonValueTest {
         int result = threeOfAKindCombination.compareTo(pairCombination);
         assertTrue(result >0);
     }
+
+
+    @Test
+    void compareToWithFourOfAKindDifferent() {
+        /*We test if the method compareto in a fourOfAKind case when there are different works*/
+        assertTrue(testFourOfAKindEight.compareTo(testFourOfAKindSix) > 0);
+    }
+
+    @Test
+    void compareToWithFourOfAKindEquality() {
+        /*We test if the method compareto in a fourOfAKind case when there are equals works*/
+        assertThrows(IllegalStateException.class, () -> testFourOfAKindEight.compareTo(testFourOfAKindEight), "Il est impossible d'avoir deux brelans ou deux carrés identiques");
+    }
+    @Test
+    void testToStringFourOfAKindBasicCard() {
+        CombinaisonValue fourOfAKindOfTenCombination = new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, List.of(new Card(Rank.TEN,Suit.CLUB)));
+        assertEquals("Carré de 10", fourOfAKindOfTenCombination.toString());
+    }
+
+    @Test
+    void testToStringFourOfAKindAceCard() {
+        CombinaisonValue threeOfAKindOfAceCombination= new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, List.of(new Card(Rank.ACE,Suit.CLUB)));
+        assertEquals("Carré d'As", threeOfAKindOfAceCombination.toString());
+    }
+
+    /**
+     * Test Pair vs four of a kind comparison
+     */
+    @Test
+    void testFourOfAKindVSPair() {
+
+        Hand pairHand = new Hand(List.of("2Co", "2Ca", "5Pi", "4Tr", "6Co"));
+
+        CombinaisonValue fourOfAKindCombination = new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, List.of(new Card(Rank.TWO,Suit.HEART)));
+        CombinaisonValue pairCombination = new CombinaisonValue(Combinaison.PAIR, pairHand.getCards());
+
+        int result = fourOfAKindCombination.compareTo(pairCombination);
+        assertTrue(result >0);
+    }
+
+    @Test
+    void testFourOfAKindVSStraight(){
+        Hand straightHand = new Hand(List.of("ACo", "2Co", "3Co", "4Co", "5Co"));
+        CombinaisonValue straightCombinationValue = new CombinaisonValue(Combinaison.STRAIGHT, straightHand.getCards());
+        int result= testFourOfAKindEight.compareTo(straightCombinationValue);
+        assertTrue(result>0);
+    }
+    @Test
+    void testFourOfAKindVSThreeOfAKind(){
+        assertEquals(1,testFourOfAKindEight .compareTo(testThreeOfAKindSix));
+    }
+
+    @Test
+    void testFourOfAKindVSTwoPairs(){
+        assertEquals(-1, testTwoPairOfEightAndSixWithFive.compareTo(testFourOfAKindEight));
+    }
+
+    @Test
+    void testFourOfAKindVSFlush(){
+        assertEquals(-1, testFlushOfHeart.compareTo(testFourOfAKindEight));
+    }
+
 
     @Test
     void testStraightFlushToString() {
