@@ -151,7 +151,7 @@ public class Referee {
                     .filter(card -> !cardsFilteredByOccurence.contains(card))
                     .sorted(Collections.reverseOrder())
                     .toList());
-            // add the card wich is in the pair at the beginning of the list
+            // add the card which is in the pair at the beginning of the list
             list.add(0, cardsFilteredByOccurence.get(0));
             list.add(1, cardsFilteredByOccurence.get(2));
             return Optional.of(list);

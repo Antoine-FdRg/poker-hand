@@ -63,7 +63,7 @@ public class CombinaisonValue {
                     return 0;
                 }
                 case TWO_PAIR -> {
-                    if (this.cards.size() != 3 || combinaison2.getCards().size() != 3) { //3 is because there one card for the fisrt, one for the second and one for the kicker
+                    if (this.cards.size() != 3 || combinaison2.getCards().size() != 3) { //3 is because there one card for the first, one for the second and one for the kicker
                         throw new IllegalStateException("There is not two pair in the hand");
                     }
                     //Compare the best pair of each combinaison
