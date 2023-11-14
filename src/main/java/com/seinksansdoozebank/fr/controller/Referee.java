@@ -1,20 +1,9 @@
 package com.seinksansdoozebank.fr.controller;
 
 
-import com.seinksansdoozebank.fr.model.Card;
-import com.seinksansdoozebank.fr.model.Combinaison;
-import com.seinksansdoozebank.fr.model.CombinaisonValue;
-import com.seinksansdoozebank.fr.model.Hand;
-import com.seinksansdoozebank.fr.model.Suit;
-import com.seinksansdoozebank.fr.model.Victory;
-import com.seinksansdoozebank.fr.model.Rank;
+import com.seinksansdoozebank.fr.model.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class Referee {
 
@@ -46,7 +35,11 @@ public class Referee {
      * @return the best combinaison
      */
     protected CombinaisonValue getBestCombinaison(Hand hand) {
-        Optional<List<Card>> response = this.searchNOfAKind(hand,4);
+        Optional<List<Card>> response = this.searchStraightFlush(hand);
+        if (response.isPresent()) {
+            return new CombinaisonValue(Combinaison.STRAIGHT_FLUSH, response.get());
+        }
+        response = this.searchNOfAKind(hand, 4);
         if (response.isPresent()) {
             return new CombinaisonValue(Combinaison.FOUR_OF_A_KIND, response.get());
         }
@@ -74,6 +67,23 @@ public class Referee {
     }
 
     /**
+     * Search if the hand is a straight flush
+     *
+     * @param hand the hand
+     * @return the list of cards if the hand is a straight flush, empty optional otherwise
+     */
+    protected Optional<List<Card>> searchStraightFlush(Hand hand) {
+        Optional<List<Card>> response = this.searchFlush(hand);
+        if (response.isPresent()) {
+            response = this.searchStraight(hand);
+            if (response.isPresent()) {
+                return response;
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Search if the hand is a straight
      *
      * @param hand the hand
@@ -95,7 +105,7 @@ public class Referee {
         // the previous card is inferior to the current card or
         // the previous card is an ACE and the current card is a TWO or
         // the previous card is a KING and the current card is an ACE
-        while (index < cardsSize && (previousCard.compareTo(cards.get(index)) == -1) || index < cardsSize && (previousCard.getRank().equals(Rank.ACE) && cards.get(index).getRank().equals(Rank.TWO))) {
+        while (index < cardsSize && (previousCard.compareTo(cards.get(index)) == -1) || index < cardsSize && ((previousCard.getRank().equals(Rank.ACE) && cards.get(index).getRank().equals(Rank.TWO)))) {
             previousCard = cards.get(index);
             index++;
         }
@@ -106,6 +116,12 @@ public class Referee {
         return Optional.empty();
     }
 
+    /**
+     * Search if the hand is a flush
+     *
+     * @param hand the hand
+     * @return the list of cards if the hand is a flush, empty optional otherwise
+     */
     public Optional<List<Card>> searchFlush(Hand hand) {
         List<Card> cards = hand.getCards();
         int cardsSize = cards.size();
@@ -166,11 +182,11 @@ public class Referee {
     /**
      * Search if the hand gots a N of a kind combination
      *
-     * @param hand the hand
+     * @param hand                     the hand
      * @param numberOfIdentiticalCards the number of identical cards that we search
      * @return an optional list with the card marked by the rank of a four of a kind combination
      */
-    public Optional<List<Card>> searchNOfAKind(Hand hand,int numberOfIdentiticalCards) {
+    public Optional<List<Card>> searchNOfAKind(Hand hand, int numberOfIdentiticalCards) {
         Map<Rank, Integer> cardsCounter = new EnumMap<>(Rank.class);
         List<Card> cards = hand.getCards();
         for (Card card : cards) {
