@@ -204,26 +204,41 @@ public class CombinaisonValue {
                     victoryCondition.append("carte la plus élevée : ").append(this.cardMakingTheDifference);
                 }
             }
-            case FLUSH -> victoryCondition.append("Couleur de ").append(this.getBestCard().getSuit().getName());
-            case STRAIGHT -> victoryCondition.append(toStringStraight());
-            case STRAIGHT_FLUSH -> victoryCondition.append("Quinte Flush de ")
-                    .append(this.getBestCard().getSuit().getName());
-            case PAIR -> victoryCondition.append("Paire de ").append(cards.get(0).getRank().getName());
-            case TWO_PAIR -> victoryCondition.append("Double paire de ")
-                    .append(cards.get(0).getRank().getName())
-                    .append(" et de ")
-                    .append(cards.get(1).getRank().getName());
+            case FLUSH -> {
+                victoryCondition.append("Couleur de ").append(this.getBestCard().getSuit().getName());
+            }
+            case STRAIGHT -> {
+                victoryCondition.append(toStringStraight());
+            }
+            case STRAIGHT_FLUSH -> {
+                victoryCondition.append("Quinte Flush de ")
+                        .append(this.getBestCard().getSuit().getName());
+            }
+            case PAIR -> {
+                victoryCondition.append("Paire de ").append(cards.get(0).getRank().getName());
+            }
+            case TWO_PAIR -> {
+                victoryCondition.append("Double paire de ")
+                        .append(cards.get(0).getRank().getName())
+                        .append(" et de ")
+                        .append(cards.get(1).getRank().getName());
+            }
             case THREE_OF_A_KIND -> {
                 String followedCondition = toStringNOfAKind();
                 victoryCondition.append("Brelan ").append(followedCondition);
             }
-            case FULL_HOUSE -> victoryCondition.append("Full au ")
-                    .append(this.cards.get(0).getRank().getName())
-                    .append(" par les ")
-                    .append(this.cards.get(1).getRank().getName());
-            case FOUR_OF_A_KIND -> victoryCondition.append("Carré ").append(toStringNOfAKind());
-            default ->
-                    victoryCondition.append(this.combinaison.getName()).append(" : ").append(this.getBestCard().getRank().getName());
+            case FULL_HOUSE -> {
+                victoryCondition.append("Full au ")
+                        .append(this.cards.get(0).getRank().getName())
+                        .append(" par les ")
+                        .append(this.cards.get(1).getRank().getName());
+            }
+            case FOUR_OF_A_KIND -> {
+                victoryCondition.append("Carré ").append(toStringNOfAKind());
+            }
+            default -> {
+                victoryCondition.append(this.combinaison.getName()).append(" : ").append(this.getBestCard().getRank().getName());
+            }
         }
         return victoryCondition.toString();
     }
