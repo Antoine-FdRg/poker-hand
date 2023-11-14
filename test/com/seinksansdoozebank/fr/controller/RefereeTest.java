@@ -620,7 +620,7 @@ class RefereeTest {
     }
 
     @Test
-    void testGetBestCombinaisonFulAndVerifOrder(){
+    void testGetBestCombinaisonFullAndVerifOrder(){
         Hand handWithFull = new Hand(List.of("2Co", "3Ca", "2Tr", "3Pi", "3Co"));
         Combinaison combiFull = referee.getBestCombinaison(handWithFull).getCombinaison();
         assertEquals(Combinaison.FULL_HOUSE,combiFull);
