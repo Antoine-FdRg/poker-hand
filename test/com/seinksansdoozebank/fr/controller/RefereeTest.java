@@ -699,7 +699,6 @@ class RefereeTest {
         assertNotEquals(Combinaison.THREE_OF_A_KIND, combiFull);
         assertNotEquals(Combinaison.PAIR, combiFull);
     }
-}
 
     @Test
     void fourOfAKindVictoryTestWithAPair() {
