@@ -623,6 +623,8 @@ class CombinaisonValueTest {
         int result = combinaisonValue1.compareTo(combinaisonValue2);
         assertEquals(0, result);
     }
+
+    @Test
     void testCompareToTwoPairVSHighestCardExpectTwoPairWins(){
         assertEquals(1, testTwoPairOfEightAndSixWithFive.compareTo(testBestCardJack));
     }
